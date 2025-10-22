@@ -1,0 +1,35 @@
+:root {
+  --focus-color: #007ef2; /* Default focus color, changes with theme to black/white  */
+}
+
+body {
+  min-height: 100dvh;
+}
+
+input:focus {
+  outline: none;
+}
+
+select {
+  -moz-appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 6px solid var(--focus-color);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}

@@ -1,0 +1,42 @@
+{
+  "short_name": "OwnTube.tv",
+  "name": "OwnTube.tv",
+  "description": "A web client for OwnTube.tv",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#F95F1E",
+  "screenshots": [
+    {
+      "src": "screenshot_wide.jpeg",
+      "sizes": "1280x576",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "OwnTube.tv"
+    },
+    {
+      "src": "screenshot_narrow.jpeg",
+      "sizes": "576x1280",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "OwnTube.tv"
+    }
+  ]
+}

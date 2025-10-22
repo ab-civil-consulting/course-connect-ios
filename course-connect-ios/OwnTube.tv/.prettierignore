@@ -1,0 +1,5 @@
+**/.expo/*
+**/dist/*
+package.json
+app.json
+assets/selection.json
