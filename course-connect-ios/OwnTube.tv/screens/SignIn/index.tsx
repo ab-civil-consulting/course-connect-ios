@@ -274,7 +274,7 @@ export const SignIn = () => {
                     router.push({ pathname: ROUTES.SIGNUP, params: { backend } });
                   }}
                   style={styles.height48}
-                  contrast="medium"
+                  contrast="low"
                   text={t("createAccount")}
                 />
                 <Spacer height={spacing.md} />

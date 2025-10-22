@@ -22,7 +22,14 @@ import { useCallback, useRef, useState } from "react";
 import { useCustomFocusManager } from "../../hooks";
 
 const signUpFormValidationSchema = z.object({
-  username: z.string().trim().min(1, "requiredField"),
+  username: z.string()
+    .trim()
+    .min(1, "requiredField")
+    .min(3, "usernameTooShort")
+    .max(50, "usernameTooLong")
+    .regex(/^[a-z0-9_.]+$/, "usernameInvalidChars")
+    .regex(/^[a-z]/, "usernameMustStartWithLetter")
+    .transform((val) => val.toLowerCase()),
   email: z.string().trim().min(1, "requiredField").email("invalidEmail"),
   password: z.string().trim().min(8, "passwordTooShort"),
   confirmPassword: z.string().trim().min(1, "requiredField"),
@@ -36,6 +43,7 @@ export const SignUp = () => {
   const { backend } = useLocalSearchParams<RootStackParams[ROUTES.SIGNUP]>();
   const { colors } = useTheme();
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [serverErrorMessage, setServerErrorMessage] = useState<string>("");
 
   const { data: instanceInfo, isLoading: isLoadingInstanceInfo } = useGetInstanceInfoQuery(backend);
   const { data: instanceServerConfig, isLoading: isLoadingInstanceServerConfig } = useGetInstanceServerConfigQuery({
@@ -65,6 +73,7 @@ export const SignUp = () => {
   });
 
   const handleSignUp = async (formValues: z.infer<typeof signUpFormValidationSchema>) => {
+    setServerErrorMessage(""); // Clear previous errors
     try {
       await register({
         username: formValues.username,
@@ -73,8 +82,25 @@ export const SignUp = () => {
       });
       setRegistrationSuccess(true);
       reset();
-    } catch (e) {
+    } catch (e: any) {
       console.error("Registration failed:", e);
+
+      // Try to extract specific error message from PeerTube response
+      if (e?.response?.data?.detail) {
+        setServerErrorMessage(e.response.data.detail);
+      } else if (e?.response?.data?.["invalid-params"]) {
+        // Parse field-specific errors
+        const invalidParams = e.response.data["invalid-params"];
+        const fieldErrors = Object.keys(invalidParams).map(field => {
+          const error = invalidParams[field];
+          return `${field}: ${error.msg || "Invalid value"}`;
+        });
+        setServerErrorMessage(fieldErrors.join(", "));
+      } else if (e?.message) {
+        setServerErrorMessage(e.message);
+      } else {
+        setServerErrorMessage(t("registrationFailed"));
+      }
     }
   };
 
@@ -132,23 +158,30 @@ export const SignUp = () => {
             control={control}
             render={({ field, fieldState }) => {
               return (
-                <Input
-                  autoFocus
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  value={field.value}
-                  onChangeText={field.onChange}
-                  onBlur={field.onBlur}
-                  autoComplete="username"
-                  variant="default"
-                  placeholder={t("username")}
-                  placeholderTextColor={colors.themeDesaturated500}
-                  error={fieldState.error?.message && t(fieldState.error?.message)}
-                  onSubmitEditing={() => {
-                    emailFieldRef.current?.focus?.();
-                  }}
-                  enterKeyHint="next"
-                />
+                <>
+                  <Input
+                    autoFocus
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    value={field.value}
+                    onChangeText={(text) => field.onChange(text.toLowerCase())}
+                    onBlur={field.onBlur}
+                    autoComplete="username"
+                    variant="default"
+                    placeholder={t("username")}
+                    placeholderTextColor={colors.themeDesaturated500}
+                    error={fieldState.error?.message && t(fieldState.error?.message)}
+                    onSubmitEditing={() => {
+                      emailFieldRef.current?.focus?.();
+                    }}
+                    enterKeyHint="next"
+                  />
+                  {!fieldState.error && (
+                    <Typography fontSize="sizeXS" color={colors.themeDesaturated500} style={{ marginTop: 4 }}>
+                      {t("usernameRequirements")}
+                    </Typography>
+                  )}
+                </>
               );
             }}
           />
@@ -245,10 +278,10 @@ export const SignUp = () => {
           />
           {Platform.OS === "web" && <button type="submit" style={{ display: "none" }} />}
           <Spacer height={spacing.xl} />
-          {isRegisterError && (
+          {serverErrorMessage && (
             <>
               <Typography style={styles.textAlignCenter} fontSize="sizeXS" color={colors.error500}>
-                {t("registrationFailed")}
+                {serverErrorMessage}
               </Typography>
               <Spacer height={spacing.xl} />
             </>
