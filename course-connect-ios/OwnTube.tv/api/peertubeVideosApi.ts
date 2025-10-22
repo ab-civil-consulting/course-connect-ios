@@ -67,18 +67,46 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
 
     if (limit <= this.maxChunkSize) {
       try {
+        const params = {
+          search: "*", // Wildcard to match all videos
+          ...commonQueryParams,
+          ...(queryParams || {}),
+          count: limit
+        };
+
+        if (this.debugLogging) {
+          console.debug("=== Video Fetch Request ===");
+          console.debug(`URL: https://${baseURL}/api/v1/search/videos`);
+          console.debug("Query Parameters:", params);
+          console.debug("Privacy Filters:", {
+            // privacyOneOf values: 1 (Public), 2 (Unlisted), 3 (Private), 4 (Internal)
+            privacyOneOf: params.privacyOneOf,
+            description: params.privacyOneOf?.map((p: number) =>
+              ({1: 'Public', 2: 'Unlisted', 3: 'Private', 4: 'Internal'}[p] || 'Unknown')
+            ).join(', ')
+          });
+          console.debug("Authorization Header:", this.instance.defaults.headers.common['Authorization'] ? 'Present' : 'Not Set');
+        }
+
         // Use search endpoint instead of videos endpoint to bypass permission restrictions
         const response = await this.instance.get("search/videos", {
-          params: {
-            search: "*", // Wildcard to match all videos
-            ...commonQueryParams,
-            ...(queryParams || {}),
-            count: limit
-          },
+          params,
           baseURL: `https://${baseURL}/api/v1`,
         });
+
         total = response.data.total;
         rawVideos = response.data.data as Required<Video>[];
+
+        if (this.debugLogging) {
+          console.debug("=== Video Fetch Response ===");
+          console.debug(`Total videos available: ${total}`);
+          console.debug(`Videos returned: ${rawVideos.length}`);
+          console.debug("Video Privacy Breakdown:", rawVideos.reduce((acc: any, v: any) => {
+            const privacy = {1: 'Public', 2: 'Unlisted', 3: 'Private', 4: 'Internal'}[v.privacy?.id] || 'Unknown';
+            acc[privacy] = (acc[privacy] || 0) + 1;
+            return acc;
+          }, {}));
+        }
       } catch (error: unknown) {
         return handleAxiosErrorWithRetry(error, "videos");
       }
@@ -106,22 +134,46 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
           }
         }
         try {
+          const params = {
+            search: "*", // Wildcard to match all videos
+            ...commonQueryParams,
+            ...(queryParams || {}),
+            count: fetchCount,
+            start: offset
+          };
+
+          if (this.debugLogging) {
+            console.debug(`=== Video Fetch Request (Chunk ${Math.floor(offset / this.maxChunkSize) + 1}) ===`);
+            console.debug(`URL: https://${baseURL}/api/v1/search/videos`);
+            console.debug("Query Parameters:", params);
+            console.debug("Privacy Filters:", {
+              // privacyOneOf values: 1 (Public), 2 (Unlisted), 3 (Private), 4 (Internal)
+              privacyOneOf: params.privacyOneOf,
+              description: params.privacyOneOf?.map((p: number) =>
+                ({1: 'Public', 2: 'Unlisted', 3: 'Private', 4: 'Internal'}[p] || 'Unknown')
+              ).join(', ')
+            });
+            console.debug("Authorization Header:", this.instance.defaults.headers.common['Authorization'] ? 'Present' : 'Not Set');
+          }
+
           // Use search endpoint instead of videos endpoint to bypass permission restrictions
           const response = await this.instance.get("search/videos", {
-            params: {
-              search: "*", // Wildcard to match all videos
-              ...commonQueryParams,
-              ...(queryParams || {}),
-              count: fetchCount,
-              start: offset
-            },
+            params,
             baseURL: `https://${baseURL}/api/v1`,
           });
           rawTotal = response.data.total as number;
           if (rawTotal < limit) {
             limit = rawTotal;
           }
-          rawVideos = rawVideos.concat(response.data.data as Required<Video>[]);
+          const chunkVideos = response.data.data as Required<Video>[];
+          rawVideos = rawVideos.concat(chunkVideos);
+
+          if (this.debugLogging) {
+            console.debug(`=== Video Fetch Response (Chunk ${Math.floor(offset / this.maxChunkSize) + 1}) ===`);
+            console.debug(`Total videos available: ${rawTotal}`);
+            console.debug(`Videos in this chunk: ${chunkVideos.length}`);
+            console.debug(`Total videos fetched so far: ${rawVideos.length}`);
+          }
         } catch (error: unknown) {
           return handleAxiosErrorWithRetry(error, "videos");
         }

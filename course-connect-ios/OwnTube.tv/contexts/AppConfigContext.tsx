@@ -116,6 +116,15 @@ export const AppConfigContextProvider = ({ children }: PropsWithChildren) => {
     });
   }, []);
 
+  // Enable API debug logging when debug mode is active
+  useEffect(() => {
+    const { ApiServiceImpl } = require("../api/peertubeVideosApi");
+    ApiServiceImpl.debugLogging = isDebugMode;
+    if (isDebugMode) {
+      console.log("[Debug Mode] API debug logging enabled");
+    }
+  }, [isDebugMode]);
+
   return (
     <AppConfigContext.Provider
       value={{
