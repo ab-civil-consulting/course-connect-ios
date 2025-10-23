@@ -57,9 +57,20 @@ export const useAuthSessionStore = create<AuthSessionStore>((set, get) => ({
   },
 
   selectSession: async (backend) => {
+    console.log('[authSessionStore] selectSession called for backend:', backend);
     const loaded = await readFromAsyncStorage(`${backend}/auth`);
+    console.log('[authSessionStore] Session loaded from storage:', {
+      exists: !!loaded,
+      backend: loaded?.backend,
+      hasAccessToken: !!loaded?.accessToken,
+      accessTokenLength: loaded?.accessToken?.length,
+      tokenType: loaded?.tokenType,
+    });
     if (loaded) {
       set({ session: loaded });
+      console.log('[authSessionStore] Session set in Zustand store');
+    } else {
+      console.log('[authSessionStore] No session found in storage');
     }
   },
 

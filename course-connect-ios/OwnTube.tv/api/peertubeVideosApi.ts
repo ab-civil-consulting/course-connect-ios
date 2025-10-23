@@ -31,16 +31,16 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
 
   /**
    * Get total number of "local", "non-live", and "Safe-For-Work" videos from the PeerTube instance
-   * Uses the search API to bypass permission restrictions on the videos endpoint
+   * Uses the direct videos API to properly handle Internal video permissions
    *
    * @param [baseURL] - Selected instance url
    * @returns The total number of videos
    */
   async getTotalVideos(baseURL: string): Promise<number> {
     try {
-      // Use search endpoint instead of videos endpoint to bypass permission restrictions
-      const response = await this.instance.get("search/videos", {
-        params: { search: "*", ...commonQueryParams, count: 1 },
+      // Use direct videos endpoint to properly handle Internal video permissions
+      const response = await this.instance.get("videos", {
+        params: { ...commonQueryParams, count: 1 },
         baseURL: `https://${baseURL}/api/v1`,
       });
       return response.data.total as number;
@@ -51,7 +51,7 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
 
   /**
    * Get "local", "non-live", and "Safe-For-Work" videos from the PeerTube instance
-   * Uses the search API to bypass permission restrictions on the videos endpoint
+   * Uses the direct videos API to properly handle Internal video permissions
    *
    * @param [baseURL] - Selected instance url
    * @param [queryParams] - Any custom query params
@@ -68,7 +68,6 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
     if (limit <= this.maxChunkSize) {
       try {
         const params = {
-          search: "*", // Wildcard to match all videos
           ...commonQueryParams,
           ...(queryParams || {}),
           count: limit
@@ -76,7 +75,7 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
 
         if (this.debugLogging) {
           console.debug("=== Video Fetch Request ===");
-          console.debug(`URL: https://${baseURL}/api/v1/search/videos`);
+          console.debug(`URL: https://${baseURL}/api/v1/videos`);
           console.debug("Query Parameters:", params);
           console.debug("Privacy Filters:", {
             // privacyOneOf values: 1 (Public), 2 (Unlisted), 3 (Private), 4 (Internal)
@@ -88,8 +87,8 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
           console.debug("Authorization Header:", this.instance.defaults.headers.common['Authorization'] ? 'Present' : 'Not Set');
         }
 
-        // Use search endpoint instead of videos endpoint to bypass permission restrictions
-        const response = await this.instance.get("search/videos", {
+        // Use direct videos endpoint to properly handle Internal video permissions
+        const response = await this.instance.get("videos", {
           params,
           baseURL: `https://${baseURL}/api/v1`,
         });
@@ -135,7 +134,6 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
         }
         try {
           const params = {
-            search: "*", // Wildcard to match all videos
             ...commonQueryParams,
             ...(queryParams || {}),
             count: fetchCount,
@@ -144,7 +142,7 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
 
           if (this.debugLogging) {
             console.debug(`=== Video Fetch Request (Chunk ${Math.floor(offset / this.maxChunkSize) + 1}) ===`);
-            console.debug(`URL: https://${baseURL}/api/v1/search/videos`);
+            console.debug(`URL: https://${baseURL}/api/v1/videos`);
             console.debug("Query Parameters:", params);
             console.debug("Privacy Filters:", {
               // privacyOneOf values: 1 (Public), 2 (Unlisted), 3 (Private), 4 (Internal)
@@ -156,8 +154,8 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
             console.debug("Authorization Header:", this.instance.defaults.headers.common['Authorization'] ? 'Present' : 'Not Set');
           }
 
-          // Use search endpoint instead of videos endpoint to bypass permission restrictions
-          const response = await this.instance.get("search/videos", {
+          // Use direct videos endpoint to properly handle Internal video permissions
+          const response = await this.instance.get("videos", {
             params,
             baseURL: `https://${baseURL}/api/v1`,
           });
@@ -181,7 +179,15 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
       }
     }
 
-    // DEBUG: Log thumbnail data from first video
+    // DEBUG: Log video fetch results
+    console.log('[PeertubeVideosApi] Video fetch complete:', {
+      totalVideos: rawVideos.length,
+      totalFromAPI: total,
+      firstVideoName: rawVideos[0]?.name,
+      queryParams: queryParams || 'default',
+      backend: baseURL,
+    });
+
     if (rawVideos.length > 0) {
       console.log('[PeertubeVideosApi] First video thumbnail data:', {
         uuid: rawVideos[0].uuid,
@@ -191,6 +197,8 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
         hasPreviewPath: !!rawVideos[0].previewPath,
         hasThumbnailPath: !!rawVideos[0].thumbnailPath,
       });
+    } else {
+      console.warn('[PeertubeVideosApi] No videos returned from API!');
     }
 
     return {

@@ -26,12 +26,16 @@ export const useAuthSessionSync = () => {
   }, [session]);
 
   useEffect(() => {
-    if (backend) {
-      selectSession(backend);
-    } else {
-      clearSession();
-    }
-    setIsSessionDataLoaded(true);
+    const loadSession = async () => {
+      if (backend) {
+        await selectSession(backend);
+      } else {
+        clearSession();
+      }
+      setIsSessionDataLoaded(true);
+    };
+
+    loadSession();
   }, [backend]);
 
   return { isSessionDataLoaded };

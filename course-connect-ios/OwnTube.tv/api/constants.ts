@@ -5,7 +5,7 @@ import { VideosCommonQuery } from "@peertube/peertube-types";
 export const commonQueryParams: VideosCommonQuery = {
   start: 0,
   count: 15,
-  sort: "createdAt",
+  sort: "-publishedAt", // Show newest videos first (- means descending order)
   privacyOneOf: [1, 2, 4], // Public, Unlisted, and Internal (excludes Private which is owner-only)
   nsfw: "both", // Include both SFW and NSFW content
   isLocal: undefined, // Try removing local restriction to bypass permission error
