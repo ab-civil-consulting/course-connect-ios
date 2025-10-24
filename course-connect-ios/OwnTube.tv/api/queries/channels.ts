@@ -63,12 +63,12 @@ export const useInfiniteGetChannelVideosQuery = (
     },
     queryKey: [QUERY_KEYS.channelVideos, backend, channelHandle, "infinite", uniqueQueryKey],
     queryFn: async ({ pageParam }) => {
+      // IMPORTANT: Only use start, count, and categoryOneOf (for client-side filtering)
+      // Other parameters like sort, skipCount trigger 401 errors
       return await ChannelsApiImpl.getChannelVideos(backend!, channelHandle!, {
         count: pageSize,
         start: pageParam,
-        sort: "-publishedAt",
         categoryOneOf: category ? [category] : undefined,
-        skipCount: false,
       });
     },
     enabled: !!backend && !!channelHandle,

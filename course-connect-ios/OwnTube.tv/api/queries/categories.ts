@@ -28,13 +28,30 @@ export const useGetCategoriesCollectionQuery = (categories: Array<{ name: string
       queryKey: [QUERY_KEYS.categoriesCollection, id, backend],
       queryFn: async () => {
         try {
+          // Fetch all videos (search endpoint doesn't support categoryOneOf filtering)
+          // We'll filter client-side after fetching
           const res = await ApiServiceImpl.getVideos(backend!, {
-            categoryOneOf: [id],
-            count: 4,
-            sort: "-publishedAt",
+            count: 100, // Fetch more videos to ensure we get enough per category
           });
 
-          return { ...res, name, id };
+          // Filter videos by category on the client side
+          const filteredVideos = res.data.filter(video => video.category?.id === id);
+
+          // Sort by publishedAt (newest first) and take only 4 videos
+          const sortedVideos = filteredVideos
+            .sort((a, b) => {
+              const dateA = new Date(a.publishedAt).getTime();
+              const dateB = new Date(b.publishedAt).getTime();
+              return dateB - dateA; // Descending order (newest first)
+            })
+            .slice(0, 4);
+
+          return {
+            data: sortedVideos,
+            total: filteredVideos.length,
+            name,
+            id
+          };
         } catch (error) {
           if ((error as unknown as OwnTubeError).status === 429) {
             throw error;

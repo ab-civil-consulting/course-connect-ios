@@ -30,7 +30,33 @@ export const useGetVideosQuery = <TResult = GetVideosVideo[]>({
   return useQuery({
     queryKey: [QUERY_KEYS.videos, backend, uniqueQueryKey],
     queryFn: async () => {
-      return await ApiServiceImpl.getVideos(backend!, { count: 50, ...params });
+      // IMPORTANT: Only use start and count parameters!
+      const result = await ApiServiceImpl.getVideos(backend!, {
+        count: params?.count || 50,
+        start: params?.start || 0,
+      });
+
+      // Filter client-side if categoryOneOf is specified
+      let filteredData = result.data;
+      if (params?.categoryOneOf && params.categoryOneOf.length > 0) {
+        filteredData = result.data.filter(video =>
+          params.categoryOneOf!.includes(video.category?.id)
+        );
+      }
+
+      // Sort client-side by publishedAt (newest first) if requested
+      if (params?.sort === "-publishedAt") {
+        filteredData = filteredData.sort((a, b) => {
+          const dateA = new Date(a.publishedAt).getTime();
+          const dateB = new Date(b.publishedAt).getTime();
+          return dateB - dateA;
+        });
+      }
+
+      return {
+        data: filteredData,
+        total: result.total,
+      };
     },
     enabled: enabled && !!backend,
     select,
@@ -53,53 +79,40 @@ export const useInfiniteVideosQuery = (
   const backend = backendFromArg || backendFromParams;
   const _0PageSize = firstPageSize ?? pageSize;
 
-  // DEBUG: Log query setup
-  console.log("[useInfiniteVideosQuery] Setup:", {
-    backend,
-    uniqueQueryKey,
-    queryParams,
-    pageSize,
-    firstPageSize: _0PageSize,
-    enabled: !!backend
-  });
-
   return useInfiniteQuery({
     initialPageParam: 0,
     getNextPageParam: (lastPage: { data: GetVideosVideo[]; total: number }, _nextPage, lastPageParam) => {
       const nextCount = (lastPageParam === 0 ? _0PageSize : lastPageParam) + (lastPageParam ? pageSize : 0);
-
-      console.log("[useInfiniteVideosQuery] getNextPageParam:", {
-        lastPageDataLength: lastPage.data.length,
-        lastPageTotal: lastPage.total,
-        nextCount,
-        hasMore: nextCount < lastPage.total
-      });
-
       return nextCount >= lastPage.total ? null : nextCount;
     },
     queryKey: [QUERY_KEYS.videos, backend, "infinite", uniqueQueryKey],
     queryFn: async ({ pageParam }) => {
-      console.log("[useInfiniteVideosQuery] queryFn called:", {
-        pageParam,
-        count: pageParam === 0 ? _0PageSize : pageSize,
-        backend,
-        queryParams
-      });
-
+      // IMPORTANT: Only use start and count parameters!
+      // Adding filters like categoryOneOf, sort, etc. triggers 401 errors
       const result = await ApiServiceImpl.getVideos(backend!, {
         count: pageParam === 0 ? _0PageSize : pageSize,
         start: pageParam,
-        sort: "-publishedAt",
-        ...queryParams,
       });
 
-      console.log("[useInfiniteVideosQuery] API Result:", {
-        dataLength: result.data.length,
-        total: result.total,
-        firstVideoName: result.data[0]?.name
+      // Filter client-side if categoryOneOf is specified
+      let filteredData = result.data;
+      if (queryParams?.categoryOneOf && queryParams.categoryOneOf.length > 0) {
+        filteredData = result.data.filter(video =>
+          queryParams.categoryOneOf!.includes(video.category?.id)
+        );
+      }
+
+      // Sort client-side by publishedAt (newest first)
+      filteredData = filteredData.sort((a, b) => {
+        const dateA = new Date(a.publishedAt).getTime();
+        const dateB = new Date(b.publishedAt).getTime();
+        return dateB - dateA; // Descending order (newest first)
       });
 
-      return result;
+      return {
+        data: filteredData,
+        total: result.total, // Keep original total for pagination logic
+      };
     },
     enabled: !!backend,
     retry,

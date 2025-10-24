@@ -5,9 +5,10 @@ import { AxiosInstanceBasedApi } from "./axiosInstance";
 import { handleAxiosErrorWithRetry } from "./errorHandler";
 
 /**
- * Get videos from the PeerTube backend `/api/v1/videos` API
+ * Get videos from the PeerTube backend using `/api/v1/search/videos` API
+ * This endpoint works for regular authenticated users (doesn't require admin/moderator)
  *
- * @description https://docs.joinpeertube.org/api-rest-reference.html#tag/Video/operation/getVideos
+ * @description https://docs.joinpeertube.org/api-rest-reference.html#tag/Search/operation/searchVideos
  */
 export class PeertubeVideosApi extends AxiosInstanceBasedApi {
   constructor(maxChunkSize: number = 100, debugLogging: boolean = false) {
@@ -31,16 +32,19 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
 
   /**
    * Get total number of "local", "non-live", and "Safe-For-Work" videos from the PeerTube instance
-   * Uses the direct videos API to properly handle Internal video permissions
+   * Uses the search/videos API which works for regular authenticated users
    *
    * @param [baseURL] - Selected instance url
    * @returns The total number of videos
    */
   async getTotalVideos(baseURL: string): Promise<number> {
     try {
-      // Use direct videos endpoint to properly handle Internal video permissions
-      const response = await this.instance.get("videos", {
-        params: { ...commonQueryParams, count: 1 },
+      // IMPORTANT: Only use start and count parameters to avoid 401 errors
+      const response = await this.instance.get("search/videos", {
+        params: {
+          start: 0,
+          count: 1,
+        },
         baseURL: `https://${baseURL}/api/v1`,
       });
       return response.data.total as number;
@@ -51,7 +55,7 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
 
   /**
    * Get "local", "non-live", and "Safe-For-Work" videos from the PeerTube instance
-   * Uses the direct videos API to properly handle Internal video permissions
+   * Uses the search/videos API which works for regular authenticated users
    *
    * @param [baseURL] - Selected instance url
    * @param [queryParams] - Any custom query params
@@ -67,28 +71,25 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
 
     if (limit <= this.maxChunkSize) {
       try {
+        // IMPORTANT: Only use start and count parameters!
+        // Adding filters like privacyOneOf, categoryOneOf, isLocal, search, etc.
+        // triggers admin-only mode and causes 401 errors.
+        // The authenticated search endpoint automatically returns Public AND Internal videos.
         const params = {
-          ...commonQueryParams,
-          ...(queryParams || {}),
-          count: limit
+          start: queryParams?.start || commonQueryParams.start,
+          count: limit,
         };
 
         if (this.debugLogging) {
           console.debug("=== Video Fetch Request ===");
-          console.debug(`URL: https://${baseURL}/api/v1/videos`);
+          console.debug(`URL: https://${baseURL}/api/v1/search/videos`);
           console.debug("Query Parameters:", params);
-          console.debug("Privacy Filters:", {
-            // privacyOneOf values: 1 (Public), 2 (Unlisted), 3 (Private), 4 (Internal)
-            privacyOneOf: params.privacyOneOf,
-            description: params.privacyOneOf?.map((p: number) =>
-              ({1: 'Public', 2: 'Unlisted', 3: 'Private', 4: 'Internal'}[p] || 'Unknown')
-            ).join(', ')
-          });
           console.debug("Authorization Header:", this.instance.defaults.headers.common['Authorization'] ? 'Present' : 'Not Set');
         }
 
-        // Use direct videos endpoint to properly handle Internal video permissions
-        const response = await this.instance.get("videos", {
+        // Use search/videos endpoint which works for regular authenticated users
+        // This endpoint doesn't require admin/moderator privileges
+        const response = await this.instance.get("search/videos", {
           params,
           baseURL: `https://${baseURL}/api/v1`,
         });
@@ -133,29 +134,22 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
           }
         }
         try {
+          // IMPORTANT: Only use start and count parameters!
           const params = {
-            ...commonQueryParams,
-            ...(queryParams || {}),
+            start: offset,
             count: fetchCount,
-            start: offset
           };
 
           if (this.debugLogging) {
             console.debug(`=== Video Fetch Request (Chunk ${Math.floor(offset / this.maxChunkSize) + 1}) ===`);
-            console.debug(`URL: https://${baseURL}/api/v1/videos`);
+            console.debug(`URL: https://${baseURL}/api/v1/search/videos`);
             console.debug("Query Parameters:", params);
-            console.debug("Privacy Filters:", {
-              // privacyOneOf values: 1 (Public), 2 (Unlisted), 3 (Private), 4 (Internal)
-              privacyOneOf: params.privacyOneOf,
-              description: params.privacyOneOf?.map((p: number) =>
-                ({1: 'Public', 2: 'Unlisted', 3: 'Private', 4: 'Internal'}[p] || 'Unknown')
-              ).join(', ')
-            });
             console.debug("Authorization Header:", this.instance.defaults.headers.common['Authorization'] ? 'Present' : 'Not Set');
           }
 
-          // Use direct videos endpoint to properly handle Internal video permissions
-          const response = await this.instance.get("videos", {
+          // Use search/videos endpoint which works for regular authenticated users
+          // This endpoint doesn't require admin/moderator privileges
+          const response = await this.instance.get("search/videos", {
             params,
             baseURL: `https://${baseURL}/api/v1`,
           });

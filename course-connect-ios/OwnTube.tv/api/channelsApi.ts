@@ -66,27 +66,47 @@ export class ChannelsApi extends AxiosInstanceBasedApi {
     queryParams: VideosCommonQuery,
   ): Promise<{ data: GetVideosVideo[]; total: number }> {
     try {
+      // IMPORTANT: Only use start and count parameters to avoid 401 errors
       const response = await this.instance.get(`video-channels/${channelHandle}/videos`, {
-        params: { ...commonQueryParams, ...queryParams, sort: "-originallyPublishedAt" },
+        params: {
+          start: queryParams?.start || 0,
+          count: queryParams?.count || 24,
+        },
         baseURL: `https://${baseURL}/api/v1`,
       });
 
+      let videos = response.data.data.map((video: Video) => {
+        return {
+          uuid: video.uuid,
+          name: video.name,
+          category: video.category,
+          description: video.description,
+          // FIXED: Keep as relative path - VideoThumbnail handles URL construction
+          previewPath: video.previewPath,
+          duration: video.duration,
+          channel: video.channel,
+          publishedAt: video.publishedAt,
+          originallyPublishedAt: video.originallyPublishedAt,
+          views: video.views,
+        };
+      });
+
+      // Filter client-side if categoryOneOf is specified
+      if (queryParams?.categoryOneOf && queryParams.categoryOneOf.length > 0) {
+        videos = videos.filter(video =>
+          queryParams.categoryOneOf!.includes(video.category?.id)
+        );
+      }
+
+      // Sort client-side by originallyPublishedAt (newest first)
+      videos = videos.sort((a, b) => {
+        const dateA = new Date(a.originallyPublishedAt || a.publishedAt).getTime();
+        const dateB = new Date(b.originallyPublishedAt || b.publishedAt).getTime();
+        return dateB - dateA;
+      });
+
       return {
-        data: response.data.data.map((video: Video) => {
-          return {
-            uuid: video.uuid,
-            name: video.name,
-            category: video.category,
-            description: video.description,
-            // FIXED: Keep as relative path - VideoThumbnail handles URL construction
-            previewPath: video.previewPath,
-            duration: video.duration,
-            channel: video.channel,
-            publishedAt: video.publishedAt,
-            originallyPublishedAt: video.originallyPublishedAt,
-            views: video.views,
-          };
-        }),
+        data: videos,
         total: response.data.total,
       };
     } catch (error: unknown) {

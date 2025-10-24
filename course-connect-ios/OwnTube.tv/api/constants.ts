@@ -1,16 +1,12 @@
 import { VideosCommonQuery } from "@peertube/peertube-types";
 
-// Common query parameters for fetching videos that are classified as "local", "non-live", and accessible to authenticated users
-// privacyOneOf: 1=Public, 2=Unlisted, 3=Private, 4=Internal
+// Common query parameters for fetching videos
+// IMPORTANT: Only use start and count parameters!
+// Adding filters like privacyOneOf, isLocal, etc. triggers admin-only mode and causes 401 errors
+// The authenticated search endpoint automatically returns Public AND Internal videos for logged-in users
 export const commonQueryParams: VideosCommonQuery = {
   start: 0,
-  count: 15,
-  sort: "-publishedAt", // Show newest videos first (- means descending order)
-  privacyOneOf: [1, 2, 4], // Public, Unlisted, and Internal (excludes Private which is owner-only)
-  nsfw: "both", // Include both SFW and NSFW content
-  isLocal: undefined, // Try removing local restriction to bypass permission error
-  isLive: false, // Exclude live streams
-  include: 0, // Explicitly set include to NONE to bypass permission error
+  count: 24,
 };
 
 export enum QUERY_KEYS {

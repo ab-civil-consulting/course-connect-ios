@@ -60,21 +60,7 @@ axiosInstance.interceptors.request.use(async (config) => {
 
   const { session, updateSession } = useAuthSessionStore.getState();
 
-  console.log('[axiosInterceptor] Request interceptor called:', {
-    requestUrl: config.url,
-    baseURL: config.baseURL,
-    extractedBackend: backend,
-    hasSession: !!session,
-    sessionBackend: session?.backend,
-  });
-
-  if (!backend || !session) {
-    console.log('[axiosInterceptor] Early return - missing backend or session:', {
-      hasBackend: !!backend,
-      hasSession: !!session,
-    });
-    return config;
-  }
+  if (!backend || !session) return config;
 
   const {
     basePath,
@@ -97,30 +83,6 @@ axiosInstance.interceptors.request.use(async (config) => {
   const refreshValidUntil = refreshIssued + refreshTokenExpiresIn - 10;
   const refreshTokenValid = refreshIssued <= now && now < refreshValidUntil;
 
-  console.log('[axiosInterceptor] Token validity check:', {
-    now,
-    accessIssued,
-    accessValidUntil,
-    accessTokenValid,
-    refreshTokenValid,
-    sessionExpired,
-  });
-
-  const backendMatches = session.backend === backend;
-  const urlMatches = config.baseURL?.startsWith(`https://${backend}${basePath ?? ""}`);
-
-  console.log('[axiosInterceptor] shouldAttachAccessToken conditions:', {
-    hasSession: !!session,
-    backendMatches,
-    sessionBackend: session.backend,
-    extractedBackend: backend,
-    urlMatches,
-    expectedUrl: `https://${backend}${basePath ?? ""}`,
-    actualUrl: config.baseURL,
-    notExpired: !sessionExpired,
-    tokenValid: accessTokenValid,
-  });
-
   const shouldAttachAccessToken = Boolean(
     session &&
       session.backend === backend &&
@@ -129,16 +91,8 @@ axiosInstance.interceptors.request.use(async (config) => {
       accessTokenValid,
   );
 
-  console.log('[axiosInterceptor] shouldAttachAccessToken:', shouldAttachAccessToken);
-
   if (shouldAttachAccessToken) {
     config.headers.Authorization = `${tokenType} ${accessToken}`;
-    console.log('[axiosInterceptor] Token attached:', {
-      tokenType,
-      tokenLength: accessToken?.length,
-    });
-  } else {
-    console.log('[axiosInterceptor] Token NOT attached');
   }
 
   const halfway = accessIssued + accessTokenExpiresIn * 0.5;
