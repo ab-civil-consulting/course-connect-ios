@@ -29,16 +29,8 @@ export const CategoryScreen = () => {
     return categories?.find(({ id }) => String(id) === category)?.name;
   }, [categories, category]);
 
-  // DEBUG: Log category screen params
-  console.log("[CategoryScreen] Params:", {
-    category,
-    categoryTitle,
-    backend,
-    pageSize: currentInstanceConfig?.customizations?.showMoreSize
-  });
-
   const { fetchNextPage, data, hasNextPage, isLoading, isFetchingNextPage, isError, error } = useInfiniteVideosQuery({
-    uniqueQueryKey: QUERY_KEYS.categoryVideosView,
+    uniqueQueryKey: `${QUERY_KEYS.categoryVideosView}-${category}`,
     queryParams: { categoryOneOf: [Number(category)] },
     pageSize: currentInstanceConfig?.customizations?.showMoreSize,
     backend: backend,
@@ -46,25 +38,6 @@ export const CategoryScreen = () => {
 
   const videos = useMemo(() => {
     const flatVideos = data?.pages?.flatMap(({ data }) => data.flat());
-
-    // DEBUG: Log videos data
-    console.log("[CategoryScreen] Videos Data:", {
-      totalPages: data?.pages?.length,
-      totalVideos: flatVideos?.length,
-      firstPageCount: data?.pages?.[0]?.data?.length,
-      firstPageTotal: data?.pages?.[0]?.total,
-      hasNextPage,
-      isLoading,
-      isFetchingNextPage,
-      isError,
-      error: error?.message,
-      firstVideo: flatVideos?.[0] ? {
-        uuid: flatVideos[0].uuid,
-        name: flatVideos[0].name,
-        hasPreviewPath: !!flatVideos[0].previewPath
-      } : null
-    });
-
     return flatVideos;
   }, [data, hasNextPage, isLoading, isFetchingNextPage, isError, error]);
 
@@ -93,7 +66,8 @@ export const CategoryScreen = () => {
           data={videos}
           backend={backend}
           isLoadingMore={isFetchingNextPage}
-          handleShowMore={hasNextPage ? fetchNextPage : undefined}
+          onEndReached={hasNextPage ? fetchNextPage : undefined}
+          onEndReachedThreshold={0.8}
           link={{ text: t("showMore") }}
           isTVActionCardHidden={!hasNextPage}
         />

@@ -89,8 +89,10 @@ export const useInfiniteVideosQuery = (
     queryFn: async ({ pageParam }) => {
       // IMPORTANT: Only use start and count parameters!
       // Adding filters like categoryOneOf, sort, etc. triggers 401 errors
+      // When filtering client-side, we need to fetch more videos to ensure we get all category videos
+      const fetchCount = queryParams?.categoryOneOf ? 250 : (pageParam === 0 ? _0PageSize : pageSize);
       const result = await ApiServiceImpl.getVideos(backend!, {
-        count: pageParam === 0 ? _0PageSize : pageSize,
+        count: fetchCount,
         start: pageParam,
       });
 
@@ -116,8 +118,8 @@ export const useInfiniteVideosQuery = (
     },
     enabled: !!backend,
     retry,
-    staleTime: 0, // Force fresh data - don't use cache
-    gcTime: 0, // Clear cache immediately
+    staleTime: 1000 * 60 * 5, // 5 minutes - keep data fresh but not too aggressive
+    gcTime: 1000 * 60 * 10, // 10 minutes - keep in cache for quick navigation
   });
 };
 

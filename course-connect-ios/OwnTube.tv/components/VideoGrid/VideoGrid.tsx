@@ -31,6 +31,8 @@ export interface VideoGridProps {
     href?: LinkProps["href"];
   };
   handleShowMore?: () => void;
+  onEndReached?: () => void;
+  onEndReachedThreshold?: number;
   channelLogoUri?: string;
   isLoadingMore?: boolean;
   isLoading?: boolean;
@@ -51,6 +53,8 @@ export const VideoGrid = ({
   icon,
   link,
   handleShowMore,
+  onEndReached,
+  onEndReachedThreshold = 0.8,
   channelLogoUri,
   isLoadingMore,
   isLoading,
@@ -70,24 +74,6 @@ export const VideoGrid = ({
   const { isMobile, isDesktop } = useBreakpoints();
   const [customPresentation, setCustomPresentation] = useState<VideoGridProps["presentation"]>(presentation || "grid");
   const { t } = useTranslation();
-
-  // DEBUG: Log VideoGrid props
-  console.log("[VideoGrid] Render:", {
-    variant,
-    title,
-    dataLength: data?.length,
-    backend,
-    backendProp,
-    backendFromParams,
-    isLoading,
-    isError,
-    isLoadingMore,
-    hasData: !!data,
-    firstVideo: data?.[0] ? {
-      uuid: data[0].uuid,
-      name: data[0].name
-    } : null
-  });
 
   const handleSetPresentation = (newPresentation: VideoGridProps["presentation"]) => {
     setCustomPresentation(newPresentation);
@@ -137,6 +123,8 @@ export const VideoGrid = ({
             isLoading={isLoading}
             data={data}
             backend={backend}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={onEndReachedThreshold}
           />
         ) : (
           <VideoListContent ref={listContentRef} isLoading={isLoading} data={data} backend={backend} />
@@ -158,6 +146,8 @@ export const VideoGrid = ({
     data,
     backend,
     handleShowMore,
+    onEndReached,
+    onEndReachedThreshold,
     isLoadingMore,
     colors,
     t,

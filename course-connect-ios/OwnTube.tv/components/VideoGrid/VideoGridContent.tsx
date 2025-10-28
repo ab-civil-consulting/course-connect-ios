@@ -17,10 +17,12 @@ interface VideoGridContentProps extends Pick<VideoGridProps, "data" | "variant">
   backend?: string;
   tvActionCardProps: Omit<TVActionCardProps, "width"> & { isHidden?: boolean };
   scrollable?: boolean;
+  onEndReached?: () => void;
+  onEndReachedThreshold?: number;
 }
 
 export const VideoGridContent = forwardRef<VideoGridContentHandle, VideoGridContentProps>(
-  ({ isLoading, data = [], variant, backend, tvActionCardProps, scrollable = false }, ref) => {
+  ({ isLoading, data = [], variant, backend, tvActionCardProps, scrollable = false, onEndReached, onEndReachedThreshold = 0.8 }, ref) => {
     const [containerWidth, setContainerWidth] = useState(0);
     const lastItemRef = useRef<View>(null);
 
@@ -68,7 +70,7 @@ export const VideoGridContent = forwardRef<VideoGridContentHandle, VideoGridCont
             return <TVActionCard width={columnWidth} {...tvActionCardProps} />;
           }
 
-          return <View pointerEvents="none" key={`empty-item-${index}`} style={styles.gridItemNonWeb} />;
+          return <View key={`empty-item-${index}`} style={[styles.gridItemNonWeb, { pointerEvents: "none" }]} />;
         }
 
         return (
@@ -163,6 +165,8 @@ export const VideoGridContent = forwardRef<VideoGridContentHandle, VideoGridCont
             horizontal={isHorizontalScrollingEnabled}
             // Add ItemSeparatorComponent for consistent vertical spacing
             ItemSeparatorComponent={() => !isHorizontalScrollingEnabled ? <View style={{ height: spacing.sm }} /> : null}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={onEndReachedThreshold}
           />
         )}
       </View>
