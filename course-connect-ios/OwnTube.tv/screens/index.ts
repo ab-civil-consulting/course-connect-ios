@@ -11,4 +11,5 @@ export * from "./Playlist";
 export * from "./SignIn";
 export * from "./SignUp";
 export * from "./Otp";
+export * from "./PasswordReset";
 export * from "./SearchResults";

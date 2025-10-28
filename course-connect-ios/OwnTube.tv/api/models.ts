@@ -115,3 +115,9 @@ export type RegisterResponse = {
     };
   };
 };
+
+export type AskResetPasswordRequestArgs = {
+  email: string;
+};
+
+export type AskResetPasswordResponse = Record<string, never>;

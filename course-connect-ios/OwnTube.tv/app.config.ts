@@ -3,7 +3,10 @@ const getBuildNumber = ({ platform }: { platform: "ios" | "android" }) => {
   const isAndroid = platform === "android";
 
   const buildNumber = `${now.getUTCFullYear() % 100}${String(now.getUTCMonth() + 1).padStart(2, "0")}${String(now.getUTCDate()).padStart(2, "0")}${String(now.getUTCHours()).padStart(2, "0")}${String(now.getUTCMinutes() + 20 * Number(!!process.env.EXPO_TV) * Number(isAndroid)).padStart(2, "0")}`;
-  return isAndroid ? buildNumber.slice(0, -1) : buildNumber;
+  const finalBuildNumber = isAndroid ? buildNumber.slice(0, -1) : buildNumber;
+
+  // iOS needs string, Android needs integer
+  return isAndroid ? parseInt(finalBuildNumber, 10) : finalBuildNumber;
 };
 
 const icon =
@@ -13,6 +16,7 @@ export default {
   slug: process.env.EXPO_PUBLIC_APP_SLUG || "course-connect",
   name: process.env.EXPO_PUBLIC_APP_NAME || "Course Connect",
   icon,
+  owner: "adam_bower",
   scheme: "courseconnect",
   version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.0",
   assetBundlePatterns: ["**/*"],
@@ -20,9 +24,15 @@ export default {
 
   extra: {
     eas: {
-      projectId: "6b798df2-dda0-4f1c-9f99-65d1f4ee4124",
+      projectId: "512d37de-e7c0-42f4-912e-ff850d3e9e57",
     },
     primaryBackend: process.env.EXPO_PUBLIC_PRIMARY_BACKEND || undefined,
+  },
+  updates: {
+    url: "https://u.expo.dev/512d37de-e7c0-42f4-912e-ff850d3e9e57",
+  },
+  runtimeVersion: {
+    policy: "appVersion",
   },
 
   splash: {
@@ -37,7 +47,7 @@ export default {
     },
     buildNumber: getBuildNumber({ platform: "ios" }),
     supportsTablet: true,
-    bundleIdentifier: process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER || "com.abcivil.courseconnect",
+    bundleIdentifier: process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER || "com.abcivil.courseconnect.v2",
     associatedDomains: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL
       ? [`applinks:${process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL}`]
       : undefined,
@@ -50,7 +60,7 @@ export default {
   android: {
     blockedPermissions: ["RECORD_AUDIO"],
     versionCode: getBuildNumber({ platform: "android" }),
-    package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.courseconnect",
+    package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.courseconnect.v2",
     intentFilters: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL
       ? [
           {

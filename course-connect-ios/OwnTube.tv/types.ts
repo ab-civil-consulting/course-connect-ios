@@ -32,6 +32,7 @@ export enum ROUTES {
   SIGNIN = "signin",
   SIGNUP = "signup",
   OTP = "otp",
+  PASSWORD_RESET = "password-reset",
   SEARCH = "search",
   FORUM = "forum",
   FORUM_CATEGORY = "forum-category",

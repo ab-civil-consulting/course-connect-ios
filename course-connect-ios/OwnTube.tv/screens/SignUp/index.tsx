@@ -1,13 +1,9 @@
 import { Keyboard, Platform, Pressable, StyleSheet, TextInput, View } from "react-native";
-import { Button, FormComponent, Input, QrCodeLinkModal, Separator, Typography } from "../../components";
+import { Button, FormComponent, Input, Typography } from "../../components";
 import { useTranslation } from "react-i18next";
-import {
-  useGetInstanceInfoQuery,
-  useGetInstanceServerConfigQuery,
-  useRegisterMutation,
-} from "../../api";
-import { useAppConfigContext, useFullScreenModalContext } from "../../contexts";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useGetInstanceInfoQuery, useGetInstanceServerConfigQuery, useRegisterMutation } from "../../api";
+import { useAppConfigContext } from "../../contexts";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { RootStackParams } from "../../app/_layout";
 import { ROUTES } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -21,22 +17,25 @@ import { SignInFormLoader } from "../../components/loaders/SignInFormLoader";
 import { useCallback, useRef, useState } from "react";
 import { useCustomFocusManager } from "../../hooks";
 
-const signUpFormValidationSchema = z.object({
-  username: z.string()
-    .trim()
-    .min(1, "requiredField")
-    .min(3, "usernameTooShort")
-    .max(50, "usernameTooLong")
-    .regex(/^[a-z0-9_.]+$/, "usernameInvalidChars")
-    .regex(/^[a-z]/, "usernameMustStartWithLetter")
-    .transform((val) => val.toLowerCase()),
-  email: z.string().trim().min(1, "requiredField").email("invalidEmail"),
-  password: z.string().trim().min(8, "passwordTooShort"),
-  confirmPassword: z.string().trim().min(1, "requiredField"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "passwordsDoNotMatch",
-  path: ["confirmPassword"],
-});
+const signUpFormValidationSchema = z
+  .object({
+    username: z
+      .string()
+      .trim()
+      .min(1, "requiredField")
+      .min(3, "usernameTooShort")
+      .max(50, "usernameTooLong")
+      .regex(/^[a-z0-9_.]+$/, "usernameInvalidChars")
+      .regex(/^[a-z]/, "usernameMustStartWithLetter")
+      .transform((val) => val.toLowerCase()),
+    email: z.string().trim().min(1, "requiredField").email("invalidEmail"),
+    password: z.string().trim().min(8, "passwordTooShort"),
+    confirmPassword: z.string().trim().min(1, "requiredField"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "passwordsDoNotMatch",
+    path: ["confirmPassword"],
+  });
 
 export const SignUp = () => {
   const { t } = useTranslation();
@@ -49,19 +48,13 @@ export const SignUp = () => {
   const { data: instanceServerConfig, isLoading: isLoadingInstanceServerConfig } = useGetInstanceServerConfigQuery({
     hostname: backend,
   });
-  const {
-    mutateAsync: register,
-    isError: isRegisterError,
-    isPending: isRegistering,
-    error: registerError,
-  } = useRegisterMutation(backend!);
+  const { mutateAsync: register, isPending: isRegistering } = useRegisterMutation(backend!);
   const { currentInstanceConfig } = useAppConfigContext();
   const { top } = useSafeAreaInsets();
-  const { toggleModal, setContent } = useFullScreenModalContext();
   useCustomFocusManager();
   const router = useRouter();
 
-  const { control, handleSubmit, reset, formState } = useForm({
+  const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       username: "",
       email: "",
@@ -82,7 +75,11 @@ export const SignUp = () => {
       });
       setRegistrationSuccess(true);
       reset();
-    } catch (e: any) {
+    } catch (error: unknown) {
+      const e = error as {
+        response?: { data?: { detail?: string; "invalid-params"?: Record<string, { msg?: string }> } };
+        message?: string;
+      };
       console.error("Registration failed:", e);
 
       // Try to extract specific error message from PeerTube response
@@ -91,7 +88,7 @@ export const SignUp = () => {
       } else if (e?.response?.data?.["invalid-params"]) {
         // Parse field-specific errors
         const invalidParams = e.response.data["invalid-params"];
-        const fieldErrors = Object.keys(invalidParams).map(field => {
+        const fieldErrors = Object.keys(invalidParams).map((field) => {
           const error = invalidParams[field];
           return `${field}: ${error.msg || "Invalid value"}`;
         });
@@ -103,9 +100,6 @@ export const SignUp = () => {
       }
     }
   };
-
-  const signInHref = `https://${backend}/login`;
-  const externalSignUpHref = `https://${backend}/signup`;
 
   const emailFieldRef = useRef<TextInput | null>(null);
   const passwordFieldRef = useRef<TextInput | null>(null);
@@ -130,12 +124,7 @@ export const SignUp = () => {
             : t("registrationCheckEmail")}
         </Typography>
         <Spacer height={spacing.xxl} />
-        <Button
-          onPress={navigateToSignIn}
-          style={styles.height48}
-          contrast="high"
-          text={t("goToSignIn")}
-        />
+        <Button onPress={navigateToSignIn} style={styles.height48} contrast="high" text={t("goToSignIn")} />
       </View>
     );
   }
@@ -311,48 +300,6 @@ export const SignUp = () => {
                 {t("signIn")}
               </Typography>
             </Pressable>
-            <Spacer height={spacing.xl} />
-            <Separator />
-            <Spacer height={spacing.xl} />
-            <Typography
-              style={styles.textAlignCenter}
-              fontSize="sizeXS"
-              fontWeight="Medium"
-              color={colors.themeDesaturated500}
-            >
-              {t("preferBrowserSignup")}
-            </Typography>
-            {Platform.isTV ? (
-              <Pressable
-                style={({ focused }) => ({
-                  borderWidth: focused ? 2 : 0,
-                  margin: focused ? -2 : 0,
-                  borderRadius: borderRadius.radiusSm,
-                })}
-                onPress={() => {
-                  toggleModal(true);
-                  setContent(<QrCodeLinkModal link={externalSignUpHref} />);
-                }}
-              >
-                <Typography
-                  style={[{ color: colors.theme500 }, styles.textAlignCenter]}
-                  fontSize="sizeXS"
-                  fontWeight="Medium"
-                >
-                  {externalSignUpHref}
-                </Typography>
-              </Pressable>
-            ) : (
-              <Link target="_blank" rel="noreferrer noopener" href={{ pathname: externalSignUpHref }}>
-                <Typography
-                  style={[{ color: colors.theme500 }, styles.textAlignCenter]}
-                  fontSize="sizeXS"
-                  fontWeight="Medium"
-                >
-                  {externalSignUpHref}
-                </Typography>
-              </Link>
-            )}
           </View>
         </View>
       )}

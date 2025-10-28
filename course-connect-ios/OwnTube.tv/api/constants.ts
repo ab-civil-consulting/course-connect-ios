@@ -43,6 +43,7 @@ export enum QUERY_KEYS {
 export enum MUTATION_KEYS {
   login = "login",
   register = "register",
+  askResetPassword = "askResetPassword",
 }
 
 export const WRONG_SERVER_VERSION_STATUS_CODE = 444;

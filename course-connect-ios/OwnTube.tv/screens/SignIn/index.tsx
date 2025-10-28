@@ -1,5 +1,5 @@
-import { Keyboard, Platform, Pressable, StyleSheet, TextInput, View } from "react-native";
-import { Button, FormComponent, Input, QrCodeLinkModal, Separator, Typography } from "../../components";
+import { Keyboard, Platform, StyleSheet, TextInput, View } from "react-native";
+import { Button, FormComponent, Input, Separator, Typography } from "../../components";
 import { useTranslation } from "react-i18next";
 import {
   useGetInstanceInfoQuery,
@@ -8,12 +8,12 @@ import {
   useGetMyUserInfoQuery,
   useLoginWithUsernameAndPasswordMutation,
 } from "../../api";
-import { useAppConfigContext, useFullScreenModalContext } from "../../contexts";
-import { Link, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useAppConfigContext } from "../../contexts";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { RootStackParams } from "../../app/_layout";
 import { ROUTES } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { borderRadius, spacing } from "../../theme";
+import { spacing } from "../../theme";
 import { Spacer } from "../../components/shared/Spacer";
 import { useTheme } from "@react-navigation/native";
 import { Controller, useForm } from "react-hook-form";
@@ -53,7 +53,6 @@ export const SignIn = () => {
   const { refetch: getUserInfo, isFetching: isGettingUserInfo, isError: isUserInfoError } = useGetMyUserInfoQuery();
   const { currentInstanceConfig } = useAppConfigContext();
   const { top } = useSafeAreaInsets();
-  const { toggleModal, setContent } = useFullScreenModalContext();
   useCustomFocusManager();
   const { addSession, selectSession, updateSession } = useAuthSessionStore();
   const router = useRouter();
@@ -119,9 +118,6 @@ export const SignIn = () => {
       }
     }
   };
-
-  const resetPwdHref = `https://${backend}/login`;
-  const signUpHref = `https://${backend}/signup`;
 
   const passwordFieldRef = useRef<TextInput | null>(null);
 
@@ -224,37 +220,15 @@ export const SignIn = () => {
             >
               {t("forgotPassword")}
             </Typography>
-            {Platform.isTV ? (
-              <Pressable
-                onPress={() => {
-                  toggleModal(true);
-                  setContent(<QrCodeLinkModal link={resetPwdHref} />);
-                }}
-                style={({ focused }) => ({
-                  borderWidth: focused ? 2 : 0,
-                  margin: focused ? -2 : 0,
-                  borderRadius: borderRadius.radiusSm,
-                })}
-              >
-                <Typography
-                  style={[{ color: colors.theme500 }, styles.textAlignCenter]}
-                  fontSize="sizeXS"
-                  fontWeight="Medium"
-                >
-                  {resetPwdHref}
-                </Typography>
-              </Pressable>
-            ) : (
-              <Link target="_blank" rel="noreferrer noopener" href={{ pathname: resetPwdHref }}>
-                <Typography
-                  style={[{ color: colors.theme500 }, styles.textAlignCenter]}
-                  fontSize="sizeXS"
-                  fontWeight="Medium"
-                >
-                  {resetPwdHref}
-                </Typography>
-              </Link>
-            )}
+            <Spacer height={spacing.sm} />
+            <Button
+              onPress={() => {
+                router.push({ pathname: ROUTES.PASSWORD_RESET, params: { backend } });
+              }}
+              style={styles.height48}
+              contrast="low"
+              text={t("resetPassword")}
+            />
             {instanceServerConfig?.signup.allowed && (
               <>
                 <Spacer height={spacing.xl} />
@@ -277,46 +251,6 @@ export const SignIn = () => {
                   contrast="low"
                   text={t("createAccount")}
                 />
-                <Spacer height={spacing.md} />
-                <Typography
-                  style={styles.textAlignCenter}
-                  fontSize="sizeXS"
-                  fontWeight="Medium"
-                  color={colors.themeDesaturated500}
-                >
-                  {t("orSignUpInBrowser")}
-                </Typography>
-                {Platform.isTV ? (
-                  <Pressable
-                    style={({ focused }) => ({
-                      borderWidth: focused ? 2 : 0,
-                      margin: focused ? -2 : 0,
-                      borderRadius: borderRadius.radiusSm,
-                    })}
-                    onPress={() => {
-                      toggleModal(true);
-                      setContent(<QrCodeLinkModal link={signUpHref} />);
-                    }}
-                  >
-                    <Typography
-                      style={[{ color: colors.theme500 }, styles.textAlignCenter]}
-                      fontSize="sizeXS"
-                      fontWeight="Medium"
-                    >
-                      {signUpHref}
-                    </Typography>
-                  </Pressable>
-                ) : (
-                  <Link target="_blank" rel="noreferrer noopener" href={{ pathname: signUpHref }}>
-                    <Typography
-                      style={[{ color: colors.theme500 }, styles.textAlignCenter]}
-                      fontSize="sizeXS"
-                      fontWeight="Medium"
-                    >
-                      {signUpHref}
-                    </Typography>
-                  </Link>
-                )}
               </>
             )}
           </View>

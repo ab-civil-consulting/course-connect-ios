@@ -1,6 +1,11 @@
 import { useGlobalSearchParams, usePathname } from "expo-router";
-import { Platform, TVEventControl } from "react-native";
+import { Platform, TVEventControl, LogBox } from "react-native";
 import { ROUTES, STORAGE } from "../types";
+
+// Suppress expected warnings
+LogBox.ignoreLogs([
+  'Animated: `useNativeDriver` is not supported', // Expected on web - animations fall back to JS
+]);
 import { ThemeProvider } from "@react-navigation/native";
 import {
   AppConfigContextProvider,
@@ -242,6 +247,8 @@ export type RootStackParams = {
   [ROUTES.CATEGORY]: { backend: string; category: string };
   [ROUTES.PLAYLIST]: { backend: string; playlist: string };
   [ROUTES.SIGNIN]: { backend: string; username?: string };
+  [ROUTES.SIGNUP]: { backend: string };
   [ROUTES.OTP]: { backend: string };
+  [ROUTES.PASSWORD_RESET]: { backend: string };
   [ROUTES.SEARCH]: { backend: string; searchQuery: string; sort?: VideosSearchQuery["sort"] };
 };

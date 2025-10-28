@@ -1,7 +1,13 @@
 import { AxiosInstanceBasedApi } from "./axiosInstance";
 import { handleAxiosErrorWithRetry } from "./errorHandler";
 import { OAuthClientLocal } from "@peertube/peertube-types";
-import { UserLoginResponse, RegisterRequestArgs, RegisterResponse } from "./models";
+import {
+  UserLoginResponse,
+  RegisterRequestArgs,
+  RegisterResponse,
+  AskResetPasswordRequestArgs,
+  AskResetPasswordResponse,
+} from "./models";
 
 /**
  * PeerTube Auth API
@@ -67,6 +73,24 @@ export class AuthApi extends AxiosInstanceBasedApi {
       return response.data;
     } catch (error: unknown) {
       return handleAxiosErrorWithRetry(error, "register");
+    }
+  }
+
+  /**
+   * Request a password reset email
+   *
+   */
+  async askResetPassword(baseURL: string, data: AskResetPasswordRequestArgs): Promise<AskResetPasswordResponse> {
+    try {
+      const response = await this.instance.post("users/ask-reset-password", data, {
+        baseURL: `https://${baseURL}/api/v1`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error: unknown) {
+      return handleAxiosErrorWithRetry(error, "askResetPassword");
     }
   }
 }
