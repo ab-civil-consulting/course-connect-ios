@@ -27,10 +27,9 @@ export const SearchPopup = ({ handleClose, backend }: { handleClose: () => void;
 
   return (
     <Animated.View
-      style={[styles.modalWrapper, { paddingTop: breakpoints.isMobile ? "25%" : "10%" }]}
+      style={[styles.modalWrapper, { paddingTop: breakpoints.isMobile ? "25%" : "10%", pointerEvents: "box-none" }]}
       entering={SlideInUp}
       exiting={SlideOutUp}
-      pointerEvents="box-none"
     >
       <ModalContainer showCloseButton onClose={handleClose} title={t("searchForVideos")}>
         <FormComponent

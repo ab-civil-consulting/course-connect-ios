@@ -44,8 +44,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
       <Animated.View
         entering={SlideInUp}
         exiting={Platform.isTV ? FadeOut : SlideOutUp}
-        style={styles.animatedContainer}
-        pointerEvents="box-none"
+        style={[styles.animatedContainer, { pointerEvents: "box-none" }]}
       >
         <ModalContainer
           containerStyle={{ maxWidth: 350 }}

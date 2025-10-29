@@ -114,8 +114,9 @@ export const PlaybackSettingsPopup = ({
   const { data: videoCaptions } = useGetVideoCaptionsQuery(id, false);
 
   const screens = useMemo(() => {
+    // Prioritize direct files (web videos) over HLS streaming playlists
     const qualityOptions = (
-      videoData?.streamingPlaylists?.[0]?.files?.length ? videoData?.streamingPlaylists?.[0]?.files : videoData?.files
+      videoData?.files?.length ? videoData?.files : videoData?.streamingPlaylists?.[0]?.files
     )
       ?.map(({ resolution }) => ({ ...resolution, id: String(resolution.id) }))
       .concat([

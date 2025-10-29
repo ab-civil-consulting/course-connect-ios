@@ -163,19 +163,18 @@ const VideoControlsOverlay = ({
     // @ts-expect-error web cursor options not included in React Native core
     <Pressable style={[styles.overlay, { cursor: isVisible ? "auto" : "none" }]} onPress={onOverlayPress}>
       {isVisible ? (
-        <View style={styles.contentContainer} pointerEvents="box-none">
+        <View style={[styles.contentContainer, { pointerEvents: "box-none" }]}>
           <Animated.View
             entering={SlideInUp}
             exiting={SlideOutUp}
-            style={styles.animatedTopContainer}
-            pointerEvents="box-none"
+            style={[styles.animatedTopContainer, { pointerEvents: "box-none" }]}
           >
             <LinearGradient
               locations={[0, 0.25, 1]}
               colors={isMobile ? ["#00000000", "#00000000", "#00000000"] : ["#00000080", "#0000004D", "#00000000"]}
               style={[styles.topControlsContainer, ...(isMobile ? [{ paddingTop: spacing.lg }] : [{ height: 360 }])]}
             >
-              <View style={styles.topLeftControls} pointerEvents="box-none">
+              <View style={[styles.topLeftControls, { pointerEvents: "box-none" }]}>
                 <PlayerButton onPress={handlePressBack} icon="Arrow-Left" />
                 <View style={styles.videoInfoContainer}>
                   <ChannelLink
@@ -252,9 +251,8 @@ const VideoControlsOverlay = ({
           ) : null}
           <Animated.View
             exiting={SlideOutDown}
-            style={[styles.animatedBottomContainer, { paddingBottom: insets.bottom }]}
+            style={[styles.animatedBottomContainer, { paddingBottom: insets.bottom, pointerEvents: "box-none" }]}
             entering={SlideInDown}
-            pointerEvents="box-none"
           >
             <LinearGradient
               locations={[0, 0.85, 1]}

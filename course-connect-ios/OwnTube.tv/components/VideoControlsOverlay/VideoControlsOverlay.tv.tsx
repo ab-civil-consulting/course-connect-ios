@@ -310,7 +310,7 @@ const VideoControlsOverlay = ({
               </View>
             )}
           </View>
-          <View style={styles.animatedBottomContainer} pointerEvents="box-none">
+          <View style={[styles.animatedBottomContainer, { pointerEvents: "box-none" }]}>
             <LinearGradient
               locations={[0, 0.85, 1]}
               colors={["#00000000", "#0000004D", "#000000AB"]}

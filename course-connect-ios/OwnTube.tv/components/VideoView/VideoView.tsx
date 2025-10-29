@@ -224,8 +224,47 @@ const VideoView = ({
   };
 
   const handlePlayerError = ({ error }: OnVideoErrorData) => {
+    console.error('[VideoView] === VIDEO PLAYER ERROR ===');
+    console.error('[VideoView] Error code:', error.errorCode);
+    console.error('[VideoView] Error description:', error.localizedDescription);
+    console.error('[VideoView] Error domain:', error.domain);
+    console.error('[VideoView] Full error object:', JSON.stringify(error, null, 2));
+    console.error('[VideoView] Video URI:', uri?.substring(0, 150));
+
     captureError(error, CustomPostHogExceptions.VideoPlayerError);
-    Toast.show({ type: "info", text1: `Error: ${String(error.localizedDescription)}`, props: { isError: true } });
+
+    // Provide user-friendly error messages based on error codes
+    let errorMessage = String(error.localizedDescription);
+    const errorCode = error.errorCode;
+
+    // ExoPlayer/react-native-video error codes
+    // 22004 is typically a source loading error (invalid format or missing file)
+    if (errorCode === '22004') {
+      errorMessage = 'Video format error (22004). The video file may be missing or incompatible. Check server configuration.';
+      console.error('[VideoView] ERROR 22004: This typically means:');
+      console.error('[VideoView] - Video file not found (404)');
+      console.error('[VideoView] - Invalid video format or codec');
+      console.error('[VideoView] - Missing video file on server');
+      console.error('[VideoView] → SOLUTION: Check PeerTube video transcoding and storage settings');
+    } else if (errorCode === '2004') {
+      errorMessage = 'Failed to load video source. The video may not exist on the server.';
+    } else if (errorCode === '2002') {
+      errorMessage = 'Network error loading video. Check your internet connection.';
+    } else if (errorMessage.includes('404') || errorMessage.includes('not found')) {
+      errorMessage = 'Video not found (404). The server is missing video files. Contact your administrator.';
+    } else if (errorMessage.includes('403') || errorMessage.includes('forbidden')) {
+      errorMessage = 'Access denied (403). You may not have permission to view this video.';
+    } else if (errorMessage.includes('network') || errorMessage.includes('connection')) {
+      errorMessage = 'Network error. Please check your internet connection.';
+    }
+
+    Toast.show({
+      type: "info",
+      text1: errorMessage,
+      text2: `Error code: ${errorCode}`,
+      props: { isError: true },
+      visibilityTime: 6000,
+    });
   };
 
   const handleProgress = ({ currentTime, playableDuration }: OnProgressData) => {
@@ -256,8 +295,32 @@ const VideoView = ({
       }));
   }, [captions]);
 
+  // Extract token from URI for HLS authentication
+  // This is needed because HLS segment requests need the token in headers
+  const extractToken = (url: string) => {
+    const match = url?.match(/[?&]videoFileToken=([^&]+)/);
+    return match ? match[1] : null;
+  };
+
+  const videoToken = extractToken(uri || "");
+
   const videoSource = useMemo(() => {
-    return {
+    if (!uri) return null;
+
+    // Determine video type based on URL
+    const isHLS = uri.includes('.m3u8') || uri.includes('streaming-playlists/hls');
+    const isMP4 = uri.includes('.mp4') || uri.includes('/download/videos/');
+    const isWebM = uri.includes('.webm');
+
+    console.log('[VideoView] Creating video source:', {
+      isHLS,
+      isMP4,
+      isWebM,
+      uri: uri.substring(0, 100) + '...',
+    });
+
+    const sourceConfig: any = {
+      uri,
       textTracks: formattedCaptions,
       startPosition: Number(timestamp || 0) * 1000,
       metadata: {
@@ -268,17 +331,35 @@ const VideoView = ({
         imageUri: `https://${videoData?.channel?.host}${videoData?.thumbnailPath}`,
       },
     };
-  }, [timestamp, videoData, formattedCaptions]);
 
+    // Set appropriate content type for ExoPlayer
+    if (isHLS) {
+      sourceConfig.type = 'application/x-mpegurl';
+      console.log('[VideoView] Set content type to HLS');
+    } else if (isMP4) {
+      sourceConfig.type = 'video/mp4';
+      console.log('[VideoView] Set content type to MP4');
+    } else if (isWebM) {
+      sourceConfig.type = 'video/webm';
+      console.log('[VideoView] Set content type to WebM');
+    }
+
+    // Add authentication token to headers if available
+    if (videoToken) {
+      sourceConfig.headers = {
+        'X-Video-File-Token': videoToken,
+      };
+      console.log('[VideoView] Added token to source headers');
+    }
+
+    return sourceConfig;
+  }, [uri, timestamp, videoData, formattedCaptions, videoToken]);
+
+  // Track if we've loaded the video initially
   const isInitialVideoLoadDone = useRef(false);
 
   useEffect(() => {
     if (uri) {
-      videoRef.current?.setSource({
-        ...videoSource,
-        uri,
-        startPosition: Number(!isInitialVideoLoadDone.current ? Number(timestamp || 0) : currentTime) * 1000,
-      });
       isInitialVideoLoadDone.current = true;
     }
   }, [uri]);
@@ -318,14 +399,17 @@ const VideoView = ({
       isCastActivated.current = false;
       setCastState(undefined);
       captureDiagnosticsEvent(CustomPostHogEvents.ChromecastStopped);
-      videoRef.current?.setSource({
-        ...videoSource,
-        uri,
-        startPosition: Number(currentTime) * 1000,
-      });
-      videoRef.current?.[isPlaying ? "resume" : "pause"]();
+
+      // Resume local playback after Chromecast disconnect
+      if (videoSource) {
+        videoRef.current?.setSource({
+          ...videoSource,
+          startPosition: Number(currentTime) * 1000,
+        });
+        videoRef.current?.[isPlaying ? "resume" : "pause"]();
+      }
     }
-  }, [googleCastClient]);
+  }, [googleCastClient, videoSource, currentTime, isPlaying]);
 
   useFocusEffect(
     useCallback(() => {
@@ -406,7 +490,9 @@ const VideoView = ({
     captureDiagnosticsEvent(CustomPostHogEvents.PlaybackSpeedChanged, { playbackSpeed: speed });
   };
 
-  const allowQualityControls = Platform.OS !== "ios" || !videoData?.streamingPlaylists?.length;
+  // Quality controls now work on all platforms with direct files (web videos)
+  // Previously disabled on iOS when HLS was available due to react-native-video limitations
+  const allowQualityControls = true;
 
   return (
     <View collapsable={false} style={styles.container}>
@@ -484,6 +570,7 @@ const VideoView = ({
           </View>
         ) : (
           <Video
+            source={videoSource}
             reportBandwidth
             onBandwidthUpdate={handleBandwidthUpdate}
             onEnd={() => {

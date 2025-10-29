@@ -178,14 +178,20 @@ const styles = StyleSheet.create({
   },
   categoryCardFocused: {
     elevation: 8,
-    shadowColor: colors.black100,
-    shadowOffset: {
-      height: 4,
-      width: 0,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
     transform: [{ scale: 1.05 }],
+    ...(Platform.OS === "web"
+      ? {
+          boxShadow: `0px 4px 4.65px rgba(0, 0, 0, 0.3)`,
+        }
+      : {
+          shadowColor: colors.black100,
+          shadowOffset: {
+            height: 4,
+            width: 0,
+          },
+          shadowOpacity: 0.3,
+          shadowRadius: 4.65,
+        }),
   },
   categoryImage: {
     height: "100%",

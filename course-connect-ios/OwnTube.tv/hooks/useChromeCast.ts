@@ -23,6 +23,7 @@ export const useChromeCast = ({
 }: UseChromeCastProps) => {
   const [isChromecastConnected, setIsChromecastConnected] = useState(false);
   const [isChromeCastAvailable, setIsChromeCastAvailable] = useState(false);
+  const [isCastInitialized, setIsCastInitialized] = useState(false);
   const isChromecastConnectedRef = useRef(false);
   const { captureDiagnosticsEvent, captureError } = useCustomDiagnosticsEvents();
 
@@ -128,52 +129,63 @@ export const useChromeCast = ({
     }
   };
 
-  useEffect(() => {
-    if (!window.cast) return;
+  const setupRemotePlayerListeners = () => {
+    // Only setup RemotePlayer after Cast framework is fully initialized
+    if (!window.cast?.framework) {
+      console.warn('[useChromeCast] Cast framework not available for RemotePlayer setup');
+      return;
+    }
 
-    const player = new window.cast.framework.RemotePlayer();
-    const remotePlayerController = new window.cast.framework.RemotePlayerController(player);
+    try {
+      const player = new window.cast.framework.RemotePlayer();
+      const remotePlayerController = new window.cast.framework.RemotePlayerController(player);
 
-    remotePlayerController.addEventListener(
-      window.cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED,
-      ({ value }) => {
-        if (typeof value === "number" && isChromecastConnectedRef.current) {
+      remotePlayerController.addEventListener(
+        window.cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED,
+        ({ value }) => {
+          if (typeof value === "number" && isChromecastConnectedRef.current) {
+            updatePlaybackStatus({
+              position: Math.floor(value),
+              didJustFinish: Math.floor(value) === playerRef.current?.duration(),
+            });
+            playerRef.current?.tech().setCurrentTime(value);
+          }
+        },
+      );
+      remotePlayerController.addEventListener(
+        window.cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED,
+        ({ value }) => {
+          if (typeof value === "number") {
+            updatePlaybackStatus({
+              volume: value,
+            });
+          }
+        },
+      );
+      remotePlayerController.addEventListener(
+        window.cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED,
+        ({ value }) => {
           updatePlaybackStatus({
-            position: Math.floor(value),
-            didJustFinish: Math.floor(value) === playerRef.current?.duration(),
+            isPlaying: !value,
           });
-          playerRef.current?.tech().setCurrentTime(value);
-        }
-      },
-    );
-    remotePlayerController.addEventListener(
-      window.cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED,
-      ({ value }) => {
-        if (typeof value === "number") {
-          updatePlaybackStatus({
-            volume: value,
-          });
-        }
-      },
-    );
-    remotePlayerController.addEventListener(
-      window.cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED,
-      ({ value }) => {
-        updatePlaybackStatus({
-          isPlaying: !value,
-        });
-        if (value) {
-          captureDiagnosticsEvent(CustomPostHogEvents.Pause, {
-            currentTime: getHumanReadableDuration((playerRef.current?.currentTime() || 0) * 1000),
-          });
-        } else {
-          captureDiagnosticsEvent(CustomPostHogEvents.Play, {
-            currentTime: getHumanReadableDuration((playerRef.current?.currentTime() || 0) * 1000),
-          });
-        }
-      },
-    );
-  }, []);
+          if (value) {
+            captureDiagnosticsEvent(CustomPostHogEvents.Pause, {
+              currentTime: getHumanReadableDuration((playerRef.current?.currentTime() || 0) * 1000),
+            });
+          } else {
+            captureDiagnosticsEvent(CustomPostHogEvents.Play, {
+              currentTime: getHumanReadableDuration((playerRef.current?.currentTime() || 0) * 1000),
+            });
+          }
+        },
+      );
+
+      console.log('[useChromeCast] RemotePlayer listeners setup successfully');
+    } catch (error) {
+      console.error('[useChromeCast] Error setting up RemotePlayer:', error);
+      captureError(error as Error, CustomPostHogExceptions.ChromecastError);
+    }
+  };
 
   useEffect(() => {
     const checkCastAvailability = () => {
@@ -192,33 +204,44 @@ export const useChromeCast = ({
   }, []);
 
   const initializeCastApi = () => {
-    const castContext = window.cast.framework.CastContext.getInstance();
+    try {
+      const castContext = window.cast.framework.CastContext.getInstance();
 
-    setIsChromeCastAvailable(true);
+      setIsChromeCastAvailable(true);
 
-    castContext.setOptions({
-      receiverApplicationId: window.chrome.cast?.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-      autoJoinPolicy: window.chrome.cast?.AutoJoinPolicy.ORIGIN_SCOPED,
-    });
+      castContext.setOptions({
+        receiverApplicationId: window.chrome.cast?.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+        autoJoinPolicy: window.chrome.cast?.AutoJoinPolicy.ORIGIN_SCOPED,
+      });
 
-    castContext.addEventListener(window.cast.framework.CastContextEventType.SESSION_STATE_CHANGED, (event) => {
-      if (event.sessionState === window.cast.framework.SessionState.SESSION_STARTED) {
-        handleLoadGoogleCastMedia();
-        isChromecastConnectedRef.current = true;
-        setIsChromecastConnected(true);
-      } else if (event.sessionState === window.cast.framework.SessionState.SESSION_ENDED) {
-        isChromecastConnectedRef.current = false;
-        setIsChromecastConnected(false);
-        if (isPlayingRef.current) {
-          playerRef.current?.play();
+      castContext.addEventListener(window.cast.framework.CastContextEventType.SESSION_STATE_CHANGED, (event) => {
+        if (event.sessionState === window.cast.framework.SessionState.SESSION_STARTED) {
+          handleLoadGoogleCastMedia();
+          isChromecastConnectedRef.current = true;
+          setIsChromecastConnected(true);
+        } else if (event.sessionState === window.cast.framework.SessionState.SESSION_ENDED) {
+          isChromecastConnectedRef.current = false;
+          setIsChromecastConnected(false);
+          if (isPlayingRef.current) {
+            playerRef.current?.play();
+          }
+          captureDiagnosticsEvent(CustomPostHogEvents.ChromecastStopped);
+          updatePlaybackStatus({ volume: playerRef.current?.volume() || 1 });
         }
-        captureDiagnosticsEvent(CustomPostHogEvents.ChromecastStopped);
-        updatePlaybackStatus({ volume: playerRef.current?.volume() || 1 });
-      }
-      if (event.errorCode) {
-        captureError(new Error(`Chromecast error: ${event.errorCode}`), CustomPostHogExceptions.ChromecastError);
-      }
-    });
+        if (event.errorCode) {
+          captureError(new Error(`Chromecast error: ${event.errorCode}`), CustomPostHogExceptions.ChromecastError);
+        }
+      });
+
+      // Mark as initialized and setup RemotePlayer listeners
+      setIsCastInitialized(true);
+      setupRemotePlayerListeners();
+
+      console.log('[useChromeCast] Cast API initialized successfully');
+    } catch (error) {
+      console.error('[useChromeCast] Error initializing Cast API:', error);
+      captureError(error as Error, CustomPostHogExceptions.ChromecastError);
+    }
   };
 
   const handleCreateSession = () => {

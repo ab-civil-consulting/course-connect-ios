@@ -17,7 +17,7 @@ import { useTheme } from "@react-navigation/native";
 import { useChromeCast, useViewHistory, useWatchedDuration } from "../../hooks";
 import { useTranslation } from "react-i18next";
 import { useAppConfigContext } from "../../contexts";
-import { Typography } from "..";
+import { Typography } from "../Typography";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCustomDiagnosticsEvents } from "../../diagnostics/useCustomDiagnosticEvents";
 import { CustomPostHogEvents, CustomPostHogExceptions } from "../../diagnostics/constants";
@@ -210,6 +210,14 @@ const VideoView = ({
     capturePlaybackEvent("seek");
   };
 
+  // Extract token from URI for HLS requests
+  const extractToken = (url: string) => {
+    const match = url.match(/[?&]videoFileToken=([^&]+)/);
+    return match ? match[1] : null;
+  };
+
+  const token = extractToken(uri || "");
+
   const options = {
     autoplay: true,
     controls: true,
@@ -241,6 +249,19 @@ const VideoView = ({
   const onReady = (player: Player) => {
     playerRef.current = player;
     const video = document.getElementsByTagName("video")[0];
+
+    // Configure VHS to add token to all HLS requests
+    const vhs = player.tech()?.vhs;
+    if (vhs && token) {
+      console.log('[VideoView] Configuring VHS with token:', token.substring(0, 20) + '...');
+      vhs.xhr.beforeRequest = (options: any) => {
+        console.log('[VideoView] VHS beforeRequest:', options.uri);
+        const separator = options.uri.includes("?") ? "&" : "?";
+        options.uri = `${options.uri}${separator}videoFileToken=${token}`;
+        console.log('[VideoView] Modified URI:', options.uri);
+        return options;
+      };
+    }
 
     if (window.WebKitPlaybackTargetAvailabilityEvent && video) {
       video.addEventListener("webkitplaybacktargetavailabilitychanged", handleAirPlayAvailabilityChange);
@@ -630,7 +651,9 @@ const VideoView = ({
     }, [isCCAvailable, availableCCLangs]),
   );
 
-  const allowQualityControls = !videojs.browser.IS_ANY_SAFARI || !videoData?.streamingPlaylists?.length;
+  // Quality controls now work on all platforms with direct files (web videos)
+  // Previously disabled on Safari when HLS was available due to browser limitations
+  const allowQualityControls = true;
 
   return (
     <View style={styles.container}>

@@ -50,9 +50,16 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.radiusMd,
     elevation: 10,
     padding: spacing.xl,
-    shadowColor: colors.black20percent,
-    shadowOffset: { width: 0, height: spacing.sm },
-    shadowRadius: spacing.xl,
+    ...(Platform.OS === "web"
+      ? {
+          boxShadow: `0px ${spacing.sm}px ${spacing.xl}px ${colors.black20percent}`,
+        }
+      : {
+          shadowColor: colors.black20percent,
+          shadowOffset: { width: 0, height: spacing.sm },
+          shadowOpacity: 1,
+          shadowRadius: spacing.xl,
+        }),
   },
   header: {
     alignItems: "flex-start",

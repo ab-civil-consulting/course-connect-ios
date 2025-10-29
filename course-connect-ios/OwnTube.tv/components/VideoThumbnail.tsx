@@ -33,39 +33,23 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
 
   const percentageWatched = timestamp ? (timestamp / video.duration) * 100 : 0;
 
-  // Enhanced logging for backend parameter flow
-  console.log('[VideoThumbnail] Backend resolution:', {
-    backendProp,
-    primaryBackend,
-    resolvedBackend: backend,
-    videoUuid: video.uuid,
-    videoName: video.name
-  });
-
   // Fetch token for private thumbnails
   useEffect(() => {
     const thumbnailPath = video.previewPath || video.thumbnailPath;
     if (!backend || !video.uuid || !thumbnailPath) {
-      console.log('[VideoThumbnail] Missing required data:', { backend, uuid: video.uuid, thumbnailPath });
       return;
     }
 
     // Check if thumbnail is private
     if (thumbnailPath.includes("/lazy-static/") && backend) {
-      console.log('[VideoThumbnail] Fetching token for private thumbnail:', { uuid: video.uuid, thumbnailPath });
       // Private thumbnails might need authentication, try to fetch token
       ApiServiceImpl.requestVideoToken(backend, video.uuid)
         .then((tokenData) => {
-          console.log('[VideoThumbnail] Token response:', tokenData);
           if (tokenData?.files?.token) {
             setImageToken(tokenData.files.token);
-            console.log('[VideoThumbnail] Token set successfully');
-          } else {
-            console.log('[VideoThumbnail] No token in response');
           }
         })
-        .catch((error) => {
-          console.log('[VideoThumbnail] Token fetch failed:', error);
+        .catch(() => {
           // If token fetch fails, image will try to load without token
         });
     }
@@ -79,11 +63,15 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
   let urlValidationError: string | null = null;
 
   if (thumbnailPath && backend) {
-    // Ensure backend doesn't already include protocol
-    const cleanBackend = backend.replace(/^https?:\/\//, '');
-
-    // Construct the full URL
-    imageUrl = `https://${cleanBackend}${thumbnailPath}`;
+    // Check if thumbnailPath is already a full URL
+    if (thumbnailPath.startsWith('http://') || thumbnailPath.startsWith('https://')) {
+      // Already a full URL, use it directly
+      imageUrl = thumbnailPath;
+    } else {
+      // Relative path, construct full URL with backend
+      const cleanBackend = backend.replace(/^https?:\/\//, '');
+      imageUrl = `https://${cleanBackend}${thumbnailPath}`;
+    }
 
     // Validate URL format
     try {
@@ -91,6 +79,7 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
     } catch (e) {
       urlValidationError = `Invalid URL: ${imageUrl}`;
       imageUrl = null;
+      console.error('[VideoThumbnail] URL validation failed:', { imageUrl, error: e });
     }
   }
 
@@ -98,28 +87,6 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
     imageUrl && imageToken ? `${imageUrl}${imageUrl.includes("?") ? "&" : "?"}videoFileToken=${imageToken}` : imageUrl;
 
   const imageSource = imageUrlWithToken ? { uri: imageUrlWithToken } : fallback;
-
-  // Enhanced render state logging with iOS-specific details
-  console.log('[VideoThumbnail] Render state:', {
-    uuid: video.uuid,
-    videoName: video.name,
-    platform: Platform.OS,
-    backend,
-    backendProp,
-    primaryBackend,
-    thumbnailPath,
-    previewPath: video.previewPath,
-    thumbnailPathFallback: video.thumbnailPath,
-    imageDimensions,
-    dimensionsValid: !!(imageDimensions.width && imageDimensions.height),
-    imageUrl,
-    imageUrlWithToken,
-    hasToken: !!imageToken,
-    urlValidationError,
-    isError,
-    retryCount,
-    imageSource: imageSource === fallback ? 'fallback' : imageSource.uri
-  });
 
   // Only show warning if backend is truly missing or dimensions are invalid after initial layout
   if (!backend) {
@@ -170,7 +137,6 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
           // Retry logic: retry up to 2 times with exponential backoff
           if (retryCount < 2 && imageSource !== fallback) {
             const retryDelay = Math.pow(2, retryCount) * 1000; // 1s, 2s
-            console.log(`[VideoThumbnail] Retrying image load in ${retryDelay}ms (attempt ${retryCount + 1}/2)`);
 
             setTimeout(() => {
               setRetryCount(retryCount + 1);
@@ -180,13 +146,6 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
             console.error('[VideoThumbnail] Max retries reached or no valid image source, showing fallback');
             setIsError(true);
           }
-        }}
-        onLoad={() => {
-          console.log('[VideoThumbnail] Image loaded successfully:', {
-            uuid: video.uuid,
-            videoName: video.name,
-            imageUrl: imageSource === fallback ? 'fallback' : imageSource.uri
-          });
         }}
       />
       {!!percentageWatched && percentageWatched > 0 && !video.isLive && (

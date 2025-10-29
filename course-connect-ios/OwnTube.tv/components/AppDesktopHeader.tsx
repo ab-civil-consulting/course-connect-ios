@@ -12,8 +12,7 @@ export const AppDesktopHeader = () => {
   return (
     <TVFocusGuideHelper
       autoFocus
-      style={Platform.isTV ? styles.tvContainer : styles.container}
-      pointerEvents="box-none"
+      style={[Platform.isTV ? styles.tvContainer : styles.container, { pointerEvents: "box-none" }]}
     >
       <Button
         onPress={() => handleToggleShareModal({})}

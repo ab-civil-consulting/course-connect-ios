@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
-import { Appearance, ColorSchemeName, Platform } from "react-native";
+import { ColorSchemeName, Platform } from "react-native";
 import { readFromAsyncStorage, writeToAsyncStorage } from "../utils";
 import { colorSchemes } from "../theme";
 import { useAppConfigContext } from "./AppConfigContext";
@@ -14,11 +14,9 @@ export const ColorSchemeContextProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (!selectedColorScheme) {
-      const deviceScheme = Appearance.getColorScheme();
-
       readFromAsyncStorage("colorScheme").then((scheme: ColorSchemeName) => {
         setSelectedColorScheme(
-          scheme || currentInstanceConfig?.customizations?.pageDefaultTheme || deviceScheme || "dark",
+          scheme || currentInstanceConfig?.customizations?.pageDefaultTheme || "dark",
         );
       });
 

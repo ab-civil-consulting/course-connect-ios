@@ -41,8 +41,7 @@ export const ViewHistory = () => {
       <Animated.View
         entering={SlideInUp}
         exiting={SlideOutUp}
-        style={styles.clearModalWrapper}
-        pointerEvents="box-none"
+        style={[styles.clearModalWrapper, { pointerEvents: "box-none" }]}
       >
         <ModalContainer
           onClose={() => toggleModal(false)}
@@ -94,33 +93,42 @@ export const ViewHistory = () => {
 
   return (
     <Screen
-      style={{
-        paddingHorizontal: isMobile ? spacing.sm : spacing.xl,
-        ...styles.screenContainer,
-      }}
+      scrollable={false}
+      style={styles.screenContainer}
     >
-      <View style={styles.headerContainer}>
-        <Typography
-          fontSize={isMobile ? "sizeXL" : "sizeXXL"}
-          fontWeight="ExtraBold"
-          color={colors.theme900}
-          style={styles.header}
-        >
-          {t("yourWatchHistory")}
-        </Typography>
-        <Button
-          icon="Trash"
-          onPress={handleClearConfirmation}
-          text={t("clearSiteHistory", {
-            appName: currentInstanceConfig?.customizations?.pageTitle ?? backend,
-          })}
-        />
-      </View>
-      <Spacer height={spacing.xl} />
       <SectionList
         style={styles.sectionListContainer}
+        contentContainerStyle={{
+          paddingHorizontal: isMobile ? spacing.sm : spacing.xl,
+          paddingVertical: spacing.xl,
+          maxWidth: 900,
+          width: "100%",
+          alignSelf: "center",
+        }}
         renderItem={renderItem}
         sections={sections}
+        ListHeaderComponent={
+          <>
+            <View style={styles.headerContainer}>
+              <Typography
+                fontSize={isMobile ? "sizeXL" : "sizeXXL"}
+                fontWeight="ExtraBold"
+                color={colors.theme900}
+                style={styles.header}
+              >
+                {t("yourWatchHistory")}
+              </Typography>
+              <Button
+                icon="Trash"
+                onPress={handleClearConfirmation}
+                text={t("clearSiteHistory", {
+                  appName: currentInstanceConfig?.customizations?.pageTitle ?? backend,
+                })}
+              />
+            </View>
+            <Spacer height={spacing.xl} />
+          </>
+        }
         renderSectionHeader={({ section: { titleKey } }) => (
           <Typography style={styles.sectionHeader} color={colors.theme900} fontWeight="Bold" fontSize="sizeLg">
             {t(titleKey)}
@@ -128,8 +136,8 @@ export const ViewHistory = () => {
         )}
         ItemSeparatorComponent={() => <Spacer height={spacing.xl} />}
         renderSectionFooter={() => <Spacer height={spacing.xxl} />}
+        ListFooterComponent={<InfoFooter />}
       />
-      <InfoFooter />
     </Screen>
   );
 };
@@ -145,7 +153,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   modalContentContainer: { flexDirection: "row", gap: spacing.lg, justifyContent: "flex-end" },
-  screenContainer: { maxWidth: 900, paddingVertical: spacing.xl },
+  screenContainer: { flex: 1 },
   sectionHeader: { paddingBottom: spacing.xl },
-  sectionListContainer: { overflow: "visible", width: "100%" },
+  sectionListContainer: { flex: 1 },
 });

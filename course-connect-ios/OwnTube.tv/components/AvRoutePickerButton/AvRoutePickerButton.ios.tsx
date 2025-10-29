@@ -5,7 +5,7 @@ import { AvRoutePickerButtonProps } from "./AvRoutePickerButton.web";
 
 const AvRoutePickerButton = (_props: AvRoutePickerButtonProps) => {
   return (
-    <View style={styles.container} pointerEvents="box-none">
+    <View style={[styles.container, { pointerEvents: "box-none" }]}>
       <AirPlayButton style={styles.airPlayTransparentButton} tintColor="transparent" activeTintColor="transparent" />
       <PlayerButton icon={"AirPlay"} onPress={null} />
     </View>
