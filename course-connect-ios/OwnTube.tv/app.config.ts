@@ -13,8 +13,8 @@ const icon =
   process.env.EXPO_PUBLIC_ICON || (process.env.EXPO_TV ? "./assets/appleTV/icon_1280x768.png" : "./assets/icon.png");
 
 export default {
-  slug: process.env.EXPO_PUBLIC_APP_SLUG || "course-connect_v2",
-  name: process.env.EXPO_PUBLIC_APP_NAME || "Course Connect V2",
+  slug: process.env.EXPO_PUBLIC_APP_SLUG || "course-connect",
+  name: process.env.EXPO_PUBLIC_APP_NAME || "Course Connect",
   icon,
   owner: "adam_bower",
   scheme: "courseconnect",
