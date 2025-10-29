@@ -216,7 +216,7 @@ export default function RootLayout() {
         <PostHogProvider client={postHogInstance} autocapture={{ captureScreens: false }}>
           <QueryClientProvider client={queryClient}>
             <AppConfigContextProvider>
-              {isWeb && <ReactQueryDevtools initialIsOpen={false} />}
+              {__DEV__ && isWeb && <ReactQueryDevtools initialIsOpen={false} />}
               <ColorSchemeContextProvider>
                 <FullScreenModalContextProvider>
                   <RootStack />

@@ -90,25 +90,29 @@ export const Settings = ({ onClose }: SettingsProps) => {
             items={LANGUAGE_OPTIONS}
           />
           <Spacer height={spacing.sm} />
-          <Separator />
-          <Spacer height={spacing.sm} />
-          <Typography fontSize="sizeSm" fontWeight="SemiBold" color={colors.theme950}>
-            {t("settingsPageAppDiagnosticsHeading")}
-          </Typography>
-          <Spacer height={spacing.sm} />
-          <Checkbox
-            disabled={isOptedOut}
-            checked={isDebugMode && !isOptedOut}
-            onChange={handleToggleDebugMode}
-            label={t("settingsPageDebugLogging")}
-          />
-          <Spacer height={spacing.sm} />
-          <Checkbox
-            checked={isOptedOut}
-            onChange={handleToggleOptOutCheckbox}
-            label={t("settingsPageOptOutOfDiagnostics")}
-          />
-          <Spacer height={spacing.sm} />
+          {__DEV__ && (
+            <>
+              <Separator />
+              <Spacer height={spacing.sm} />
+              <Typography fontSize="sizeSm" fontWeight="SemiBold" color={colors.theme950}>
+                {t("settingsPageAppDiagnosticsHeading")}
+              </Typography>
+              <Spacer height={spacing.sm} />
+              <Checkbox
+                disabled={isOptedOut}
+                checked={isDebugMode && !isOptedOut}
+                onChange={handleToggleDebugMode}
+                label={t("settingsPageDebugLogging")}
+              />
+              <Spacer height={spacing.sm} />
+              <Checkbox
+                checked={isOptedOut}
+                onChange={handleToggleOptOutCheckbox}
+                label={t("settingsPageOptOutOfDiagnostics")}
+              />
+              <Spacer height={spacing.sm} />
+            </>
+          )}
           {!primaryBackend && (
             <>
               <Separator />
