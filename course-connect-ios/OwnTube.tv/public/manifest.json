@@ -1,7 +1,7 @@
 {
-  "short_name": "OwnTube.tv",
-  "name": "OwnTube.tv",
-  "description": "A web client for OwnTube.tv",
+  "short_name": "Course Connect",
+  "name": "Course Connect",
+  "description": "Course Connect - Professional development and training platform",
   "icons": [
     {
       "src": "favicon.ico",
@@ -22,21 +22,21 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#F95F1E",
+  "background_color": "#FFFFFF",
   "screenshots": [
     {
       "src": "screenshot_wide.jpeg",
       "sizes": "1280x576",
       "type": "image/jpeg",
       "form_factor": "wide",
-      "label": "OwnTube.tv"
+      "label": "Course Connect"
     },
     {
       "src": "screenshot_narrow.jpeg",
       "sizes": "576x1280",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "OwnTube.tv"
+      "label": "Course Connect"
     }
   ]
 }

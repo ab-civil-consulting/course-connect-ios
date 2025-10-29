@@ -1,0 +1,267 @@
+COURSE CONNECT LOGO RESIZE INSTRUCTIONS
+========================================
+
+Source Files (already in place):
+- OwnTube.tv/assets/course-connect-logo-blue.png (417x419)
+- OwnTube.tv/assets/course-connect-logo-charcoal.png (417x419)
+- OwnTube.tv/assets/course-connect-logo-white.png (417x419)
+
+INSTRUCTIONS:
+Use your blue logo as the source for all resizing unless otherwise specified.
+For best results, use a square crop of your logo with transparent background.
+
+========================================
+REQUIRED IMAGE FILES TO CREATE
+========================================
+
+-------------------------------------------
+1. MAIN APP ASSETS (4 files)
+-------------------------------------------
+
+File: OwnTube.tv/assets/icon.png
+Size: 1024x1024 pixels
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+Notes: Main app icon for iOS/Android - must be square
+
+File: OwnTube.tv/assets/splash.png
+Size: 1152x1152 pixels
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+Notes: Splash screen logo - can be same as icon, just larger
+
+File: OwnTube.tv/assets/favicon.png
+Size: 32x32 pixels
+Source: course-connect-logo-blue.png
+Format: PNG
+Notes: Web browser tab icon - very small, keep it simple
+
+File: OwnTube.tv/assets/custom-logo.png
+Size: Keep existing OR create wide format (e.g., 1827x311)
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+Notes: Footer logo - wide/horizontal format preferred
+Action: CHECK IF ALREADY CORRECT - might already have Course Connect logo!
+
+-------------------------------------------
+2. WEB PWA ICONS (2 files)
+-------------------------------------------
+
+File: OwnTube.tv/public/logo192.png
+Size: 192x192 pixels
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+Notes: PWA icon for Android home screen
+
+File: OwnTube.tv/public/logo512.png
+Size: 512x512 pixels
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+Notes: PWA icon for Android home screen (larger)
+
+-------------------------------------------
+3. APPLE TV ICONS (7 files)
+-------------------------------------------
+
+File: OwnTube.tv/assets/appleTV/icon_1280x768.png
+Size: 1280x768 pixels (16:9.6 ratio)
+Source: course-connect-logo-blue.png
+Format: PNG
+Notes: Main Apple TV icon
+
+File: OwnTube.tv/assets/appleTV/iconSmall_400x240.png
+Size: 400x240 pixels
+Source: course-connect-logo-blue.png
+Format: PNG
+
+File: OwnTube.tv/assets/appleTV/iconSmall2x_800x480.png
+Size: 800x480 pixels
+Source: course-connect-logo-blue.png
+Format: PNG
+Notes: 2x version of iconSmall
+
+File: OwnTube.tv/assets/appleTV/topShelf_1920x720.png
+Size: 1920x720 pixels (wide banner)
+Source: course-connect-logo-white.png OR course-connect-logo-blue.png
+Format: PNG
+Notes: Apple TV top shelf banner - use white logo on dark background OR blue on light
+
+File: OwnTube.tv/assets/appleTV/topShelf2x_3840x1440.png
+Size: 3840x1440 pixels
+Source: course-connect-logo-white.png OR course-connect-logo-blue.png
+Format: PNG
+Notes: 2x version of topShelf
+
+File: OwnTube.tv/assets/appleTV/topShelfWide_2320x720.png
+Size: 2320x720 pixels (very wide banner)
+Source: course-connect-logo-white.png OR course-connect-logo-blue.png
+Format: PNG
+Notes: Wide top shelf banner
+
+File: OwnTube.tv/assets/appleTV/topShelfWide2x_4640x1440.png
+Size: 4640x1440 pixels
+Source: course-connect-logo-white.png OR course-connect-logo-blue.png
+Format: PNG
+Notes: 2x version of topShelfWide
+
+-------------------------------------------
+4. ANDROID SPLASH SCREEN LOGOS (5 files)
+-------------------------------------------
+Location: OwnTube.tv/android/app/src/main/res/
+
+File: drawable-mdpi/splashscreen_logo.png
+Size: ~150x150 pixels (approximately)
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+
+File: drawable-hdpi/splashscreen_logo.png
+Size: ~225x225 pixels (approximately)
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+
+File: drawable-xhdpi/splashscreen_logo.png
+Size: ~300x300 pixels (approximately)
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+
+File: drawable-xxhdpi/splashscreen_logo.png
+Size: ~450x450 pixels (approximately)
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+
+File: drawable-xxxhdpi/splashscreen_logo.png
+Size: ~600x600 pixels (approximately)
+Source: course-connect-logo-blue.png
+Format: PNG with transparent background
+
+-------------------------------------------
+5. ANDROID LAUNCHER ICONS (5 files)
+-------------------------------------------
+Location: OwnTube.tv/android/app/src/main/res/
+
+File: mipmap-mdpi/ic_launcher.webp
+Size: 48x48 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP
+Notes: Convert PNG to WebP format
+
+File: mipmap-hdpi/ic_launcher.webp
+Size: 72x72 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP
+
+File: mipmap-xhdpi/ic_launcher.webp
+Size: 96x96 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP
+
+File: mipmap-xxhdpi/ic_launcher.webp
+Size: 144x144 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP
+
+File: mipmap-xxxhdpi/ic_launcher.webp
+Size: 192x192 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP
+
+-------------------------------------------
+6. ANDROID ADAPTIVE ICON FOREGROUNDS (5 files)
+-------------------------------------------
+Location: OwnTube.tv/android/app/src/main/res/
+
+File: mipmap-mdpi/ic_launcher_foreground.webp
+Size: 108x108 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP with transparent background
+Notes: Adaptive icon - logo should be centered with padding
+
+File: mipmap-hdpi/ic_launcher_foreground.webp
+Size: 162x162 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP with transparent background
+
+File: mipmap-xhdpi/ic_launcher_foreground.webp
+Size: 216x216 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP with transparent background
+
+File: mipmap-xxhdpi/ic_launcher_foreground.webp
+Size: 324x324 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP with transparent background
+
+File: mipmap-xxxhdpi/ic_launcher_foreground.webp
+Size: 432x432 pixels
+Source: course-connect-logo-blue.png
+Format: WEBP with transparent background
+
+========================================
+TOOLS FOR RESIZING
+========================================
+
+Option 1: Online Tools (Easiest)
+- https://www.iloveimg.com/resize-image (PNG)
+- https://ezgif.com/png-to-webp (PNG to WebP conversion)
+- https://icon.kitchen/ (Generate all app icons at once)
+
+Option 2: Photoshop/GIMP
+- Open source logo
+- Image → Image Size → Enter dimensions
+- Export as PNG or WebP
+
+Option 3: Command Line (Windows PowerShell/Linux)
+- Install ImageMagick: winget install ImageMagick
+- Resize command: magick input.png -resize 1024x1024 output.png
+- Convert to WebP: magick input.png output.webp
+
+========================================
+CHECKLIST
+========================================
+
+Main Assets (4):
+[ ] icon.png (1024x1024)
+[ ] splash.png (1152x1152)
+[ ] favicon.png (32x32)
+[ ] custom-logo.png (wide format)
+
+Web PWA (2):
+[ ] logo192.png
+[ ] logo512.png
+
+Apple TV (7):
+[ ] icon_1280x768.png
+[ ] iconSmall_400x240.png
+[ ] iconSmall2x_800x480.png
+[ ] topShelf_1920x720.png
+[ ] topShelf2x_3840x1440.png
+[ ] topShelfWide_2320x720.png
+[ ] topShelfWide2x_4640x1440.png
+
+Android Splash (5):
+[ ] drawable-mdpi/splashscreen_logo.png
+[ ] drawable-hdpi/splashscreen_logo.png
+[ ] drawable-xhdpi/splashscreen_logo.png
+[ ] drawable-xxhdpi/splashscreen_logo.png
+[ ] drawable-xxxhdpi/splashscreen_logo.png
+
+Android Launcher (5):
+[ ] mipmap-mdpi/ic_launcher.webp
+[ ] mipmap-hdpi/ic_launcher.webp
+[ ] mipmap-xhdpi/ic_launcher.webp
+[ ] mipmap-xxhdpi/ic_launcher.webp
+[ ] mipmap-xxxhdpi/ic_launcher.webp
+
+Android Foreground (5):
+[ ] mipmap-mdpi/ic_launcher_foreground.webp
+[ ] mipmap-hdpi/ic_launcher_foreground.webp
+[ ] mipmap-xhdpi/ic_launcher_foreground.webp
+[ ] mipmap-xxhdpi/ic_launcher_foreground.webp
+[ ] mipmap-xxxhdpi/ic_launcher_foreground.webp
+
+========================================
+TOTAL: 29 IMAGE FILES
+========================================
+
+When you're done, let Claude know and we'll update the code files
+and commit everything together!
