@@ -38,7 +38,7 @@ export default {
   splash: {
     image: process.env.EXPO_PUBLIC_SPLASH_IMAGE || "./assets/splash.png",
     resizeMode: "contain",
-    backgroundColor: process.env.EXPO_PUBLIC_SPLASH_BG_COLOR || "#F95F1E",
+    backgroundColor: process.env.EXPO_PUBLIC_SPLASH_BG_COLOR || "#FFFFFF",
   },
   ios: {
     infoPlist: {
@@ -104,6 +104,9 @@ export default {
         android: {
           kotlinVersion: "2.0.21",
           targetSdkVersion: 35,
+        },
+        ios: {
+          buildReactNativeFromSource: true,
         },
       },
     ],
