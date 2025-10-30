@@ -704,6 +704,24 @@
       "setIdx": 0,
       "setId": 0,
       "iconIdx": 41
+    },
+    {
+      "icon": {
+        "paths": [
+          "M316.16 657.92l195.84 195.84 195.84-195.84 60.16 60.587-256 256.001-256-256.001 60.16-60.587z",
+          "M469.333 128h85.333v640h-85.333v-640z"
+        ],
+        "attrs": [{}, {}],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": ["Arrow Down"],
+        "grid": 0
+      },
+      "attrs": [{}, {}],
+      "properties": { "order": 42, "id": 42, "name": "Arrow-Down", "prevSize": 32, "code": 59847 },
+      "setIdx": 0,
+      "setId": 0,
+      "iconIdx": 42
     }
   ],
   "height": 1024,

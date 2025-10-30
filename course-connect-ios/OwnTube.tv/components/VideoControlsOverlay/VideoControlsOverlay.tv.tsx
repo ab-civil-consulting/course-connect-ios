@@ -22,7 +22,6 @@ import { VideoControlsOverlayProps } from "./VideoControlsOverlay";
 import { useVideoControlsOverlay } from "./hooks/useVideoControlsOverlay";
 import { useFocusEffect } from "expo-router";
 import { PlaybackSettingsPopup } from "../PlaybackSettingsPopup";
-import { ChannelLink } from "../ChannelLink";
 
 const AndroidFocusHelperContainer = forwardRef<View, PropsWithChildren<{ isVisible: boolean; onPress?: () => void }>>(
   ({ isVisible, onPress, children }, ref) => {
@@ -222,14 +221,6 @@ const VideoControlsOverlay = ({
                   icon="Arrow-Left"
                 />
                 <View style={styles.videoInfoContainer}>
-                  <ChannelLink
-                    enableOnTV
-                    color={colors.white80}
-                    text={channel?.displayName || ""}
-                    href={{ pathname: ROUTES.CHANNEL, params: { backend: channel?.host, channel: channel?.name } }}
-                    sourceLink={channel?.url || ""}
-                    nextFocusRight={shareBtnRef}
-                  />
                   <Typography
                     numberOfLines={4}
                     ellipsizeMode="tail"
@@ -240,16 +231,6 @@ const VideoControlsOverlay = ({
                   >
                     {title}
                   </Typography>
-                  <View style={{ alignSelf: "flex-start" }}>
-                    <TextLink
-                      ref={(node) => setDetailsRef(node)}
-                      text={t("details")}
-                      onPress={handleOpenDetails}
-                      isMobile={false}
-                      nextFocusRight={shareBtnRef}
-                      nextFocusLeft={backRef}
-                    />
-                  </View>
                 </View>
               </View>
               <View style={styles.topRightControls}>

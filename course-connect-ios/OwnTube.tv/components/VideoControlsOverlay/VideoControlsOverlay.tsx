@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { ActivityIndicator, Platform, Pressable, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 import { Typography } from "../Typography";
 import { getHumanReadableDuration } from "../../utils";
 import { VolumeControl } from "./components/VolumeControl";
@@ -7,7 +7,6 @@ import * as Device from "expo-device";
 import { DeviceType } from "expo-device";
 import { colors, spacing } from "../../theme";
 import { ShareButton } from "./components/ShareButton";
-import { TextLink } from "./components/TextLink";
 import { ScrubBar } from "./components/ScrubBar";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideInUp, SlideOutDown, SlideOutUp, FadeIn, FadeOut } from "react-native-reanimated";
@@ -19,10 +18,8 @@ import AvRoutePickerButton from "../AvRoutePickerButton/AvRoutePickerButton";
 import { PlaybackSettingsPopup } from "../PlaybackSettingsPopup";
 import GoogleCastButton from "../GoogleCastButton";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ChannelLink } from "../ChannelLink";
 import { VideoChannelSummary } from "@peertube/peertube-types";
 import { useAppConfigContext, useFullScreenModalContext } from "../../contexts";
-import VideoContextMenu from "../VideoContextMenu";
 import DownloadVideo from "../DownloadVideo";
 import { format } from "date-fns";
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -134,8 +131,6 @@ const VideoControlsOverlay = ({
     colors,
     isSettingsMenuVisible,
     setIsSettingsMenuVisible,
-    isContextMenuVisible,
-    setIsContextMenuVisible,
   } = useVideoControlsOverlay({
     isPlaying,
     shouldReplay,
@@ -177,12 +172,6 @@ const VideoControlsOverlay = ({
               <View style={[styles.topLeftControls, { pointerEvents: "box-none" }]}>
                 <PlayerButton onPress={handlePressBack} icon="Arrow-Left" />
                 <View style={styles.videoInfoContainer}>
-                  <ChannelLink
-                    color={colors.white80}
-                    text={channel?.displayName || ""}
-                    href={{ pathname: ROUTES.CHANNEL, params: { backend: channel?.host, channel: channel?.name } }}
-                    sourceLink={channel?.url || ""}
-                  />
                   <Typography
                     numberOfLines={4}
                     ellipsizeMode="tail"
@@ -196,31 +185,12 @@ const VideoControlsOverlay = ({
                   <Typography fontSize="sizeXS" color={colors.white80} fontWeight="Medium">
                     {`${publishedAt ? format(new Date(publishedAt), "dd MMMM yyyy") : null} • ${t("views", { count: viewsCount })}`}
                   </Typography>
-                  <View accessible={false} style={{ alignSelf: "flex-start" }}>
-                    <TextLink text={t("details")} onPress={handleOpenDetails} isMobile={isMobile} />
-                  </View>
                 </View>
               </View>
               <View style={styles.topRightControls}>
                 <ShareButton onPress={handleShare} isMobile={isMobile} />
-                <PlayerButton onPress={() => setIsContextMenuVisible((prev) => !prev)} icon="Kebab-menu" />
-                {isContextMenuVisible && (
-                  <View style={styles.contextMenuContainer}>
-                    <VideoContextMenu
-                      handleOpenSettings={() => {
-                        handleOpenSettings();
-                        setIsContextMenuVisible(false);
-                      }}
-                      handleDownload={
-                        isDownloadAvailable && !isLiveVideo
-                          ? () => {
-                              handleDownload();
-                              setIsContextMenuVisible(false);
-                            }
-                          : undefined
-                      }
-                    />
-                  </View>
+                {isDownloadAvailable && !isLiveVideo && (
+                  <PlayerButton onPress={handleDownload} icon="Arrow-Down" />
                 )}
               </View>
             </LinearGradient>
@@ -273,9 +243,6 @@ const VideoControlsOverlay = ({
                       hlsAutoQuality={hlsAutoQuality}
                     />
                   </View>
-                )}
-                {!hideVideoSiteLink && !!videoLinkProps?.url && (
-                  <ViewOnSiteLink site={videoLinkProps?.backend} url={videoLinkProps?.url} />
                 )}
               </View>
               {isWaitingForLive ? null : (
@@ -394,12 +361,6 @@ const styles = StyleSheet.create({
     top: 0,
     width: "100%",
     zIndex: 2,
-  },
-  contextMenuContainer: {
-    position: "absolute",
-    right: 0,
-    top: Platform.OS === "web" ? "100%" : spacing.xxl,
-    zIndex: 1,
   },
   functionButtonsContainer: { alignItems: "center", flexDirection: "row" },
   overlay: {
