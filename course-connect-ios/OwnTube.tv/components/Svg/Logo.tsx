@@ -1,7 +1,7 @@
 import { Image, ImageProps } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
-// Course Connect logo component
+// MC Assist logo component
 // Uses charcoal logo for light themes, white logo for dark themes
 export const Logo = ({ width = "125.5", height = "56", ...props }: Partial<ImageProps> & { width?: string; height?: string }) => {
   const { dark } = useTheme();

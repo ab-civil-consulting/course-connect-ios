@@ -14,10 +14,10 @@ const icon =
 
 export default {
   slug: process.env.EXPO_PUBLIC_APP_SLUG || "course-connect",
-  name: process.env.EXPO_PUBLIC_APP_NAME || "Course Connect",
+  name: process.env.EXPO_PUBLIC_APP_NAME || "MC Assist",
   icon,
   owner: "adam_bower",
-  scheme: "courseconnect",
+  scheme: "mcassist",
   version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.0",
   assetBundlePatterns: ["**/*"],
   userInterfaceStyle: process.env.EXPO_PUBLIC_USER_INTERFACE_STYLE || "light",
