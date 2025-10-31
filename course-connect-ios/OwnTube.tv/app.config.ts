@@ -102,8 +102,8 @@ export default {
       "expo-build-properties",
       {
         android: {
-          kotlinVersion: "2.0.21",
-          kspVersion: "2.0.21-1.0.27",
+          kotlinVersion: "2.1.20",
+          kspVersion: "2.1.20-2.0.1",
           targetSdkVersion: 35,
         },
         ios: {
