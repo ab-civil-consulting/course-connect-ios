@@ -103,6 +103,7 @@ export default {
       {
         android: {
           kotlinVersion: "2.0.21",
+          kspVersion: "2.0.21-1.0.27",
           targetSdkVersion: 35,
         },
         ios: {
