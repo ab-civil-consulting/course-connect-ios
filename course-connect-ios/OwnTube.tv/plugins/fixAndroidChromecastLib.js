@@ -32,6 +32,26 @@ function withCustomGradleProperties(config) {
       config.modResults.push({ type: "property", key: "org.gradle.jvmargs", value: "-Xmx4g" });
     }
 
+    // Add Kotlin daemon arguments for better stability
+    const kotlinDaemonArgs = config.modResults.find((prop) => prop.key === "kotlin.daemon.jvmargs");
+    if (!kotlinDaemonArgs) {
+      config.modResults.push({
+        type: "property",
+        key: "kotlin.daemon.jvmargs",
+        value: "-Xmx2g -XX:MaxMetaspaceSize=512m"
+      });
+    }
+
+    // Enable Kotlin incremental compilation
+    const kotlinIncremental = config.modResults.find((prop) => prop.key === "kotlin.incremental");
+    if (!kotlinIncremental) {
+      config.modResults.push({
+        type: "property",
+        key: "kotlin.incremental",
+        value: "true"
+      });
+    }
+
     return config;
   });
 }

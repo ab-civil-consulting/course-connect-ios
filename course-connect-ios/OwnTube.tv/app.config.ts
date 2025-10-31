@@ -111,6 +111,7 @@ export default {
       },
     ],
     "expo-asset",
+    "./plugins/withKotlinJvmTarget.js",
     "react-native-google-cast",
     [
       "./plugins/withReleaseSigningConfig.js",
