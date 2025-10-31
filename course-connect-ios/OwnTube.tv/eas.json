@@ -7,12 +7,14 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "prebuildCommand": "npx expo prebuild --clean",
       "env": {
         "npm_config_legacy_peer_deps": "true"
       }
     },
     "preview": {
       "distribution": "internal",
+      "prebuildCommand": "npx expo prebuild --clean",
       "env": {
         "npm_config_legacy_peer_deps": "true"
       }
@@ -20,6 +22,7 @@
     "production": {
       "autoIncrement": true,
       "developmentClient": false,
+      "prebuildCommand": "npx expo prebuild --clean",
       "env": {
         "npm_config_legacy_peer_deps": "true",
         "EXPO_PUBLIC_PRIMARY_BACKEND": "course-connect.ab-civil.com",
