@@ -1,0 +1,155 @@
+name: Deploy Web App
+
+on:
+  workflow_call:
+    inputs:
+      customizations_env_content:
+        required: false
+        type: string
+      build_info:
+        required: true
+        type: string
+      owntube_source:
+        required: false
+        type: string
+        description: "The repository with OwnTube-tv/web-client code. Defaults to the source repository."
+      use_parent_repo_customizations:
+        required: false
+        type: boolean
+        description: "Should a parent repo be used for customizations? (Required for branded builds)"
+
+jobs:
+  deploy_web:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.owntube_source || github.repository }}
+
+      - name: Checkout parent repo with customizations
+        uses: actions/checkout@v4
+        if: ${{ inputs.use_parent_repo_customizations }}
+        with:
+          path: customizations
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Install Dependencies
+        run: cd OwnTube.tv/ && npm install
+
+      - name: Create .env File
+        if: ${{ inputs.customizations_env_content != '' }}
+        run: |
+          echo "${{ inputs.customizations_env_content }}" > ./OwnTube.tv/.env
+
+      - name: Overwrite Manifest file for PWA customization
+        if: ${{ inputs.customizations_env_content != '' }}
+        run: |
+          # Source the environment variables
+          source ./OwnTube.tv/.env
+
+          # Write the manifest file
+          cat > ./OwnTube.tv/public/manifest.json << EOF
+          {
+            "short_name": "${EXPO_PUBLIC_APP_NAME:-OwnTube.tv}",
+            "name": "${EXPO_PUBLIC_APP_NAME:-OwnTube.tv}",
+            "description": "${EXPO_PUBLIC_APP_DESCRIPTION:-A web client for OwnTube.tv}",
+            "icons": [
+              {
+                "src": "favicon.ico",
+                "sizes": "32x32",
+                "type": "image/x-icon"
+              },
+              {
+                "src": "${EXPO_PUBLIC_ICON_192:-logo192.png}",
+                "type": "image/png",
+                "sizes": "192x192"
+              },
+              {
+                "src": "${EXPO_PUBLIC_ICON_512:-logo512.png}",
+                "type": "image/png",
+                "sizes": "512x512"
+              }
+            ],
+            "start_url": ".",
+            "display": "standalone",
+            "theme_color": "${EXPO_PUBLIC_APP_THEME_COLOR:-#000000}",
+            "background_color": "${EXPO_PUBLIC_APP_BG_COLOR:-#F95F1E}",
+            "screenshots": [
+              {
+                "src": "screenshot_wide.jpeg",
+                "sizes": "1280x576",
+                "type": "image/jpeg",
+                "form_factor": "wide",
+                "label": "${EXPO_PUBLIC_APP_NAME:-OwnTube.tv}"
+              },
+              {
+                "src": "screenshot_narrow.jpeg",
+                "sizes": "576x1280",
+                "type": "image/jpeg",
+                "form_factor": "narrow",
+                "label": "${EXPO_PUBLIC_APP_NAME:-OwnTube.tv}"
+              }
+            ]
+          }
+          EOF
+
+      - name: Create association files for deeplinking
+        run: |
+          mkdir -p ./OwnTube.tv/public/.well-known
+
+          cat > ./OwnTube.tv/public/.well-known/apple-app-site-association << 'EOF'
+          {
+            "applinks": {
+              "details": [
+                {
+                  "appID": "${{ vars.APPLE_DEVELOPMENT_TEAM }}.${{ vars.APPLE_BUNDLE_ID }}",
+                  "paths": ["*"]
+                }
+              ]
+            }
+          }
+          EOF
+
+          cat > ./OwnTube.tv/public/.well-known/assetlinks.json << 'EOF'
+          [
+            {
+              "relation": ["delegate_permission/common.handle_all_urls"],
+              "target": {
+                "namespace": "android_app",
+                "package_name": "${{ vars.ANDROID_PACKAGE }}",
+                "sha256_cert_fingerprints": [
+                  "${{ vars.ANDROID_FINGERPRINT }}"
+                ]
+              }
+            }
+          ]
+          EOF
+
+      - name: Inject Build Info
+        run: |
+          cat > ./OwnTube.tv/build-info.json << 'EOF'
+          ${{ inputs.build_info }}
+          EOF
+
+      - name: Build Web App by @${{ github.actor }}
+        run: cd OwnTube.tv/ && cat build-info.json && npx expo export --platform web
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./OwnTube.tv/dist/"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

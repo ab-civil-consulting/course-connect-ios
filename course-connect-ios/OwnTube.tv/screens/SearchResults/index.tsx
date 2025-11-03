@@ -19,6 +19,7 @@ import { SearchSortControls } from "../../components/SearchSortControls";
 import { useBreakpoints } from "../../hooks";
 import TVFocusGuideHelper from "../../components/helpers/TVFocusGuideHelper";
 import { TouchableOpacityProps } from "react-native-gesture-handler";
+import { useAuthSessionStore } from "../../store";
 
 const InputFocusHelper: React.FC<PropsWithChildren<TouchableOpacityProps>> = ({ children, ...restProps }) => {
   if (Platform.isTV && Platform.OS === "android") {
@@ -33,6 +34,7 @@ const InputFocusHelper: React.FC<PropsWithChildren<TouchableOpacityProps>> = ({ 
 
 export const SearchResultsScreen = () => {
   const router = useRouter();
+  const { session } = useAuthSessionStore();
   const { currentInstanceConfig } = useAppConfigContext();
   const { t } = useTranslation();
   const breakpoints = useBreakpoints();
@@ -83,6 +85,28 @@ export const SearchResultsScreen = () => {
   );
 
   const renderContent = () => {
+    // Check if user is authenticated
+    if (!session) {
+      const handleSignIn = () => {
+        router.navigate({
+          pathname: ROUTES.SIGNIN,
+          params: { backend, returnTo: ROUTES.SEARCH, searchQuery },
+        });
+      };
+
+      return (
+        <View style={styles.errorContainer}>
+          <EmptyPage text={t("signInRequired")} />
+          <Button
+            onPress={handleSignIn}
+            contrast="high"
+            text={t("signInToViewVideos")}
+            style={styles.signInButton}
+          />
+        </View>
+      );
+    }
+
     if (isError) {
       return (
         <ErrorPage
@@ -185,6 +209,8 @@ export const SearchResultsScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
   input: { width: "100%" },
   showMoreContainer: { alignSelf: "flex-start", flexDirection: "row", gap: spacing.xl, marginVertical: spacing.xl },
+  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
 });

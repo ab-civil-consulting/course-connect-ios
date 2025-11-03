@@ -33,9 +33,11 @@ const signInFormValidationSchema = z.object({
   password: z.string().trim().min(1, "requiredField"),
 });
 
-export const SignIn = () => {
+export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
   const { t } = useTranslation();
-  const { backend, username = "" } = useLocalSearchParams<RootStackParams[ROUTES.SIGNIN]>();
+  const params = useLocalSearchParams<RootStackParams[ROUTES.SIGNIN]>();
+  const backend = backendProp || params.backend;
+  const username = params.username || "";
   const { colors } = useTheme();
   const { captureDiagnosticsEvent } = useCustomDiagnosticsEvents();
 
@@ -43,13 +45,13 @@ export const SignIn = () => {
   const { data: instanceServerConfig, isLoading: isLoadingInstanceServerConfig } = useGetInstanceServerConfigQuery({
     hostname: backend,
   });
-  const { data: loginPrerequisites, isLoading: isLoadingLoginPrerequisites } = useGetLoginPrerequisitesQuery();
+  const { data: loginPrerequisites, isLoading: isLoadingLoginPrerequisites } = useGetLoginPrerequisitesQuery(backend);
   const {
     mutateAsync: login,
     isError: isLoginError,
     isPending: isLoggingIn,
     reset: resetLoginMutation,
-  } = useLoginWithUsernameAndPasswordMutation();
+  } = useLoginWithUsernameAndPasswordMutation(backend);
   const { refetch: getUserInfo, isFetching: isGettingUserInfo, isError: isUserInfoError } = useGetMyUserInfoQuery();
   const { currentInstanceConfig } = useAppConfigContext();
   const { top } = useSafeAreaInsets();
@@ -80,13 +82,16 @@ export const SignIn = () => {
   );
 
   const handleSignIn = async (formValues: z.infer<typeof signInFormValidationSchema>) => {
+    console.log('[SignIn] handleSignIn called with backend:', backend);
     if (loginPrerequisites) {
       let loginResponse: UserLoginResponse;
 
       try {
         loginResponse = await login({ loginPrerequisites, ...formValues });
+        console.log('[SignIn] Login successful');
       } catch (e) {
         const { code } = e as { code: string };
+        console.error('[SignIn] Login failed:', e);
 
         if (code === ServerErrorCodes.MISSING_TWO_FACTOR) {
           router.navigate({ pathname: ROUTES.OTP, params: { backend } });
@@ -98,10 +103,13 @@ export const SignIn = () => {
       }
 
       const authSessionData = parseAuthSessionData(loginResponse, backend);
+      console.log('[SignIn] Auth session data parsed');
 
       if (loginResponse) {
         await addSession(backend, authSessionData);
+        console.log('[SignIn] Session added to store');
         await selectSession(backend);
+        console.log('[SignIn] Session selected');
 
         const { data: userInfoResponse } = await getUserInfo();
 
@@ -111,11 +119,15 @@ export const SignIn = () => {
             userInfoResponse,
             email: userInfoResponse.email,
           });
+          console.log('[SignIn] User info updated');
         }
 
         captureDiagnosticsEvent(CustomPostHogEvents.Login, { backend });
+        console.log('[SignIn] Navigating to home with backend:', backend);
         router.navigate({ pathname: ROUTES.HOME, params: { backend } });
       }
+    } else {
+      console.error('[SignIn] No loginPrerequisites available');
     }
   };
 

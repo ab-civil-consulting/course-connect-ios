@@ -2,7 +2,7 @@
   "name": "mc-assist",
   "version": "1.0.0",
   "main": "expo-router/entry",
-  "homepage": "https://owntube-tv.github.io/web-client/",
+  "homepage": "https://course-connect.ab-civil.com/",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "start": "expo start",

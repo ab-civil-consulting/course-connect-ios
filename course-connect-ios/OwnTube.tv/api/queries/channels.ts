@@ -4,7 +4,7 @@ import { combineCollectionQueryResults, retry } from "../helpers";
 import { VideosCommonQuery } from "@peertube/peertube-types";
 import { useLocalSearchParams } from "expo-router";
 import { RootStackParams } from "../../app/_layout";
-import { GetVideosVideo, OwnTubeError } from "../models";
+import { GetVideosVideo, ApiError } from "../models";
 
 import { QUERY_KEYS } from "../constants";
 
@@ -101,7 +101,7 @@ export const useGetChannelsCollectionQuery = (channelIds: string[] = []) => {
           const res = await ChannelsApiImpl.getChannelVideos(backend!, id, { count: 4 });
           return { ...res, id };
         } catch (error) {
-          if ((error as unknown as OwnTubeError).status === 429) {
+          if ((error as unknown as ApiError).status === 429) {
             throw error;
           }
           return { error, isError: true, id, data: [], total: 0 };

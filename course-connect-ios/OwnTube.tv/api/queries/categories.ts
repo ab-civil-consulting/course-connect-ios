@@ -5,7 +5,7 @@ import { QUERY_KEYS } from "../constants";
 import { CategoriesApiImpl } from "../categoriesApi";
 import { combineCollectionQueryResults, retry } from "../helpers";
 import { ApiServiceImpl } from "../peertubeVideosApi";
-import { OwnTubeError } from "../models";
+import { ApiError } from "../models";
 
 export const useGetCategoriesQuery = ({ enabled = true }: { enabled?: boolean }) => {
   const { backend } = useLocalSearchParams<RootStackParams["index"]>();
@@ -53,7 +53,7 @@ export const useGetCategoriesCollectionQuery = (categories: Array<{ name: string
             id
           };
         } catch (error) {
-          if ((error as unknown as OwnTubeError).status === 429) {
+          if ((error as unknown as ApiError).status === 429) {
             throw error;
           }
           return { error, isError: true, id, name, data: [], total: 0 };

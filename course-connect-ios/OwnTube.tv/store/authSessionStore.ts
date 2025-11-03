@@ -36,7 +36,9 @@ export const useAuthSessionStore = create<AuthSessionStore>((set, get) => ({
   session: undefined,
 
   addSession: async (backend, session) => {
-    await writeToAsyncStorage(`${backend}/auth`, session);
+    const sessionData = { ...session, backend } as AuthSession;
+    await writeToAsyncStorage(`${backend}/auth`, sessionData);
+    set({ session: sessionData });
   },
 
   updateSession: async (backend, updatedSession) => {

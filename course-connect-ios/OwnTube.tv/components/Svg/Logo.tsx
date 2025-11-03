@@ -8,8 +8,8 @@ export const Logo = ({ width = "125.5", height = "56", ...props }: Partial<Image
 
   // Use charcoal logo for light themes, white for dark themes
   const logoSource = dark
-    ? require("../../assets/course-connect-logo-white.png")
-    : require("../../assets/course-connect-logo-charcoal.png");
+    ? require("../../assets/mc-assist-logo-white.png")
+    : require("../../assets/mc-assist-logo-charcoal.png");
 
   return (
     <Image

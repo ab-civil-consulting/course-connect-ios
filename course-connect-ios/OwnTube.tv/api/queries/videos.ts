@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
 import { RootStackParams } from "../../app/_layout";
 import { Query, QueryKey, useInfiniteQuery, useMutation, useQueries, useQuery } from "@tanstack/react-query";
-import { GetVideosVideo, OwnTubeError } from "../models";
+import { GetVideosVideo, ApiError } from "../models";
 import { ApiServiceImpl } from "../peertubeVideosApi";
 import { VideosCommonQuery, Video, VideoCaption } from "@peertube/peertube-types";
 import { retry } from "../helpers";
@@ -142,7 +142,7 @@ export const useGetVideoQuery = <TResult = Video>({
       return await ApiServiceImpl.getVideo(backend!, id!);
     },
     enabled: !!backend && !!id && enabled,
-    refetchInterval: (query: Query<Video, OwnTubeError, Video, QueryKey>) => {
+    refetchInterval: (query: Query<Video, ApiError, Video, QueryKey>) => {
       return query.state.data?.isLive ? LIVE_REFETCH_INTERVAL : 0;
     },
     select,
@@ -200,7 +200,7 @@ export const useGetVideoCaptionsCollectionQuery = (videoIds: string[] = [], quer
         try {
           return await ApiServiceImpl.getVideoCaptions(backend!, videoId!);
         } catch (e) {
-          throw new OwnTubeError({ message: (e as unknown as { message: string }).message });
+          throw new ApiError({ message: (e as unknown as { message: string }).message });
         }
       },
       retry,
@@ -224,7 +224,7 @@ export const useGetVideoFullInfoCollectionQuery = (videoIds: string[] = [], quer
           // FIXED: Don't add https:// - VideoThumbnail handles URL construction
           return res;
         } catch (e) {
-          throw new OwnTubeError({ message: (e as unknown as { message: string }).message });
+          throw new ApiError({ message: (e as unknown as { message: string }).message });
         }
       },
       retry,

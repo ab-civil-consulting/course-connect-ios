@@ -47,7 +47,7 @@ export default {
     },
     buildNumber: getBuildNumber({ platform: "ios" }),
     supportsTablet: true,
-    bundleIdentifier: process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER || "com.abcivil.courseconnect.v2",
+    bundleIdentifier: process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER || "com.abcivil.mcassist.v2",
     associatedDomains: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL
       ? [`applinks:${process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL}`]
       : undefined,
@@ -60,7 +60,7 @@ export default {
   android: {
     blockedPermissions: ["RECORD_AUDIO"],
     versionCode: getBuildNumber({ platform: "android" }),
-    package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.courseconnect.v2",
+    package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.mcassist.v2",
     intentFilters: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL
       ? [
           {

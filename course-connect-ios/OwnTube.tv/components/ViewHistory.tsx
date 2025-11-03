@@ -1,4 +1,4 @@
-import { useBreakpoints, useViewHistory, ViewHistoryEntry } from "../hooks";
+import { useBreakpoints, usePageContentTopPadding, useViewHistory, ViewHistoryEntry } from "../hooks";
 import { SectionList, StyleSheet, View } from "react-native";
 import { Loader } from "./Loader";
 import { Spacer } from "./shared/Spacer";
@@ -13,16 +13,20 @@ import { useTheme } from "@react-navigation/native";
 import { groupHistoryEntriesByTime } from "../utils";
 import { ModalContainer } from "./ModalContainer";
 import Animated, { SlideInUp, SlideOutUp } from "react-native-reanimated";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { RootStackParams } from "../app/_layout";
 import { ROUTES } from "../types";
 import { useAppConfigContext, useFullScreenModalContext } from "../contexts";
 import { EmptyPage } from "./EmptyPage";
 import { InfoFooter } from "./InfoFooter";
+import { useAuthSessionStore } from "../store";
 
 export const ViewHistory = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { session } = useAuthSessionStore();
   const { backend } = useLocalSearchParams<RootStackParams[ROUTES.HISTORY]>();
+  const { top } = usePageContentTopPadding();
   const {
     viewHistory = [],
     clearInstanceHistory,
@@ -82,6 +86,28 @@ export const ViewHistory = () => {
     ),
     [deleteVideoFromHistory],
   );
+
+  // Check if user is authenticated
+  if (!session) {
+    const handleSignIn = () => {
+      router.navigate({
+        pathname: ROUTES.SIGNIN,
+        params: { backend, returnTo: ROUTES.HISTORY },
+      });
+    };
+
+    return (
+      <View style={[styles.errorContainer, { paddingTop: top }]}>
+        <EmptyPage text={t("signInRequired")} />
+        <Button
+          onPress={handleSignIn}
+          contrast="high"
+          text={t("signInToViewVideos")}
+          style={styles.signInButton}
+        />
+      </View>
+    );
+  }
 
   if (!viewHistory?.length && !isFetching) {
     return <EmptyPage text={t("viewHistoryEmpty")} />;
@@ -144,6 +170,7 @@ export const ViewHistory = () => {
 
 const styles = StyleSheet.create({
   clearModalWrapper: { alignItems: "center", flex: 1, justifyContent: "center" },
+  errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
   header: { marginBottom: 16 },
   headerContainer: {
     alignItems: "flex-start",
@@ -156,4 +183,5 @@ const styles = StyleSheet.create({
   screenContainer: { flex: 1 },
   sectionHeader: { paddingBottom: spacing.xl },
   sectionListContainer: { flex: 1 },
+  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
 });

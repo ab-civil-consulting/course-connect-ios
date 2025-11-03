@@ -4,7 +4,7 @@ import { Button, EmptyPage, ErrorPage, InfoFooter, Loader, VideoGrid } from "../
 import { getAvailableVidsString } from "../../utils";
 import { ROUTES } from "../../types";
 import { useTranslation } from "react-i18next";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { spacing } from "../../theme";
@@ -12,8 +12,11 @@ import { useCustomFocusManager, usePageContentTopPadding } from "../../hooks";
 import { ErrorForbiddenLogo } from "../../components/Svg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAppConfigContext } from "../../contexts";
+import { useAuthSessionStore } from "../../store";
 
 export const Playlists = () => {
+  const router = useRouter();
+  const { session } = useAuthSessionStore();
   const { currentInstanceConfig } = useAppConfigContext();
   const queryClient = useQueryClient();
   const [showHiddenPlaylists, setShowHiddenPlaylists] = useState(false);
@@ -47,6 +50,28 @@ export const Playlists = () => {
 
   if (isLoading) {
     return <Loader />;
+  }
+
+  // Check if user is authenticated
+  if (!session) {
+    const handleSignIn = () => {
+      router.navigate({
+        pathname: ROUTES.SIGNIN,
+        params: { backend, returnTo: ROUTES.PLAYLISTS },
+      });
+    };
+
+    return (
+      <View style={[styles.errorContainer, { paddingTop: top }]}>
+        <EmptyPage text={t("signInRequired")} />
+        <Button
+          onPress={handleSignIn}
+          contrast="high"
+          text={t("signInToViewVideos")}
+          style={styles.signInButton}
+        />
+      </View>
+    );
   }
 
   if (isError) {
@@ -97,5 +122,7 @@ export const Playlists = () => {
 };
 
 const styles = StyleSheet.create({
+  errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
   showAllButtonContainer: { alignItems: "flex-start", padding: spacing.xl, width: "100%" },
+  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
 });

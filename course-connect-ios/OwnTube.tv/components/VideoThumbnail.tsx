@@ -121,19 +121,6 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
           }
         ]}
         onError={(error) => {
-          console.error('[VideoThumbnail] Image load error:', {
-            uuid: video.uuid,
-            videoName: video.name,
-            backend,
-            thumbnailPath,
-            imageUrl,
-            imageUrlWithToken,
-            imageSource: imageSource === fallback ? 'fallback' : imageSource.uri,
-            retryCount,
-            error: error?.nativeEvent,
-            errorType: error?.nativeEvent?.error || 'Unknown error'
-          });
-
           // Retry logic: retry up to 2 times with exponential backoff
           if (retryCount < 2 && imageSource !== fallback) {
             const retryDelay = Math.pow(2, retryCount) * 1000; // 1s, 2s
@@ -143,7 +130,13 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
               setIsError(false); // Reset error state to trigger retry
             }, retryDelay);
           } else {
-            console.error('[VideoThumbnail] Max retries reached or no valid image source, showing fallback');
+            // Only log when we've exhausted all retries and showing fallback
+            console.error('[VideoThumbnail] Failed to load thumbnail after retries, showing fallback:', {
+              uuid: video.uuid,
+              videoName: video.name,
+              backend,
+              thumbnailPath,
+            });
             setIsError(true);
           }
         }}

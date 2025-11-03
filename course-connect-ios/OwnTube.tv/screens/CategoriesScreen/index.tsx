@@ -1,20 +1,24 @@
 import { getErrorTextKeys, QUERY_KEYS, useGetCategoriesCollectionQuery, useGetCategoriesQuery } from "../../api";
-import { EmptyPage, ErrorPage, InfoFooter, Loader, VideoGrid } from "../../components";
+import { Button, EmptyPage, ErrorPage, InfoFooter, Loader, VideoGrid } from "../../components";
 import { getAvailableVidsString } from "../../utils";
 import { ROUTES } from "../../types";
 import { useTranslation } from "react-i18next";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { ErrorForbiddenLogo } from "../../components/Svg";
 import { useCustomFocusManager, usePageContentTopPadding } from "../../hooks";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { useState } from "react";
+import { useAuthSessionStore } from "../../store";
+import { spacing } from "../../theme";
 
 export const CategoriesScreen = () => {
   const queryClient = useQueryClient();
   const { colors } = useTheme();
+  const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
+  const { session } = useAuthSessionStore();
   const {
     data: categories,
     isLoading: isLoadingCategories,
@@ -46,6 +50,28 @@ export const CategoriesScreen = () => {
 
   if (isLoading) {
     return <Loader />;
+  }
+
+  // Check if user is authenticated
+  if (!session) {
+    const handleSignIn = () => {
+      router.navigate({
+        pathname: ROUTES.SIGNIN,
+        params: { backend, returnTo: ROUTES.CATEGORIES },
+      });
+    };
+
+    return (
+      <View style={[styles.errorContainer, { paddingTop: top }]}>
+        <EmptyPage text={t("signInRequired")} />
+        <Button
+          onPress={handleSignIn}
+          contrast="high"
+          text={t("signInToViewVideos")}
+          style={styles.signInButton}
+        />
+      </View>
+    );
   }
 
   if (isError) {
@@ -105,4 +131,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
+  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
 });

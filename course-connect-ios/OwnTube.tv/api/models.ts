@@ -68,7 +68,7 @@ export type PeertubeInstance = {
   createdAt: number;
 };
 
-export class OwnTubeError {
+export class ApiError {
   constructor({ text, code, message, status }: { text?: string; code?: string; message: string; status?: number }) {
     this.text = text || "Unexpected";
     this.code = code;

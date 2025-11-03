@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { OwnTubeError } from "./models";
+import { ApiError } from "./models";
 import { postHogInstance } from "../diagnostics";
 import { CustomPostHogExceptions } from "../diagnostics/constants";
 
@@ -40,7 +40,7 @@ export function handleAxiosErrorWithRetry(error: unknown, target: string): Promi
     setTimeout(
       () => {
         reject(
-          new OwnTubeError({
+          new ApiError({
             text: `Failed to fetch ${target}. ${message}`,
             status: response?.status,
             code: (response?.data as { code: string })?.code,

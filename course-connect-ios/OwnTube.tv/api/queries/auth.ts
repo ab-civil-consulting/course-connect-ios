@@ -7,8 +7,9 @@ import { retry } from "../helpers";
 import { AuthApiImpl } from "../authApi";
 import { LoginRequestArgs, RegisterRequestArgs, AskResetPasswordRequestArgs } from "../models";
 
-export const useGetLoginPrerequisitesQuery = () => {
-  const { backend } = useLocalSearchParams<RootStackParams[ROUTES.SIGNIN]>();
+export const useGetLoginPrerequisitesQuery = (backendOverride?: string) => {
+  const params = useLocalSearchParams<RootStackParams[ROUTES.SIGNIN]>();
+  const backend = backendOverride || params.backend;
 
   return useQuery({
     queryKey: [QUERY_KEYS.loginPrerequisites, backend],
@@ -21,8 +22,9 @@ export const useGetLoginPrerequisitesQuery = () => {
   });
 };
 
-export const useLoginWithUsernameAndPasswordMutation = () => {
-  const { backend } = useLocalSearchParams<RootStackParams[ROUTES.SIGNIN]>();
+export const useLoginWithUsernameAndPasswordMutation = (backendOverride?: string) => {
+  const params = useLocalSearchParams<RootStackParams[ROUTES.SIGNIN]>();
+  const backend = backendOverride || params.backend;
 
   return useMutation({
     mutationKey: [MUTATION_KEYS.login],

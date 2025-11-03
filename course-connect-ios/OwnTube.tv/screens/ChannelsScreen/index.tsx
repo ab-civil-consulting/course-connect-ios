@@ -1,19 +1,22 @@
 import { getErrorTextKeys, QUERY_KEYS, useGetChannelsCollectionQuery, useGetChannelsQuery } from "../../api";
 import { Screen } from "../../layouts";
 import { spacing } from "../../theme";
-import { EmptyPage, ErrorPage, InfoFooter, Loader, VideoGrid } from "../../components";
-import { StyleSheet } from "react-native";
+import { Button, EmptyPage, ErrorPage, InfoFooter, Loader, VideoGrid } from "../../components";
+import { StyleSheet, View } from "react-native";
 import { useMemo } from "react";
 import { getAvailableVidsString } from "../../utils";
 import { ROUTES } from "../../types";
 import { useTranslation } from "react-i18next";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { ErrorForbiddenLogo } from "../../components/Svg";
 import { useCustomFocusManager, usePageContentTopPadding } from "../../hooks";
+import { useAuthSessionStore } from "../../store";
 
 export const ChannelsScreen = () => {
   const { backend } = useLocalSearchParams();
+  const router = useRouter();
+  const { session } = useAuthSessionStore();
   const queryClient = useQueryClient();
   const {
     data: channels,
@@ -39,6 +42,28 @@ export const ChannelsScreen = () => {
   const renderScreenContent = useMemo(() => {
     if (isLoading) {
       return <Loader />;
+    }
+
+    // Check if user is authenticated
+    if (!session) {
+      const handleSignIn = () => {
+        router.navigate({
+          pathname: ROUTES.SIGNIN,
+          params: { backend, returnTo: ROUTES.CHANNELS },
+        });
+      };
+
+      return (
+        <View style={[styles.errorContainer, { paddingTop: top }]}>
+          <EmptyPage text={t("signInRequired")} />
+          <Button
+            onPress={handleSignIn}
+            contrast="high"
+            text={t("signInToViewVideos")}
+            style={styles.signInButton}
+          />
+        </View>
+      );
     }
 
     if (isError) {
@@ -88,6 +113,7 @@ export const ChannelsScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
   screenContainer: {
     alignItems: "center",
     flex: 1,
@@ -95,4 +121,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 0,
   },
+  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
 });

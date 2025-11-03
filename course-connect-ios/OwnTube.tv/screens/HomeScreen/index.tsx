@@ -13,19 +13,19 @@ import { useMemo } from "react";
 // Category images mapping - maps category names to images
 // Place your images in assets/categories/ folder with these names:
 const categoryImages: Record<string, any> = {
-  "Popular Videos": require("../../assets/categories/popular-videos.png"),
-  "Uploading & File Formats": require("../../assets/categories/uploading-file-formats.png"),
-  "Intro to Machine Control": require("../../assets/categories/intro-machine-control.png"),
-  "Earthworks Infield Design": require("../../assets/categories/earthworks-infield-design.png"),
-  "Earthworks Core Features": require("../../assets/categories/earthworks-core-features.png"),
-  "Earthworks Project Setup": require("../../assets/categories/earthworks-project-setup.png"),
-  "Earthworks First-Time Setup": require("../../assets/categories/earthworks-first-time-setup.png"),
-  "Earthworks Basics": require("../../assets/categories/earthworks-basics.png"),
-  "Siteworks Advanced Layout": require("../../assets/categories/siteworks-advanced-layout.png"),
-  "Siteworks Basic Layout": require("../../assets/categories/siteworks-basic-layout.png"),
-  "Siteworks Project Setup": require("../../assets/categories/siteworks-project-setup.png"),
-  "Siteworks Basics": require("../../assets/categories/siteworks-basics.png"),
-  "Siteworks First-Time Setup": require("../../assets/categories/siteworks-first-time-setup.png"),
+  "Popular Videos": require("../../assets/categories/popularvideos.png"),
+  "Uploading & File Formats": require("../../assets/categories/uploadingfileformats.png"),
+  "Intro to Machine Control": require("../../assets/categories/intromachinecontrol.png"),
+  "Earthworks Infield Design": require("../../assets/categories/earthworksinfielddesign.png"),
+  "Earthworks Core Features": require("../../assets/categories/earthworkscorefeatures.png"),
+  "Earthworks Project Setup": require("../../assets/categories/earthworksprojectsetup.png"),
+  "Earthworks First-Time Setup": require("../../assets/categories/earthworksfirsttimesetup.png"),
+  "Earthworks Basics": require("../../assets/categories/earthworksbasics.png"),
+  "Siteworks Advanced Layout": require("../../assets/categories/siteworksadvancedlayout.png"),
+  "Siteworks Basic Layout": require("../../assets/categories/siteworksbasiclayout.png"),
+  "Siteworks Project Setup": require("../../assets/categories/siteworksprojectsetup.png"),
+  "Siteworks Basics": require("../../assets/categories/siteworksbasics.png"),
+  "Siteworks First-Time Setup": require("../../assets/categories/siteworksfirsttimesetup.png"),
 };
 
 export const HomeScreen = () => {

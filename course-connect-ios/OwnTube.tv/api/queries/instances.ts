@@ -5,7 +5,7 @@ import { InstanceSearchServiceImpl } from "../instanceSearchApi";
 
 import { QUERY_KEYS, WRONG_SERVER_VERSION_STATUS_CODE } from "../constants";
 import Toast from "react-native-toast-message";
-import { OwnTubeError } from "../models";
+import { ApiError } from "../models";
 import { useTranslation } from "react-i18next";
 
 export const useGetInstancesQuery = () => {
@@ -77,7 +77,7 @@ export const useGetInstanceServerConfigQuery = ({
       const res = await InstanceInformationApiImpl.getInstanceConfig(hostname!);
 
       if (shouldValidate && !!res.serverVersion && Number(res.serverVersion[0]) < 5) {
-        throw new OwnTubeError({
+        throw new ApiError({
           message: t("incompatibleServerVersion", { serverVersion: res.serverVersion }),
           status: WRONG_SERVER_VERSION_STATUS_CODE,
         });

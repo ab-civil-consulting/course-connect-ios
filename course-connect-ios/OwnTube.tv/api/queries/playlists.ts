@@ -4,7 +4,7 @@ import { useInfiniteQuery, useQueries, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../constants";
 import { PlaylistsApiImpl } from "../playlistsApi";
 import { combineCollectionQueryResults, retry } from "../helpers";
-import { GetVideosVideo, OwnTubeError } from "../models";
+import { GetVideosVideo, ApiError } from "../models";
 import { VideoPlaylist } from "@peertube/peertube-types";
 
 export const useGetPlaylistsQuery = ({
@@ -89,7 +89,7 @@ export const useGetPlaylistsCollectionQuery = (playlists: Array<VideoPlaylist> =
           const res = await PlaylistsApiImpl.getPlaylistVideos(backend, id, { count: 4 });
           return { ...res, id, displayName, videoChannel };
         } catch (error) {
-          if ((error as unknown as OwnTubeError).status === 429) {
+          if ((error as unknown as ApiError).status === 429) {
             throw error;
           }
           return { error, isError: true, id, displayName, videoChannel, data: [], total: 0 };

@@ -18,7 +18,7 @@ import {
 import { useFocusEffect, useRouter } from "expo-router";
 import ComboBoxInput from "../../components/ComboBoxInput";
 import Toast from "react-native-toast-message";
-import { OwnTubeError } from "../../api/models";
+import { ApiError } from "../../api/models";
 import { ROUTES } from "../../types";
 import Constants from "expo-constants";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -63,11 +63,11 @@ export const LandingScreen = () => {
         type: "info",
         props: { isError: true },
         text1:
-          (instanceConfigError as unknown as OwnTubeError)?.status === WRONG_SERVER_VERSION_STATUS_CODE
+          (instanceConfigError as unknown as ApiError)?.status === WRONG_SERVER_VERSION_STATUS_CODE
             ? instanceConfigError.message
             : t("siteDidNotRespondError", {
                 errorCode:
-                  (instanceConfigError as unknown as OwnTubeError)?.status || instanceConfigError.message || "",
+                  (instanceConfigError as unknown as ApiError)?.status || instanceConfigError.message || "",
               }),
         autoHide: false,
       });

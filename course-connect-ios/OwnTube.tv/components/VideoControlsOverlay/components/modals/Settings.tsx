@@ -35,9 +35,6 @@ export const Settings = ({ onClose }: SettingsProps) => {
 
   const { data: instanceInfo } = useGetInstanceInfoQuery(backend);
   const { currentInstanceConfig } = useAppConfigContext();
-  const [isOptedOut, setIsOptedOut] = useState(
-    posthog.getPersistedProperty(PostHogPersistedProperty.OptedOut) || false,
-  );
 
   const handleLeaveInstance = () => {
     writeToAsyncStorage(STORAGE.DATASOURCE, "").then(() => {
@@ -48,21 +45,6 @@ export const Settings = ({ onClose }: SettingsProps) => {
 
   const handleSelectLanguage = (langCode: string) => {
     handleChangeLang(langCode);
-  };
-
-  const handleToggleDebugMode = (debugModeOn: boolean) => {
-    setIsDebugMode(debugModeOn);
-    writeToAsyncStorage(STORAGE.DEBUG_MODE, String(debugModeOn));
-  };
-
-  const handleToggleOptOutCheckbox = (optOut: boolean) => {
-    if (!optOut) {
-      posthog.optIn();
-    } else {
-      posthog.optOut();
-    }
-
-    setIsOptedOut(optOut);
   };
 
   return (
@@ -90,29 +72,6 @@ export const Settings = ({ onClose }: SettingsProps) => {
             items={LANGUAGE_OPTIONS}
           />
           <Spacer height={spacing.sm} />
-          {__DEV__ && (
-            <>
-              <Separator />
-              <Spacer height={spacing.sm} />
-              <Typography fontSize="sizeSm" fontWeight="SemiBold" color={colors.theme950}>
-                {t("settingsPageAppDiagnosticsHeading")}
-              </Typography>
-              <Spacer height={spacing.sm} />
-              <Checkbox
-                disabled={isOptedOut}
-                checked={isDebugMode && !isOptedOut}
-                onChange={handleToggleDebugMode}
-                label={t("settingsPageDebugLogging")}
-              />
-              <Spacer height={spacing.sm} />
-              <Checkbox
-                checked={isOptedOut}
-                onChange={handleToggleOptOutCheckbox}
-                label={t("settingsPageOptOutOfDiagnostics")}
-              />
-              <Spacer height={spacing.sm} />
-            </>
-          )}
           {!primaryBackend && (
             <>
               <Separator />

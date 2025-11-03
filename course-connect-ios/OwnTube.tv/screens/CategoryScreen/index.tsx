@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { RootStackParams } from "../../app/_layout";
 import { ROUTES } from "../../types";
-import { InfoFooter, Loader, VideoGrid } from "../../components";
+import { Button, EmptyPage, InfoFooter, Loader, VideoGrid } from "../../components";
 import { QUERY_KEYS, useGetCategoriesQuery, useInfiniteVideosQuery } from "../../api";
 import { useMemo } from "react";
 import { useCustomFocusManager, usePageContentTopPadding } from "../../hooks";
@@ -13,11 +13,13 @@ import { IcoMoonIcon } from "../../components/IcoMoonIcon";
 import { Typography } from "../../components/Typography";
 import { useTheme } from "@react-navigation/native";
 import { spacing } from "../../theme";
+import { useAuthSessionStore } from "../../store";
 
 export const CategoryScreen = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { colors } = useTheme();
+  const { session } = useAuthSessionStore();
   const { currentInstanceConfig } = useAppConfigContext();
   const { category, backend } = useLocalSearchParams<RootStackParams[ROUTES.CATEGORY]>();
   const { data: categories, isLoading: isLoadingCategories } = useGetCategoriesQuery({});
@@ -47,6 +49,28 @@ export const CategoryScreen = () => {
 
   if (isLoadingCategories) {
     return <Loader />;
+  }
+
+  // Check if user is authenticated
+  if (!session) {
+    const handleSignIn = () => {
+      router.navigate({
+        pathname: ROUTES.SIGNIN,
+        params: { backend, returnTo: ROUTES.CATEGORY, category },
+      });
+    };
+
+    return (
+      <View style={[styles.errorContainer, { paddingTop: top }]}>
+        <EmptyPage text={t("signInRequired")} />
+        <Button
+          onPress={handleSignIn}
+          contrast="high"
+          text={t("signInToViewVideos")}
+          style={styles.signInButton}
+        />
+      </View>
+    );
   }
 
   return (
@@ -90,6 +114,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
+  errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
   header: {
     alignItems: "center",
     borderBottomColor: "rgba(128, 128, 128, 0.2)",
@@ -101,6 +126,7 @@ const styles = StyleSheet.create({
   placeholder: {
     width: 40 + spacing.md * 2, // Same width as back button for centering
   },
+  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
   title: {
     flex: 1,
     fontSize: 20,

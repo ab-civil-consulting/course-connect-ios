@@ -1,6 +1,8 @@
 import { useGlobalSearchParams, usePathname } from "expo-router";
-import { Platform, TVEventControl, LogBox } from "react-native";
+import { Platform, TVEventControl, LogBox, View } from "react-native";
 import { ROUTES, STORAGE } from "../types";
+import { useAuthSessionStore } from "../store";
+import { SignIn } from "../screens";
 
 // Suppress expected warnings
 LogBox.ignoreLogs([
@@ -11,6 +13,7 @@ import {
   AppConfigContextProvider,
   ColorSchemeContextProvider,
   FullScreenModalContextProvider,
+  useAppConfigContext,
   useColorSchemeContext,
   useFullScreenModalContext,
 } from "../contexts";
@@ -21,7 +24,7 @@ import Toast from "react-native-toast-message";
 import { AppDesktopHeader, FullScreenModal, InfoToast, Sidebar, ErrorBoundary, Loader } from "../components";
 import "../i18n";
 import { useTranslation } from "react-i18next";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { readFromAsyncStorage } from "../utils";
 import { colorSchemes } from "../theme";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -70,8 +73,18 @@ const RootStack = () => {
 
   const breakpoints = useBreakpoints();
   const { backend } = useGlobalSearchParams<{ backend: string }>();
+  const { primaryBackend } = useAppConfigContext();
   const pathname = usePathname();
   const { left, top } = useSafeAreaInsets();
+  const [storedBackend, setStoredBackend] = useState<string | undefined>();
+
+  useEffect(() => {
+    readFromAsyncStorage(STORAGE.DATASOURCE).then((stored) => {
+      if (stored) {
+        setStoredBackend(stored);
+      }
+    });
+  }, []);
 
   const { isOpen: isModalOpen, content: modalContent, toggleModal, handleModalClose } = useFullScreenModalContext();
 
@@ -117,8 +130,26 @@ const RootStack = () => {
 
   useAppStateDiagnostics();
 
+  const { session } = useAuthSessionStore();
+
   if (!isSessionDataLoaded) {
     return <Loader />;
+  }
+
+  // If no session and not on sign-in related routes, show sign-in page directly
+  if (!session && pathname !== `/(home)/${ROUTES.SIGNIN}` && pathname !== `/(home)/${ROUTES.SIGNUP}` && pathname !== `/(home)/${ROUTES.PASSWORD_RESET}` && pathname !== `/(home)/${ROUTES.OTP}`) {
+    const signInBackend = backend || primaryBackend || storedBackend;
+    console.log('[RootStack] Rendering SignIn with backend:', signInBackend, { backend, primaryBackend, storedBackend });
+    return (
+      <>
+        <StatusBar style="light" />
+        <ThemeProvider value={colorSchemes.dark}>
+          <View style={{ flex: 1, backgroundColor: colorSchemes.dark.colors.background }}>
+            <SignIn backend={signInBackend} />
+          </View>
+        </ThemeProvider>
+      </>
+    );
   }
 
   return (
