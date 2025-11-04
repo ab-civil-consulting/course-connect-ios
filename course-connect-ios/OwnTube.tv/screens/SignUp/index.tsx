@@ -284,6 +284,7 @@ export const SignUp = () => {
             >
               {t("alreadyHaveAccount")}
             </Typography>
+            <Spacer height={spacing.xs} />
             <Pressable
               onPress={navigateToSignIn}
               style={({ focused }) => ({

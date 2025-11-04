@@ -137,8 +137,16 @@ const RootStack = () => {
   }
 
   // If no session and not on sign-in related routes, show sign-in page directly
-  if (!session && pathname !== `/(home)/${ROUTES.SIGNIN}` && pathname !== `/(home)/${ROUTES.SIGNUP}` && pathname !== `/(home)/${ROUTES.PASSWORD_RESET}` && pathname !== `/(home)/${ROUTES.OTP}`) {
+  // Check for both /(home)/route and /route formats (web strips the (home) prefix)
+  const authRoutes = [ROUTES.SIGNIN, ROUTES.SIGNUP, ROUTES.PASSWORD_RESET, ROUTES.OTP];
+  const isAuthRoute = authRoutes.some(route =>
+    pathname === `/(home)/${route}` || pathname === `/${route}`
+  );
+
+  if (!session && !isAuthRoute) {
     const signInBackend = backend || primaryBackend || storedBackend;
+    console.log('[RootStack] Auth guard triggered - pathname:', pathname);
+    console.log('[RootStack] Is auth route:', isAuthRoute);
     console.log('[RootStack] Rendering SignIn with backend:', signInBackend, { backend, primaryBackend, storedBackend });
     return (
       <>
@@ -188,8 +196,22 @@ const RootStack = () => {
             <Drawer.Screen name={`(home)/${ROUTES.CATEGORY}`} />
             <Drawer.Screen name={`(home)/${ROUTES.PLAYLISTS}`} />
             <Drawer.Screen name={`(home)/${ROUTES.PLAYLIST}`} />
-            <Drawer.Screen name={`(home)/${ROUTES.SIGNIN}`} />
-            <Drawer.Screen name={`(home)/${ROUTES.OTP}`} />
+            <Drawer.Screen
+              name={`(home)/${ROUTES.SIGNIN}`}
+              options={{ drawerStyle: { display: "none" }, swipeEnabled: false, header: () => <></> }}
+            />
+            <Drawer.Screen
+              name={`(home)/${ROUTES.SIGNUP}`}
+              options={{ drawerStyle: { display: "none" }, swipeEnabled: false, header: () => <></> }}
+            />
+            <Drawer.Screen
+              name={`(home)/${ROUTES.PASSWORD_RESET}`}
+              options={{ drawerStyle: { display: "none" }, swipeEnabled: false, header: () => <></> }}
+            />
+            <Drawer.Screen
+              name={`(home)/${ROUTES.OTP}`}
+              options={{ drawerStyle: { display: "none" }, swipeEnabled: false, header: () => <></> }}
+            />
             <Drawer.Screen name={`(home)/${ROUTES.SEARCH}`} />
           </Drawer>
           <Toast

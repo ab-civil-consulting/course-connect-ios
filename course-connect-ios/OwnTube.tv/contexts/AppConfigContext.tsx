@@ -17,9 +17,9 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { InstanceConfig } from "../instanceConfigs";
 import Toast from "react-native-toast-message";
 import { useTranslation } from "react-i18next";
-import { useGlobalSearchParams } from "expo-router";
+import { useGlobalSearchParams, usePathname } from "expo-router";
 import { readFromAsyncStorage, writeToAsyncStorage } from "../utils";
-import { STORAGE } from "../types";
+import { ROUTES, STORAGE } from "../types";
 import { useQueryClient } from "@tanstack/react-query";
 import { GLOBAL_QUERY_STALE_TIME } from "../api";
 import { useInstanceConfigStore } from "../store";
@@ -51,8 +51,9 @@ export const AppConfigContextProvider = ({ children }: PropsWithChildren) => {
   const { t } = useTranslation();
   const [isDebugMode, setIsDebugMode] = useState(false);
   const { deviceCapabilities } = useDeviceCapabilities();
-  const { featuredInstances } = useFeaturedInstancesData();
+  const { featuredInstances, isLoading: isFeaturedInstancesLoading, error: featuredInstancesError } = useFeaturedInstancesData();
   const { isConnected } = useNetInfo();
+  const pathname = usePathname();
   const lastRecordedConnectionState = useRef<boolean | undefined | null>();
   const { recentInstances, addRecentInstance } = useRecentInstances();
   const { backend } = useGlobalSearchParams<{ backend: string }>();
@@ -125,6 +126,24 @@ export const AppConfigContextProvider = ({ children }: PropsWithChildren) => {
     }
   }, [isDebugMode]);
 
+  // Auth routes that should render even without featured instances
+  const isAuthRoute = pathname && [
+    ROUTES.SIGNIN,
+    ROUTES.SIGNUP,
+    ROUTES.OTP,
+    ROUTES.PASSWORD_RESET,
+  ].some(route => pathname.includes(route));
+
+  // Log errors for debugging
+  useEffect(() => {
+    if (featuredInstancesError) {
+      console.error('[AppConfigContext] Featured instances failed to load:', featuredInstancesError);
+    }
+  }, [featuredInstancesError]);
+
+  // Don't block auth routes from rendering
+  const shouldRenderChildren = isAuthRoute || featuredInstances?.length > 0;
+
   return (
     <AppConfigContext.Provider
       value={{
@@ -138,7 +157,7 @@ export const AppConfigContextProvider = ({ children }: PropsWithChildren) => {
         currentInstanceConfig,
       }}
     >
-      {!featuredInstances?.length ? null : children}
+      {shouldRenderChildren ? children : null}
     </AppConfigContext.Provider>
   );
 };

@@ -243,7 +243,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                   <Spacer height={spacing.sm} />
                   <Button
                     onPress={() => {
-                      router.push({ pathname: ROUTES.PASSWORD_RESET, params: { backend } });
+                      router.push({ pathname: `/(home)/${ROUTES.PASSWORD_RESET}`, params: { backend } });
                     }}
                     style={styles.height48}
                     contrast="low"
@@ -265,7 +265,11 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                       <Spacer height={spacing.sm} />
                       <Button
                         onPress={() => {
-                          router.push({ pathname: ROUTES.SIGNUP, params: { backend } });
+                          console.log('[SignIn] Create Account button clicked');
+                          console.log('[SignIn] Navigating to:', `/(home)/${ROUTES.SIGNUP}`);
+                          console.log('[SignIn] With backend:', backend);
+                          router.push({ pathname: `/(home)/${ROUTES.SIGNUP}`, params: { backend } });
+                          console.log('[SignIn] router.push called');
                         }}
                         style={styles.height48}
                         contrast="low"
