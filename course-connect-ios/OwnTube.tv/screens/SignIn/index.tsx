@@ -1,4 +1,4 @@
-import { Keyboard, Platform, StyleSheet, TextInput, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import { Button, FormComponent, Input, Separator, Typography } from "../../components";
 import { useTranslation } from "react-i18next";
 import {
@@ -52,7 +52,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
     isPending: isLoggingIn,
     reset: resetLoginMutation,
   } = useLoginWithUsernameAndPasswordMutation(backend);
-  const { refetch: getUserInfo, isFetching: isGettingUserInfo, isError: isUserInfoError } = useGetMyUserInfoQuery();
+  const { refetch: getUserInfo, isFetching: isGettingUserInfo, isError: isUserInfoError } = useGetMyUserInfoQuery(backend);
   const { currentInstanceConfig } = useAppConfigContext();
   const { top } = useSafeAreaInsets();
   useCustomFocusManager();
@@ -136,139 +136,150 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
   const isLoading = isLoadingInstanceInfo || isLoadingInstanceServerConfig || isLoadingLoginPrerequisites;
 
   return (
-    <FormComponent
-      style={{ paddingTop: spacing.xxxl + top, ...styles.container }}
-      onSubmit={handleSubmit(handleSignIn)}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.keyboardAvoidingView}
     >
-      {isLoading ? (
-        <SignInFormLoader />
-      ) : (
-        <View>
-          <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
-            {t("signInToApp", { appName: currentInstanceConfig?.customizations?.pageTitle || instanceInfo?.name })}
-          </Typography>
-          <Spacer height={spacing.xxl} />
-          <Controller
-            name="username"
-            control={control}
-            render={({ field, fieldState }) => {
-              return (
-                <Input
-                  autoFocus={!username}
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  value={field.value}
-                  keyboardType={Platform.OS !== "web" ? "email-address" : undefined}
-                  onChangeText={field.onChange}
-                  onBlur={field.onBlur}
-                  autoComplete="email"
-                  variant="default"
-                  placeholder={t("email")}
-                  placeholderTextColor={colors.themeDesaturated500}
-                  error={fieldState.error?.message && t(fieldState.error?.message)}
-                  onSubmitEditing={() => {
-                    passwordFieldRef.current?.focus?.();
+      <FormComponent
+        style={{ paddingTop: spacing.xxxl + top, ...styles.container }}
+        onSubmit={handleSubmit(handleSignIn)}
+      >
+        {isLoading ? (
+          <SignInFormLoader />
+        ) : (
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View>
+                <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
+                  {t("signInToApp", { appName: currentInstanceConfig?.customizations?.pageTitle || instanceInfo?.name })}
+                </Typography>
+                <Spacer height={spacing.xxl} />
+                <Controller
+                  name="username"
+                  control={control}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Input
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        value={field.value}
+                        keyboardType={Platform.OS !== "web" ? "email-address" : undefined}
+                        onChangeText={field.onChange}
+                        onBlur={field.onBlur}
+                        autoComplete="email"
+                        variant="default"
+                        placeholder={t("email")}
+                        placeholderTextColor={colors.themeDesaturated500}
+                        error={fieldState.error?.message && t(fieldState.error?.message)}
+                        onSubmitEditing={() => {
+                          passwordFieldRef.current?.focus?.();
+                        }}
+                        enterKeyHint="next"
+                      />
+                    );
                   }}
-                  enterKeyHint="next"
                 />
-              );
-            }}
-          />
-          <Spacer height={spacing.xl} />
-          <Controller
-            name="password"
-            control={control}
-            render={({ field, fieldState }) => {
-              return (
-                <Input
-                  autoFocus={!!username}
-                  ref={passwordFieldRef}
-                  autoCorrect={false}
-                  value={field.value}
-                  secureTextEntry
-                  onChangeText={field.onChange}
-                  onBlur={field.onBlur}
-                  onSubmitEditing={() => {
+                <Spacer height={spacing.xl} />
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Input
+                        ref={passwordFieldRef}
+                        autoCorrect={false}
+                        value={field.value}
+                        secureTextEntry
+                        onChangeText={field.onChange}
+                        onBlur={field.onBlur}
+                        onSubmitEditing={() => {
+                          Keyboard.dismiss();
+                          handleSubmit(handleSignIn)();
+                        }}
+                        autoComplete="current-password"
+                        variant="default"
+                        placeholder={t("password")}
+                        placeholderTextColor={colors.themeDesaturated500}
+                        error={fieldState.error?.message && t(fieldState.error?.message)}
+                        enterKeyHint="done"
+                      />
+                    );
+                  }}
+                />
+                <Spacer height={spacing.xl} />
+                <Button
+                  disabled={isLoggingIn || isGettingUserInfo || isLoadingLoginPrerequisites}
+                  onPress={() => {
                     Keyboard.dismiss();
                     handleSubmit(handleSignIn)();
                   }}
-                  autoComplete="current-password"
-                  variant="default"
-                  placeholder={t("password")}
-                  placeholderTextColor={colors.themeDesaturated500}
-                  error={fieldState.error?.message && t(fieldState.error?.message)}
-                  enterKeyHint="done"
-                />
-              );
-            }}
-          />
-          <Spacer height={spacing.xl} />
-          <Button
-            disabled={isLoggingIn || isGettingUserInfo || isLoadingLoginPrerequisites}
-            onPress={() => {
-              Keyboard.dismiss();
-              handleSubmit(handleSignIn)();
-            }}
-            style={styles.height48}
-            contrast="high"
-            text={t("signIn")}
-          />
-          {Platform.OS === "web" && <button type="submit" style={{ display: "none" }} />}
-          <Spacer height={spacing.xl} />
-          {(isLoginError || isUserInfoError) && (
-            <>
-              <Typography style={styles.textAlignCenter} fontSize="sizeXS" color={colors.error500}>
-                {t("signInDataIncorrect")}
-              </Typography>
-              <Spacer height={spacing.xl} />
-            </>
-          )}
-          <View style={styles.alignItemsCenter}>
-            <Typography
-              style={styles.textAlignCenter}
-              fontSize="sizeXS"
-              fontWeight="Medium"
-              color={colors.themeDesaturated500}
-            >
-              {t("forgotPassword")}
-            </Typography>
-            <Spacer height={spacing.sm} />
-            <Button
-              onPress={() => {
-                router.push({ pathname: ROUTES.PASSWORD_RESET, params: { backend } });
-              }}
-              style={styles.height48}
-              contrast="low"
-              text={t("resetPassword")}
-            />
-            {instanceServerConfig?.signup.allowed && (
-              <>
-                <Spacer height={spacing.xl} />
-                <Separator />
-                <Spacer height={spacing.xl} />
-                <Typography
-                  style={styles.textAlignCenter}
-                  fontSize="sizeXS"
-                  fontWeight="Medium"
-                  color={colors.themeDesaturated500}
-                >
-                  {t("noAccountCreateOne")}
-                </Typography>
-                <Spacer height={spacing.sm} />
-                <Button
-                  onPress={() => {
-                    router.push({ pathname: ROUTES.SIGNUP, params: { backend } });
-                  }}
                   style={styles.height48}
-                  contrast="low"
-                  text={t("createAccount")}
+                  contrast="high"
+                  text={t("signIn")}
                 />
-              </>
-            )}
-          </View>
-        </View>
-      )}
-    </FormComponent>
+                {Platform.OS === "web" && <button type="submit" style={{ display: "none" }} />}
+                <Spacer height={spacing.xl} />
+                {(isLoginError || isUserInfoError) && (
+                  <>
+                    <Typography style={styles.textAlignCenter} fontSize="sizeXS" color={colors.error500}>
+                      {t("signInDataIncorrect")}
+                    </Typography>
+                    <Spacer height={spacing.xl} />
+                  </>
+                )}
+                <View style={styles.alignItemsCenter}>
+                  <Typography
+                    style={styles.textAlignCenter}
+                    fontSize="sizeXS"
+                    fontWeight="Medium"
+                    color={colors.themeDesaturated500}
+                  >
+                    {t("forgotPassword")}
+                  </Typography>
+                  <Spacer height={spacing.sm} />
+                  <Button
+                    onPress={() => {
+                      router.push({ pathname: ROUTES.PASSWORD_RESET, params: { backend } });
+                    }}
+                    style={styles.height48}
+                    contrast="low"
+                    text={t("resetPassword")}
+                  />
+                  {instanceServerConfig?.signup.allowed && (
+                    <>
+                      <Spacer height={spacing.xl} />
+                      <Separator />
+                      <Spacer height={spacing.xl} />
+                      <Typography
+                        style={styles.textAlignCenter}
+                        fontSize="sizeXS"
+                        fontWeight="Medium"
+                        color={colors.themeDesaturated500}
+                      >
+                        {t("noAccountCreateOne")}
+                      </Typography>
+                      <Spacer height={spacing.sm} />
+                      <Button
+                        onPress={() => {
+                          router.push({ pathname: ROUTES.SIGNUP, params: { backend } });
+                        }}
+                        style={styles.height48}
+                        contrast="low"
+                        text={t("createAccount")}
+                      />
+                    </>
+                  )}
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </ScrollView>
+        )}
+      </FormComponent>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -281,5 +292,11 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   height48: { height: 48 },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   textAlignCenter: { textAlign: "center" },
 });
