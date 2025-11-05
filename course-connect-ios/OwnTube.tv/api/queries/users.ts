@@ -6,8 +6,9 @@ import { QUERY_KEYS } from "../constants";
 import { retry } from "../helpers";
 import { UsersApiImpl } from "../usersApi";
 
-export const useGetMyUserInfoQuery = () => {
-  const { backend } = useLocalSearchParams<RootStackParams[ROUTES.INDEX]>();
+export const useGetMyUserInfoQuery = (backendParam?: string) => {
+  const { backend: routeBackend } = useLocalSearchParams<RootStackParams[ROUTES.INDEX]>();
+  const backend = backendParam || routeBackend;
 
   return useQuery({
     queryKey: [QUERY_KEYS.myUserInfo, backend],

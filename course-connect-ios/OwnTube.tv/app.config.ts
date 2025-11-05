@@ -40,6 +40,11 @@ export default {
     resizeMode: "contain",
     backgroundColor: process.env.EXPO_PUBLIC_SPLASH_BG_COLOR || "#FFFFFF",
   },
+
+  adaptiveIcon: {
+    foregroundImage: "./assets/adaptive-icon-foreground.png",
+    backgroundColor: "#FFFFFF",
+  },
   ios: {
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,

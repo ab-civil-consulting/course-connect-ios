@@ -17,6 +17,10 @@ export class UsersApi extends AxiosInstanceBasedApi {
    *
    */
   async getMyUserInfo(baseURL: string): Promise<User> {
+    if (!baseURL || baseURL === 'undefined') {
+      throw new Error('[UsersApi] Backend URL is required but was not provided or is undefined');
+    }
+
     try {
       const response = await this.instance.get("users/me", {
         baseURL: `https://${baseURL}/api/v1`,
