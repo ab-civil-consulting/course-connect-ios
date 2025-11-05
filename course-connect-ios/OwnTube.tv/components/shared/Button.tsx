@@ -47,7 +47,7 @@ export const Button = forwardRef<View, ButtonProps>(
           return colors.theme100;
         }
 
-        return isHovered ? hoverColor : isActive || pressed ? colors.theme100 : regularColor;
+        return isHovered || isActive || pressed ? hoverColor : regularColor;
       },
       [colors, isHovered, hoverColor, isActive, regularColor, disabled],
     );

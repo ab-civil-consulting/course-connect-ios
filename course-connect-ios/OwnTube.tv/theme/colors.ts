@@ -34,13 +34,13 @@ const light: ColorScheme = {
   theme50: "#F5F9FD",
   theme100: "#E0E9F4",
   theme200: "#B8CFE5",
-  theme500: "#007EF2",
-  theme600: "#0060B9",
+  theme500: "#3b82f6",
+  theme600: "#2563eb",
   theme800: "#2E4357",
   theme900: "#1E2F3F",
   theme950: "#0D151D",
   themeDesaturated500: "#607385",
-  error500: "#FF3C00",
+  error500: "#f97316",
   ...blackAndWhite,
 };
 
@@ -48,13 +48,13 @@ const dark: ColorScheme = {
   theme50: "#001510",
   theme100: "#1E2F3F",
   theme200: "#254357",
-  theme500: "#0060B9",
-  theme600: "#007EF2",
+  theme500: "#2563eb",
+  theme600: "#3b82f6",
   theme800: "#B3CFEA",
   theme900: "#DEEAF6",
   theme950: "#F5F9FD",
   themeDesaturated500: "#7A8D9F",
-  error500: "#FF3C00",
+  error500: "#ea580c",
   ...blackAndWhite,
 };
 

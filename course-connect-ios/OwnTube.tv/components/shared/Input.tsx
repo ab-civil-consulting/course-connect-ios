@@ -19,7 +19,7 @@ export const Input = forwardRef<TextInput, InputProps>(
     const { colors, dark: isDarkTheme } = useTheme();
 
     return (
-      <View accessible={false}>
+      <View>
         <TextInput
           {...props}
           ref={ref}
@@ -38,7 +38,7 @@ export const Input = forwardRef<TextInput, InputProps>(
               backgroundColor: colors.theme100,
               borderWidth: isFocused || error ? 2 : variant === "default" ? 0 : 1,
               color: props.readOnly ? colors.themeDesaturated500 : colors.theme950,
-              padding: (isFocused || error ? 15 : 16) - (Platform.isTVOS ? 16 : 0),
+              padding: Platform.OS === "web" ? 15 : (isFocused || error ? 15 : 16) - (Platform.isTVOS ? 16 : 0),
             },
             props.style,
           ]}

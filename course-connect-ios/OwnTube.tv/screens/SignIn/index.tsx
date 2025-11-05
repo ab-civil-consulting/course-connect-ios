@@ -78,7 +78,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
         reset();
         resetLoginMutation();
       };
-    }, [formState.isSubmitSuccessful]),
+    }, [formState.isSubmitSuccessful, reset, resetLoginMutation]),
   );
 
   const handleSignIn = async (formValues: z.infer<typeof signInFormValidationSchema>) => {
@@ -135,10 +135,13 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
 
   const isLoading = isLoadingInstanceInfo || isLoadingInstanceServerConfig || isLoadingLoginPrerequisites;
 
+  const KeyboardWrapper = Platform.OS === "web" ? View : KeyboardAvoidingView;
+  const keyboardProps = Platform.OS === "web" ? {} : { behavior: Platform.OS === "ios" ? "padding" as const : "height" as const };
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <KeyboardWrapper
       style={styles.keyboardAvoidingView}
+      {...keyboardProps}
     >
       <FormComponent
         style={{ paddingTop: spacing.xxxl + top, ...styles.container }}
@@ -152,7 +155,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            {Platform.OS === "web" ? (
               <View>
                 <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
                   {t("signInToApp", { appName: currentInstanceConfig?.customizations?.pageTitle || instanceInfo?.name })}
@@ -279,11 +282,140 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                   )}
                 </View>
               </View>
-            </TouchableWithoutFeedback>
+            ) : (
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View>
+                  <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
+                    {t("signInToApp", { appName: currentInstanceConfig?.customizations?.pageTitle || instanceInfo?.name })}
+                  </Typography>
+                  <Spacer height={spacing.xxl} />
+                  <Controller
+                    name="username"
+                    control={control}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <Input
+                          autoCorrect={false}
+                          autoCapitalize="none"
+                          value={field.value}
+                          keyboardType={Platform.OS !== "web" ? "email-address" : undefined}
+                          onChangeText={field.onChange}
+                          onBlur={field.onBlur}
+                          autoComplete="email"
+                          variant="default"
+                          placeholder={t("email")}
+                          placeholderTextColor={colors.themeDesaturated500}
+                          error={fieldState.error?.message && t(fieldState.error?.message)}
+                          onSubmitEditing={() => {
+                            passwordFieldRef.current?.focus?.();
+                          }}
+                          enterKeyHint="next"
+                        />
+                      );
+                    }}
+                  />
+                  <Spacer height={spacing.xl} />
+                  <Controller
+                    name="password"
+                    control={control}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <Input
+                          ref={passwordFieldRef}
+                          autoCorrect={false}
+                          value={field.value}
+                          secureTextEntry
+                          onChangeText={field.onChange}
+                          onBlur={field.onBlur}
+                          onSubmitEditing={() => {
+                            Keyboard.dismiss();
+                            handleSubmit(handleSignIn)();
+                          }}
+                          autoComplete="current-password"
+                          variant="default"
+                          placeholder={t("password")}
+                          placeholderTextColor={colors.themeDesaturated500}
+                          error={fieldState.error?.message && t(fieldState.error?.message)}
+                          enterKeyHint="done"
+                        />
+                      );
+                    }}
+                  />
+                  <Spacer height={spacing.xl} />
+                  <Button
+                    disabled={isLoggingIn || isGettingUserInfo || isLoadingLoginPrerequisites}
+                    onPress={() => {
+                      Keyboard.dismiss();
+                      handleSubmit(handleSignIn)();
+                    }}
+                    style={styles.height48}
+                    contrast="high"
+                    text={t("signIn")}
+                  />
+                  {Platform.OS === "web" && <button type="submit" style={{ display: "none" }} />}
+                  <Spacer height={spacing.xl} />
+                  {(isLoginError || isUserInfoError) && (
+                    <>
+                      <Typography style={styles.textAlignCenter} fontSize="sizeXS" color={colors.error500}>
+                        {t("signInDataIncorrect")}
+                      </Typography>
+                      <Spacer height={spacing.xl} />
+                    </>
+                  )}
+                  <View style={styles.alignItemsCenter}>
+                    <Typography
+                      style={styles.textAlignCenter}
+                      fontSize="sizeXS"
+                      fontWeight="Medium"
+                      color={colors.themeDesaturated500}
+                    >
+                      {t("forgotPassword")}
+                    </Typography>
+                    <Spacer height={spacing.sm} />
+                    <Button
+                      onPress={() => {
+                        router.push({ pathname: `/(home)/${ROUTES.PASSWORD_RESET}`, params: { backend } });
+                      }}
+                      style={styles.height48}
+                      contrast="low"
+                      text={t("resetPassword")}
+                    />
+                    {instanceServerConfig?.signup.allowed && (
+                      <>
+                        <Spacer height={spacing.xl} />
+                        <Separator />
+                        <Spacer height={spacing.xl} />
+                        <Typography
+                          style={styles.textAlignCenter}
+                          fontSize="sizeXS"
+                          fontWeight="Medium"
+                          color={colors.themeDesaturated500}
+                        >
+                          {t("noAccountCreateOne")}
+                        </Typography>
+                        <Spacer height={spacing.sm} />
+                        <Button
+                          onPress={() => {
+                            console.log('[SignIn] Create Account button clicked');
+                            console.log('[SignIn] Navigating to:', `/(home)/${ROUTES.SIGNUP}`);
+                            console.log('[SignIn] With backend:', backend);
+                            router.push({ pathname: `/(home)/${ROUTES.SIGNUP}`, params: { backend } });
+                            console.log('[SignIn] router.push called');
+                          }}
+                          style={styles.height48}
+                          contrast="low"
+                          text={t("createAccount")}
+                        />
+                      </>
+                    )}
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            )}
           </ScrollView>
         )}
       </FormComponent>
-    </KeyboardAvoidingView>
+    </KeyboardWrapper>
   );
 };
 
