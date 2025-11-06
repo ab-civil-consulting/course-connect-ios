@@ -24,7 +24,7 @@ export const InfoFooter = ({ showBuildInfo }: InfoFooterProps) => {
           source={require("../assets/mc-assist-logo-blue.png")}
           style={{ width: 32, height: 32 }}
         />
-        <Typography fontSize="sizeMd" fontWeight="SemiBold" color={colors.theme950}>
+        <Typography fontSize="sizeLg" fontWeight="SemiBold" color={colors.theme950}>
           AB CIVIL
         </Typography>
       </View>
