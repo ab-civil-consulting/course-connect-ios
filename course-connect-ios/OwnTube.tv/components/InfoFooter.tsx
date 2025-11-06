@@ -18,19 +18,16 @@ export const InfoFooter = ({ showBuildInfo }: InfoFooterProps) => {
 
   return (
     <View style={styles.container}>
-      {process.env.EXPO_PUBLIC_FOOTER_LOGO ? (
+      <View style={styles.logoContainer}>
         <Image
           resizeMode="contain"
-          source={{ uri: process.env.EXPO_PUBLIC_FOOTER_LOGO }}
-          style={{ width: 292, height: 73 }}
+          source={require("../assets/mc-assist-logo-blue.png")}
+          style={{ width: 32, height: 32 }}
         />
-      ) : (
-        <Image
-          resizeMode="contain"
-          source={require("../assets/custom-logo.png")}
-          style={{ width: 150, height: 150 }}
-        />
-      )}
+        <Typography fontSize="sizeMd" fontWeight="SemiBold" color={colors.theme950}>
+          AB CIVIL
+        </Typography>
+      </View>
       {showBuildInfo && (
         <View style={styles.buildInfoContainer}>
           {process.env.EXPO_PUBLIC_HIDE_GIT_DETAILS ? (
@@ -68,5 +65,10 @@ const styles = StyleSheet.create({
     position: undefined,
     width: "100%",
     zIndex: undefined,
+  },
+  logoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
   },
 });

@@ -39,18 +39,6 @@ const SIDEBAR_ROUTES = [
     routeName: `(home)/${ROUTES.HISTORY}`,
     isAvailableOffline: true,
   },
-  {
-    nameKey: "playlistsPageTitle",
-    icon: "Playlist",
-    href: { pathname: `/${ROUTES.PLAYLISTS}` },
-    routeName: `(home)/${ROUTES.PLAYLISTS}`,
-  },
-  {
-    nameKey: "forum",
-    icon: "Menu",
-    href: { pathname: `/${ROUTES.FORUM}` },
-    routeName: `(home)/${ROUTES.FORUM}`,
-  },
 ];
 
 interface SidebarProps extends DrawerContentComponentProps {
@@ -151,8 +139,6 @@ export const Sidebar: FC<SidebarProps> = ({ backend, ...navigationProps }) => {
           switch (nameKey) {
             case "history":
               return !currentInstanceConfig?.customizations?.menuHideHistoryButton;
-            case "playlistsPageTitle":
-              return !currentInstanceConfig?.customizations?.menuHidePlaylistsButton;
             default:
               return true;
           }
