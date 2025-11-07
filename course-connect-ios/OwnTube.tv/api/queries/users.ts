@@ -1,8 +1,8 @@
 import { useLocalSearchParams } from "expo-router";
 import { RootStackParams } from "../../app/_layout";
 import { ROUTES } from "../../types";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEYS } from "../constants";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { MUTATION_KEYS, QUERY_KEYS } from "../constants";
 import { retry } from "../helpers";
 import { UsersApiImpl } from "../usersApi";
 
@@ -30,5 +30,14 @@ export const useGetSubscriptionByChannelQuery = (channelHandle: string, enabled:
     },
     enabled: !!channelHandle && enabled,
     retry: 1,
+  });
+};
+
+export const useUpdateMyUserInfoMutation = (backend: string) => {
+  return useMutation({
+    mutationKey: [MUTATION_KEYS.updateUserInfo, backend],
+    mutationFn: async (data: { email?: string; password?: string; currentPassword: string }) => {
+      return await UsersApiImpl.updateMyUserInfo(backend, data);
+    },
   });
 };

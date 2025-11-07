@@ -13,6 +13,13 @@ export enum STORAGE {
   CC_LOCALE = "cc_locale",
   DEBUG_MODE = "debug_mode",
   DIAGNOSTICS_REPORTED_BACKEND = "diagnostics/reported_backend",
+  DEFAULT_VIDEO_QUALITY = "default_video_quality",
+  DEFAULT_PLAYBACK_SPEED = "default_playback_speed",
+  AUTOPLAY_ENABLED = "autoplay_enabled",
+  CELLULAR_DATA_LIMIT = "cellular_data_limit",
+  DEFAULT_DOWNLOAD_QUALITY = "default_download_quality",
+  SUBTITLES_ENABLED = "subtitles_enabled",
+  SUBTITLE_LANGUAGE = "subtitle_language",
 }
 
 export enum ROUTES {

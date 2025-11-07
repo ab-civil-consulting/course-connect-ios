@@ -47,6 +47,34 @@ export class UsersApi extends AxiosInstanceBasedApi {
       return handleAxiosErrorWithRetry(error, "my channel subscription");
     }
   }
+
+  /**
+   * Update *my* user information (email, password, etc.)
+   *
+   * @param baseURL - PeerTube instance URL
+   * @param data - Update data (email, password, currentPassword required)
+   * @returns Promise that resolves when update is successful (204 No Content)
+   */
+  async updateMyUserInfo(
+    baseURL: string,
+    data: {
+      email?: string;
+      password?: string;
+      currentPassword: string;
+    }
+  ): Promise<void> {
+    if (!baseURL || baseURL === 'undefined') {
+      throw new Error('[UsersApi] Backend URL is required but was not provided or is undefined');
+    }
+
+    try {
+      await this.instance.put("users/me", data, {
+        baseURL: `https://${baseURL}/api/v1`,
+      });
+    } catch (error: unknown) {
+      return handleAxiosErrorWithRetry(error, "update user info");
+    }
+  }
 }
 
 export const UsersApiImpl = new UsersApi();
