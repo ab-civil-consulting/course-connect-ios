@@ -7,13 +7,15 @@ import { Typography } from "../Typography";
 import { IcoMoonIcon } from "../IcoMoonIcon";
 
 interface ButtonProps extends PropsWithChildren<PressableProps> {
-  style?: ViewStyle;
+  style?: ViewStyle | ((state: { pressed: boolean; focused: boolean }) => ViewStyle | ViewStyle[]);
   contrast?: "high" | "low" | "none";
   icon?: string;
   iconPosition?: "leading" | "trailing";
   text?: string;
   justifyContent?: ViewStyle["justifyContent"];
   isActive?: boolean;
+  customColor?: string;
+  customHoverColor?: string;
 }
 
 export const Button = forwardRef<View, ButtonProps>(
@@ -26,6 +28,8 @@ export const Button = forwardRef<View, ButtonProps>(
       justifyContent = "center",
       isActive,
       disabled,
+      customColor,
+      customHoverColor,
       ...props
     },
     ref,
@@ -34,12 +38,21 @@ export const Button = forwardRef<View, ButtonProps>(
     const { isHovered, toggleHovered } = useHoverState();
 
     const { regularColor, hoverColor } = useMemo(() => {
+      // If custom colors provided, use them
+      if (customColor) {
+        return {
+          regularColor: customColor,
+          hoverColor: customHoverColor || customColor,
+        };
+      }
+
+      // Otherwise use theme colors
       return {
         none: { regularColor: colors.theme50, hoverColor: colors.theme100 },
         low: { regularColor: colors.theme100, hoverColor: colors.theme200 },
         high: { regularColor: colors.theme500, hoverColor: colors.theme600 },
       }[contrast];
-    }, [colors, contrast]);
+    }, [colors, contrast, customColor, customHoverColor]);
 
     const getBackgroundColor = useCallback(
       (pressed: boolean) => {
@@ -65,20 +78,33 @@ export const Button = forwardRef<View, ButtonProps>(
           props.onHoverOut?.(e);
           toggleHovered();
         }}
-        style={({ pressed, focused }) => [
-          styles.container,
-          props.style,
-          {
-            backgroundColor: getBackgroundColor(pressed),
-            justifyContent,
-            borderWidth: focused ? 2 : 0,
-            borderColor: colors.theme950,
-            paddingHorizontal:
-              (Number(props.style?.paddingHorizontal) || styles.container.paddingHorizontal || 0) - (focused ? 2 : 0),
-            paddingVertical:
-              (Number(props.style?.paddingVertical) || styles.container.paddingVertical || 0) - (focused ? 2 : 0),
-          },
-        ]}
+        style={({ pressed, focused }) => {
+          // Check if custom style is a function (for state-based styles)
+          const customStyle = typeof props.style === 'function' ? props.style({ pressed, focused }) : props.style;
+          const customStyleArray = Array.isArray(customStyle) ? customStyle : [customStyle];
+
+          // Extract backgroundColor from custom styles if provided
+          const customBackgroundColor = customStyleArray.reduce((acc, style) => {
+            return style?.backgroundColor || acc;
+          }, null);
+
+          return [
+            styles.container,
+            // Apply custom style (function or static)
+            typeof props.style === 'function' ? props.style({ pressed, focused }) : props.style,
+            {
+              // Only use theme backgroundColor if no custom backgroundColor is provided
+              ...(!customBackgroundColor ? { backgroundColor: getBackgroundColor(pressed) } : {}),
+              justifyContent,
+              borderWidth: focused ? 2 : 0,
+              borderColor: colors.theme950,
+              paddingHorizontal:
+                (Number(props.style?.paddingHorizontal) || styles.container.paddingHorizontal || 0) - (focused ? 2 : 0),
+              paddingVertical:
+                (Number(props.style?.paddingVertical) || styles.container.paddingVertical || 0) - (focused ? 2 : 0),
+            },
+          ];
+        }}
         ref={ref}
         disabled={disabled}
       >

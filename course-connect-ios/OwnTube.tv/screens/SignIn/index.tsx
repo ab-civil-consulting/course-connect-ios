@@ -1,4 +1,4 @@
-import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import { Button, FormComponent, Input, Separator, Typography } from "../../components";
 import { useTranslation } from "react-i18next";
 import {
@@ -13,7 +13,7 @@ import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { RootStackParams } from "../../app/_layout";
 import { ROUTES } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { spacing } from "../../theme";
+import { borderRadius, spacing } from "../../theme";
 import { Spacer } from "../../components/shared/Spacer";
 import { useTheme } from "@react-navigation/native";
 import { Controller, useForm } from "react-hook-form";
@@ -235,23 +235,20 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                   </>
                 )}
                 <View style={styles.alignItemsCenter}>
-                  <Typography
-                    style={styles.textAlignCenter}
-                    fontSize="sizeXS"
-                    fontWeight="Medium"
-                    color={colors.themeDesaturated500}
-                  >
-                    {t("forgotPassword")}
-                  </Typography>
-                  <Spacer height={spacing.sm} />
-                  <Button
+                  <Pressable
                     onPress={() => {
                       router.push({ pathname: `/(home)/${ROUTES.PASSWORD_RESET}`, params: { backend } });
                     }}
-                    style={styles.height48}
-                    contrast="low"
-                    text={t("resetPassword")}
-                  />
+                  >
+                    <Typography
+                      style={[styles.textAlignCenter, { textDecorationLine: "underline" }]}
+                      fontSize="sizeXS"
+                      fontWeight="Medium"
+                      color={colors.theme500}
+                    >
+                      {t("forgotPassword")}
+                    </Typography>
+                  </Pressable>
                   {instanceServerConfig?.signup.allowed && (
                     <>
                       <Spacer height={spacing.xl} />
@@ -275,8 +272,10 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                           console.log('[SignIn] router.push called');
                         }}
                         style={styles.height48}
-                        contrast="low"
+                        contrast="high"
                         text={t("createAccount")}
+                        customColor="#f97316"
+                        customHoverColor="#ea580c"
                       />
                     </>
                   )}
@@ -363,23 +362,25 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                     </>
                   )}
                   <View style={styles.alignItemsCenter}>
-                    <Typography
-                      style={styles.textAlignCenter}
-                      fontSize="sizeXS"
-                      fontWeight="Medium"
-                      color={colors.themeDesaturated500}
-                    >
-                      {t("forgotPassword")}
-                    </Typography>
-                    <Spacer height={spacing.sm} />
-                    <Button
+                    <Pressable
                       onPress={() => {
                         router.push({ pathname: `/(home)/${ROUTES.PASSWORD_RESET}`, params: { backend } });
                       }}
-                      style={styles.height48}
-                      contrast="low"
-                      text={t("resetPassword")}
-                    />
+                      style={({ focused }) => ({
+                        borderWidth: focused ? 2 : 0,
+                        margin: focused ? -2 : 0,
+                        borderRadius: borderRadius.radiusSm,
+                      })}
+                    >
+                      <Typography
+                        style={[styles.textAlignCenter, { textDecorationLine: "underline" }]}
+                        fontSize="sizeXS"
+                        fontWeight="Medium"
+                        color={colors.theme500}
+                      >
+                        {t("forgotPassword")}
+                      </Typography>
+                    </Pressable>
                     {instanceServerConfig?.signup.allowed && (
                       <>
                         <Spacer height={spacing.xl} />
@@ -403,8 +404,10 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                             console.log('[SignIn] router.push called');
                           }}
                           style={styles.height48}
-                          contrast="low"
+                          contrast="high"
                           text={t("createAccount")}
+                          customColor="#f97316"
+                          customHoverColor="#ea580c"
                         />
                       </>
                     )}

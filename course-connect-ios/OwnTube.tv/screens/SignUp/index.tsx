@@ -19,15 +19,6 @@ import { useCustomFocusManager } from "../../hooks";
 
 const signUpFormValidationSchema = z
   .object({
-    username: z
-      .string()
-      .trim()
-      .min(1, "requiredField")
-      .min(3, "usernameTooShort")
-      .max(50, "usernameTooLong")
-      .regex(/^[a-z0-9_.]+$/, "usernameInvalidChars")
-      .regex(/^[a-z]/, "usernameMustStartWithLetter")
-      .transform((val) => val.toLowerCase()),
     email: z.string().trim().min(1, "requiredField").email("invalidEmail"),
     password: z.string().trim().min(8, "passwordTooShort"),
     confirmPassword: z.string().trim().min(1, "requiredField"),
@@ -56,7 +47,6 @@ export const SignUp = () => {
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
-      username: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -69,7 +59,7 @@ export const SignUp = () => {
     setServerErrorMessage(""); // Clear previous errors
     try {
       await register({
-        username: formValues.username,
+        username: formValues.email, // Use email as username
         email: formValues.email,
         password: formValues.password,
       });
@@ -141,40 +131,11 @@ export const SignUp = () => {
           <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
             {t("signUpToApp", { appName: currentInstanceConfig?.customizations?.pageTitle || instanceInfo?.name })}
           </Typography>
+          <Spacer height={spacing.xs} />
+          <Typography fontSize="sizeXS" color={colors.themeDesaturated500} style={styles.textAlignCenter}>
+            {t("emailWillBeUsedForSignIn")}
+          </Typography>
           <Spacer height={spacing.xxl} />
-          <Controller
-            name="username"
-            control={control}
-            render={({ field, fieldState }) => {
-              return (
-                <>
-                  <Input
-                    autoFocus
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    value={field.value}
-                    onChangeText={(text) => field.onChange(text.toLowerCase())}
-                    onBlur={field.onBlur}
-                    autoComplete="username"
-                    variant="default"
-                    placeholder={t("username")}
-                    placeholderTextColor={colors.themeDesaturated500}
-                    error={fieldState.error?.message && t(fieldState.error?.message)}
-                    onSubmitEditing={() => {
-                      emailFieldRef.current?.focus?.();
-                    }}
-                    enterKeyHint="next"
-                  />
-                  {!fieldState.error && (
-                    <Typography fontSize="sizeXS" color={colors.themeDesaturated500} style={{ marginTop: 4 }}>
-                      {t("usernameRequirements")}
-                    </Typography>
-                  )}
-                </>
-              );
-            }}
-          />
-          <Spacer height={spacing.xl} />
           <Controller
             name="email"
             control={control}
@@ -182,6 +143,7 @@ export const SignUp = () => {
               return (
                 <Input
                   ref={emailFieldRef}
+                  autoFocus
                   autoCorrect={false}
                   autoCapitalize="none"
                   value={field.value}

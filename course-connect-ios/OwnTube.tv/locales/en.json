@@ -236,6 +236,7 @@
   "signInToViewVideos": "Sign in to view videos",
   "signUp": "Sign up",
   "signUpToApp": "Sign up to {{appName}}",
+  "emailWillBeUsedForSignIn": "Your email address will be used to sign in",
   "createAccount": "Create account",
   "confirmPassword": "Confirm password",
   "passwordsDoNotMatch": "Passwords do not match",
