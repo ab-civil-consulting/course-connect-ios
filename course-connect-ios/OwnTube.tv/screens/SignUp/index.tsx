@@ -17,6 +17,25 @@ import { SignInFormLoader } from "../../components/loaders/SignInFormLoader";
 import { useCallback, useRef, useState } from "react";
 import { useCustomFocusManager } from "../../hooks";
 
+/**
+ * Converts an email address to a valid PeerTube username
+ * PeerTube usernames must be alphanumeric with optional underscores, hyphens, and periods
+ */
+const generateUsernameFromEmail = (email: string): string => {
+  // Extract the local part (before @)
+  const localPart = email.split("@")[0];
+
+  // Replace invalid characters with underscores and convert to lowercase
+  // Keep alphanumeric, underscores, hyphens, and periods
+  const username = localPart
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]/g, "_")
+    .replace(/^[._-]+|[._-]+$/g, "") // Remove leading/trailing special chars
+    .slice(0, 50); // Limit to 50 characters (PeerTube's typical max)
+
+  return username || "user"; // Fallback if somehow empty
+};
+
 const signUpFormValidationSchema = z
   .object({
     email: z.string().trim().min(1, "requiredField").email("invalidEmail"),
@@ -58,8 +77,9 @@ export const SignUp = () => {
   const handleSignUp = async (formValues: z.infer<typeof signUpFormValidationSchema>) => {
     setServerErrorMessage(""); // Clear previous errors
     try {
+      const username = generateUsernameFromEmail(formValues.email);
       await register({
-        username: formValues.email, // Use email as username
+        username: username, // Generate valid username from email
         email: formValues.email,
         password: formValues.password,
       });
