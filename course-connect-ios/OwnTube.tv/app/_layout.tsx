@@ -82,11 +82,11 @@ const RootStack = () => {
   const [storedBackend, setStoredBackend] = useState<string | undefined>();
 
   // Determine if sidebar should be expanded
-  // Priority: manual override > breakpoint behavior
+  // Priority: manual override > default to expanded
   const shouldExpandSidebar =
     isManuallyExpanded !== null
       ? isManuallyExpanded
-      : (breakpoints.isDesktop || breakpoints.isMobile);
+      : true; // Default to expanded on first open
 
   useEffect(() => {
     readFromAsyncStorage(STORAGE.DATASOURCE).then((stored) => {
