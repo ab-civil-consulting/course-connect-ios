@@ -49,6 +49,8 @@ export default {
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
       UIBackgroundModes: ["audio"],
+      NSPhotoLibraryAddUsageDescription: "This app needs access to your photo library to save downloaded videos.",
+      NSPhotoLibraryUsageDescription: "This app needs access to your photo library to save downloaded videos.",
     },
     buildNumber: getBuildNumber({ platform: "ios" }),
     supportsTablet: true,
@@ -64,6 +66,12 @@ export default {
   },
   android: {
     blockedPermissions: ["RECORD_AUDIO"],
+    permissions: [
+      "READ_EXTERNAL_STORAGE",
+      "WRITE_EXTERNAL_STORAGE",
+      "READ_MEDIA_VIDEO",
+      "READ_MEDIA_IMAGES",
+    ],
     versionCode: getBuildNumber({ platform: "android" }),
     package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.mcassist.v2",
     intentFilters: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL
@@ -117,6 +125,13 @@ export default {
       },
     ],
     "expo-asset",
+    [
+      "expo-media-library",
+      {
+        photosPermission: "Allow MC Assist to save downloaded videos to your photo library.",
+        savePhotosPermission: "Allow MC Assist to save downloaded videos to your photo library.",
+      },
+    ],
     "./plugins/withKotlinJvmTarget.js",
     "react-native-google-cast",
     [
