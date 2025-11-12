@@ -5,7 +5,7 @@ import { Link } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 import { ROUTES, STORAGE } from "../types";
 import { useTranslation } from "react-i18next";
-import { useAppConfigContext, useColorSchemeContext, useFullScreenModalContext } from "../contexts";
+import { useAppConfigContext, useColorSchemeContext, useFullScreenModalContext, useSidebarContext } from "../contexts";
 import { Platform, StyleSheet, View } from "react-native";
 import { Button, Separator } from "./shared";
 import { spacing } from "../theme";
@@ -43,15 +43,16 @@ const SIDEBAR_ROUTES = [
 
 interface SidebarProps extends DrawerContentComponentProps {
   backend?: string;
+  shouldExpand: boolean;
 }
 
-export const Sidebar: FC<SidebarProps> = ({ backend, ...navigationProps }) => {
+export const Sidebar: FC<SidebarProps> = ({ backend, shouldExpand, ...navigationProps }) => {
   const { colors } = useTheme();
   const { scheme, toggleScheme } = useColorSchemeContext();
   const { t } = useTranslation();
   const isDarkMode = scheme === "dark";
   const breakpoints = useBreakpoints();
-  const shouldExpand = breakpoints.isDesktop || breakpoints.isMobile;
+  const { toggleSidebar } = useSidebarContext();
   const { toggleModal, setContent } = useFullScreenModalContext();
   const { isConnected } = useNetInfo();
   const { isLeaveInstanceAllowed } = useLeaveInstancePermission(navigationProps);
@@ -95,18 +96,38 @@ export const Sidebar: FC<SidebarProps> = ({ backend, ...navigationProps }) => {
           paddingHorizontal: shouldExpand ? spacing.md : ["ios", "android"].includes(Platform.OS) ? 0 : spacing.sm,
           width: "100%",
           paddingTop: shouldExpand ? spacing.lg : spacing.xl,
+          overflow: "hidden",
         },
       ]}
     >
       {shouldExpand ? (
         <View style={styles.expandedInstanceInfo}>
           <InstanceInfo backend={backend} />
-          {breakpoints.isMobile && (
+          {breakpoints.isMobile ? (
             <Button style={styles.button} icon="Arrow-Left" onPress={navigationProps.navigation.toggleDrawer} />
+          ) : (
+            <Button
+              style={styles.button}
+              icon="Arrow-Left"
+              onPress={() => toggleSidebar(shouldExpand)}
+              aria-label={t("collapseSidebar")}
+              hideFocusBorder={true}
+            />
           )}
         </View>
       ) : (
-        <InstanceInfo backend={backend} showText={false} />
+        <View style={styles.collapsedInstanceInfo}>
+          <InstanceInfo backend={backend} showText={false} />
+          {!breakpoints.isMobile && (
+            <Button
+              style={styles.button}
+              icon="Arrow-Right"
+              onPress={() => toggleSidebar(shouldExpand)}
+              aria-label={t("expandSidebar")}
+              hideFocusBorder={true}
+            />
+          )}
+        </View>
       )}
       {currentInstanceConfig?.customizations?.loginWithUsernameAndPassword && (
         <View style={styles.routesContainer}>
@@ -262,6 +283,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingBottom: spacing.lg,
     paddingLeft: spacing.xs,
+  },
+  collapsedInstanceInfo: {
+    alignItems: "center",
+    flexDirection: "column",
+    gap: spacing.sm,
+    paddingBottom: spacing.lg,
   },
   paddingHHelper: {
     height: 48,

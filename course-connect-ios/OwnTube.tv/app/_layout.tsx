@@ -13,9 +13,11 @@ import {
   AppConfigContextProvider,
   ColorSchemeContextProvider,
   FullScreenModalContextProvider,
+  SidebarContextProvider,
   useAppConfigContext,
   useColorSchemeContext,
   useFullScreenModalContext,
+  useSidebarContext,
 } from "../contexts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -72,11 +74,19 @@ const RootStack = () => {
   const { isSessionDataLoaded } = useAuthSessionSync();
 
   const breakpoints = useBreakpoints();
+  const { isManuallyExpanded } = useSidebarContext();
   const { backend } = useGlobalSearchParams<{ backend: string }>();
   const { primaryBackend } = useAppConfigContext();
   const pathname = usePathname();
   const { left, top } = useSafeAreaInsets();
   const [storedBackend, setStoredBackend] = useState<string | undefined>();
+
+  // Determine if sidebar should be expanded
+  // Priority: manual override > breakpoint behavior
+  const shouldExpandSidebar =
+    isManuallyExpanded !== null
+      ? isManuallyExpanded
+      : (breakpoints.isDesktop || breakpoints.isMobile);
 
   useEffect(() => {
     readFromAsyncStorage(STORAGE.DATASOURCE).then((stored) => {
@@ -170,14 +180,16 @@ const RootStack = () => {
               drawerType: breakpoints.isMobile ? "front" : "permanent",
               drawerStyle: {
                 display: !backend ? "none" : "flex",
-                width:
-                  (!breakpoints.isDesktop && !breakpoints.isMobile ? CLOSED_DRAWER_WIDTH : OPEN_DRAWER_WIDTH) + left,
+                width: (shouldExpandSidebar ? OPEN_DRAWER_WIDTH : CLOSED_DRAWER_WIDTH) + left,
                 borderRightWidth: 0,
+                ...(Platform.OS === "web" && {
+                  transition: "width 300ms ease-in-out",
+                }),
               },
               header: (props) => renderAppHeader(props),
             }}
             backBehavior="history"
-            drawerContent={(props) => <Sidebar {...props} backend={backend} />}
+            drawerContent={(props) => <Sidebar {...props} backend={backend} shouldExpand={shouldExpandSidebar} />}
           >
             <Drawer.Screen
               name={"(home)/index"}
@@ -271,9 +283,11 @@ export default function RootLayout() {
             <AppConfigContextProvider>
               {__DEV__ && isWeb && <ReactQueryDevtools initialIsOpen={false} />}
               <ColorSchemeContextProvider>
-                <FullScreenModalContextProvider>
-                  <RootStack />
-                </FullScreenModalContextProvider>
+                <SidebarContextProvider>
+                  <FullScreenModalContextProvider>
+                    <RootStack />
+                  </FullScreenModalContextProvider>
+                </SidebarContextProvider>
               </ColorSchemeContextProvider>
             </AppConfigContextProvider>
           </QueryClientProvider>

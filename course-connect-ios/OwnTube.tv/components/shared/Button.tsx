@@ -16,6 +16,7 @@ interface ButtonProps extends PropsWithChildren<PressableProps> {
   isActive?: boolean;
   customColor?: string;
   customHoverColor?: string;
+  hideFocusBorder?: boolean;
 }
 
 export const Button = forwardRef<View, ButtonProps>(
@@ -30,6 +31,7 @@ export const Button = forwardRef<View, ButtonProps>(
       disabled,
       customColor,
       customHoverColor,
+      hideFocusBorder = false,
       ...props
     },
     ref,
@@ -96,12 +98,12 @@ export const Button = forwardRef<View, ButtonProps>(
               // Only use theme backgroundColor if no custom backgroundColor is provided
               ...(!customBackgroundColor ? { backgroundColor: getBackgroundColor(pressed) } : {}),
               justifyContent,
-              borderWidth: focused ? 2 : 0,
+              borderWidth: !hideFocusBorder && focused ? 2 : 0,
               borderColor: colors.theme950,
               paddingHorizontal:
-                (Number(props.style?.paddingHorizontal) || styles.container.paddingHorizontal || 0) - (focused ? 2 : 0),
+                (Number(props.style?.paddingHorizontal) || styles.container.paddingHorizontal || 0) - (!hideFocusBorder && focused ? 2 : 0),
               paddingVertical:
-                (Number(props.style?.paddingVertical) || styles.container.paddingVertical || 0) - (focused ? 2 : 0),
+                (Number(props.style?.paddingVertical) || styles.container.paddingVertical || 0) - (!hideFocusBorder && focused ? 2 : 0),
             },
           ];
         }}

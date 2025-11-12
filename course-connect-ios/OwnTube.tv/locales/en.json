@@ -321,5 +321,7 @@
   "defaultDownloadQuality": "Default download quality",
   "wifiOnlyMode": "Wi-Fi only mode",
   "wifiOnlyModeDescription": "Only download and stream videos when connected to Wi-Fi",
-  "deviceLanguageSettings": "Device & Language"
+  "deviceLanguageSettings": "Device & Language",
+  "expandSidebar": "Expand sidebar",
+  "collapseSidebar": "Collapse sidebar"
 }
