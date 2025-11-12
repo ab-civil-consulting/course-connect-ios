@@ -19,7 +19,12 @@ export default {
   owner: "adam_bower",
   scheme: "mcassist",
   version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.0",
-  assetBundlePatterns: ["**/*"],
+  assetBundlePatterns: [
+    "assets/fonts/**/*",
+    "assets/categories/**/*",
+    "assets/*.png",
+    "assets/appleTV/**/*",
+  ],
   userInterfaceStyle: process.env.EXPO_PUBLIC_USER_INTERFACE_STYLE || "light",
 
   extra: {
