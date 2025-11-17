@@ -18,25 +18,30 @@ const useDownloadVideo = () => {
   const { data: videoData } = useGetVideoQuery({ id: params?.id });
 
   const pickerOptions = useMemo(() => {
-    if (videoData?.streamingPlaylists && Number(videoData?.streamingPlaylists?.length) > 0) {
-      const options = videoData.streamingPlaylists[0].files.map((file) => ({
-        label: `${file.resolution.label} (${formatFileSize(file.size)})`,
-        value: file.fileDownloadUrl,
-      }));
-      console.log("Picker options (streaming playlists):", options);
-      return options;
-    }
-
+    // IMPORTANT: Prioritize direct files over streaming playlists for downloads
+    // Direct files (videoData.files) are complete MP4s suitable for download
+    // Streaming playlists (streamingPlaylists) contain HLS fragments unsuitable for download
     if (videoData?.files && Number(videoData?.files?.length) > 0) {
       const options = videoData.files.map((file) => ({
         label: `${file.resolution.label} (${formatFileSize(file.size)})`,
         value: file.fileDownloadUrl,
       }));
-      console.log("Picker options (files):", options);
+      console.log("🌐 [WEB] Picker options (direct files):", options);
       return options;
     }
 
-    console.log("No picker options available");
+    // Fallback to streaming playlists only if no direct files available
+    // Note: This may not work well as these are HLS segments, not complete videos
+    if (videoData?.streamingPlaylists && Number(videoData?.streamingPlaylists?.length) > 0) {
+      const options = videoData.streamingPlaylists[0].files.map((file) => ({
+        label: `${file.resolution.label} (${formatFileSize(file.size)})`,
+        value: file.fileDownloadUrl,
+      }));
+      console.warn("⚠️ [WEB] WARNING: Using streaming playlist files (may not download correctly):", options);
+      return options;
+    }
+
+    console.log("🌐 [WEB] No picker options available");
     return [];
   }, [videoData]);
 

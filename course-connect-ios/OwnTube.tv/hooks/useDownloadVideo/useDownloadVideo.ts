@@ -6,9 +6,10 @@ import { useFullScreenModalContext } from "../../contexts";
 import { ROUTES } from "../../types";
 import { formatFileSize } from "../../utils";
 import { Alert } from "react-native";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import * as MediaLibrary from "expo-media-library";
 import Toast from "react-native-toast-message";
+import { useAuthSessionStore } from "../../store";
 
 const useDownloadVideo = () => {
   console.log("🔵 [MOBILE/NATIVE] useDownloadVideo hook loaded - using expo-file-system");
@@ -21,20 +22,30 @@ const useDownloadVideo = () => {
   const { data: videoData } = useGetVideoQuery({ id: params?.id });
 
   const pickerOptions = useMemo(() => {
-    if (videoData?.streamingPlaylists && Number(videoData?.streamingPlaylists?.length) > 0) {
-      return videoData.streamingPlaylists[0].files.map((file) => ({
-        label: `${file.resolution.label} (${formatFileSize(file.size)})`,
-        value: file.fileDownloadUrl,
-      }));
-    }
-
+    // IMPORTANT: Prioritize direct files over streaming playlists for downloads
+    // Direct files (videoData.files) are complete MP4s suitable for download
+    // Streaming playlists (streamingPlaylists) contain HLS fragments unsuitable for download
     if (videoData?.files && Number(videoData?.files?.length) > 0) {
-      return videoData.files.map((file) => ({
+      const options = videoData.files.map((file) => ({
         label: `${file.resolution.label} (${formatFileSize(file.size)})`,
         value: file.fileDownloadUrl,
       }));
+      console.log("🔵 [MOBILE/NATIVE] Generated picker options from direct files:", options);
+      return options;
     }
 
+    // Fallback to streaming playlists only if no direct files available
+    // Note: This may not work well as these are HLS segments, not complete videos
+    if (videoData?.streamingPlaylists && Number(videoData?.streamingPlaylists?.length) > 0) {
+      const options = videoData.streamingPlaylists[0].files.map((file) => ({
+        label: `${file.resolution.label} (${formatFileSize(file.size)})`,
+        value: file.fileDownloadUrl,
+      }));
+      console.log("⚠️ [MOBILE/NATIVE] WARNING: Using streaming playlist files (may not download correctly):", options);
+      return options;
+    }
+
+    console.log("🔵 [MOBILE/NATIVE] No picker options available");
     return [];
   }, [videoData]);
 
@@ -91,8 +102,24 @@ const useDownloadVideo = () => {
 
   const handleDownloadFile = async () => {
     console.log("🔵 [MOBILE/NATIVE] handleDownloadFile called with selectedFile:", selectedFile);
-    if (!selectedFile) {
-      console.log("🔵 [MOBILE/NATIVE] No file selected, returning early");
+    console.log("🔵 [MOBILE/NATIVE] Available pickerOptions:", pickerOptions);
+
+    // If no file is selected, try to use the first available option as fallback
+    let fileToDownload = selectedFile;
+
+    if (!fileToDownload && pickerOptions.length > 0) {
+      console.log("🔵 [MOBILE/NATIVE] No file was selected, using first available option as fallback");
+      fileToDownload = pickerOptions[0].value;
+      setSelectedFile(fileToDownload);
+    }
+
+    if (!fileToDownload) {
+      console.log("🔵 [MOBILE/NATIVE] No file to download and no fallback available, returning early");
+      Toast.show({
+        type: "error",
+        text1: "Download failed",
+        text2: "No video quality selected. Please select a quality and try again.",
+      });
       return;
     }
 
@@ -138,15 +165,28 @@ const useDownloadVideo = () => {
         text2: "Please wait while the video is being downloaded.",
       });
 
-      // Get authenticated download URL
-      const authenticatedUrl = getAuthenticatedDownloadUrl(selectedFile);
+      // Get authenticated download URL (with videoFileToken query param as fallback)
+      const authenticatedUrl = getAuthenticatedDownloadUrl(fileToDownload);
 
       // Get filename from URL or generate one
-      const filename = selectedFile.split("/").pop() || `video_${Date.now()}.mp4`;
+      const filename = fileToDownload.split("/").pop() || `video_${Date.now()}.mp4`;
       const fileUri = `${FileSystem.documentDirectory}${filename}`;
 
-      // Download the file with authenticated URL
-      const downloadResult = await FileSystem.downloadAsync(authenticatedUrl, fileUri);
+      // Build download options with Authorization header
+      const { session } = useAuthSessionStore.getState();
+      const downloadOptions: FileSystem.DownloadOptions = {};
+
+      if (session?.accessToken) {
+        downloadOptions.headers = {
+          Authorization: `${session.tokenType || 'Bearer'} ${session.accessToken}`,
+        };
+        console.log("🔵 [MOBILE/NATIVE] Using Bearer token authentication for download");
+      } else {
+        console.log("🔵 [MOBILE/NATIVE] No session found, relying on query parameter authentication only");
+      }
+
+      // Download the file with authenticated URL and headers
+      const downloadResult = await FileSystem.downloadAsync(authenticatedUrl, fileUri, downloadOptions);
 
       if (!downloadResult.uri) {
         throw new Error("Download failed - no file URI returned");
@@ -176,7 +216,12 @@ const useDownloadVideo = () => {
     }
   };
 
-  return { handleDownloadFile, selectedFile, setSelectedFile, pickerOptions };
+  const handleFileSelection = (value: string | undefined) => {
+    console.log("🔵 [MOBILE/NATIVE] File selected via picker:", value);
+    setSelectedFile(value);
+  };
+
+  return { handleDownloadFile, selectedFile, setSelectedFile: handleFileSelection, pickerOptions };
 };
 
 export default useDownloadVideo;
