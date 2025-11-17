@@ -28,11 +28,15 @@ const useFullScreenVideoPlayback = () => {
       if (isFullscreen) {
         setIsFullscreen(false);
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT).catch(console.error);
-        await NavigationBar.setVisibilityAsync("visible");
+        if (Platform.OS === 'android') {
+          await NavigationBar.setVisibilityAsync("visible");
+        }
       } else {
         setIsFullscreen(true);
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).catch(console.error);
-        await NavigationBar.setVisibilityAsync("hidden");
+        if (Platform.OS === 'android') {
+          await NavigationBar.setVisibilityAsync("hidden");
+        }
       }
     }
   };
@@ -53,7 +57,9 @@ const useFullScreenVideoPlayback = () => {
       }
 
       ScreenOrientation.lockAsync(OrientationLock.DEFAULT);
-      NavigationBar.setVisibilityAsync("visible");
+      if (Platform.OS === 'android') {
+        NavigationBar.setVisibilityAsync("visible");
+      }
     };
   }, [isWeb]);
 
