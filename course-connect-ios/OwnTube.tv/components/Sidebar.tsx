@@ -39,6 +39,12 @@ const SIDEBAR_ROUTES = [
     routeName: `(home)/${ROUTES.HISTORY}`,
     isAvailableOffline: true,
   },
+  {
+    nameKey: "forum",
+    icon: "Menu",
+    href: { pathname: `/${ROUTES.FORUM}` },
+    routeName: `(home)/${ROUTES.FORUM}`,
+  },
 ];
 
 interface SidebarProps extends DrawerContentComponentProps {
@@ -160,6 +166,8 @@ export const Sidebar: FC<SidebarProps> = ({ backend, shouldExpand, ...navigation
           switch (nameKey) {
             case "history":
               return !currentInstanceConfig?.customizations?.menuHideHistoryButton;
+            case "forum":
+              return !currentInstanceConfig?.customizations?.menuHideForumButton;
             default:
               return true;
           }

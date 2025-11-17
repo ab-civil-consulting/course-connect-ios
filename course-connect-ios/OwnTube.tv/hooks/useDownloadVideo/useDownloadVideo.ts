@@ -11,6 +11,7 @@ import * as MediaLibrary from "expo-media-library";
 import Toast from "react-native-toast-message";
 
 const useDownloadVideo = () => {
+  console.log("🔵 [MOBILE/NATIVE] useDownloadVideo hook loaded - using expo-file-system");
   const { toggleModal } = useFullScreenModalContext();
   const params = useGlobalSearchParams<RootStackParams[ROUTES.VIDEO]>();
   const [selectedFile, setSelectedFile] = useState<string>();
@@ -89,7 +90,9 @@ const useDownloadVideo = () => {
   };
 
   const handleDownloadFile = async () => {
+    console.log("🔵 [MOBILE/NATIVE] handleDownloadFile called with selectedFile:", selectedFile);
     if (!selectedFile) {
+      console.log("🔵 [MOBILE/NATIVE] No file selected, returning early");
       return;
     }
 

@@ -8,6 +8,7 @@ import Toast from "react-native-toast-message";
 import { useFullScreenModalContext } from "../../contexts";
 
 const useDownloadVideo = () => {
+  console.log("🌐 [WEB] useDownloadVideo hook loaded - using document.createElement");
   const { toggleModal } = useFullScreenModalContext();
   const params = useGlobalSearchParams<RootStackParams[ROUTES.VIDEO]>();
   const [selectedFile, setSelectedFile] = useState<string>();
@@ -102,9 +103,9 @@ const useDownloadVideo = () => {
   };
 
   const handleDownloadFile = async () => {
-    console.log("Download button clicked!");
-    console.log("Current selectedFile:", selectedFile);
-    console.log("Available pickerOptions:", pickerOptions);
+    console.log("🌐 [WEB] Download button clicked!");
+    console.log("🌐 [WEB] Current selectedFile:", selectedFile);
+    console.log("🌐 [WEB] Available pickerOptions:", pickerOptions);
 
     // If no file is selected, try to use the first available option as fallback
     let fileToDownload = selectedFile;

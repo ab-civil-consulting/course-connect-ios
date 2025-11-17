@@ -9,7 +9,7 @@ import { Spacer } from "../shared/Spacer";
 import { Button } from "../shared";
 import { useTranslation } from "react-i18next";
 import { useFullScreenModalContext } from "../../contexts";
-import useDownloadVideo from "../../hooks/useDownloadVideo";
+import useDownloadVideo from "../../hooks/useDownloadVideo/useDownloadVideo";
 
 const DownloadVideo = () => {
   const { dark: isDarkTheme } = useTheme();
