@@ -8,7 +8,9 @@ import Toast from "react-native-toast-message";
 import { useFullScreenModalContext } from "../../contexts";
 
 const useDownloadVideo = () => {
-  console.log("🌐 [WEB] useDownloadVideo hook loaded - using document.createElement");
+  if (__DEV__) {
+    console.log("🌐 [WEB] useDownloadVideo hook loaded - using document.createElement");
+  }
   const { toggleModal } = useFullScreenModalContext();
   const params = useGlobalSearchParams<RootStackParams[ROUTES.VIDEO]>();
   const [selectedFile, setSelectedFile] = useState<string>();
@@ -26,7 +28,9 @@ const useDownloadVideo = () => {
         label: `${file.resolution.label} (${formatFileSize(file.size)})`,
         value: file.fileDownloadUrl,
       }));
-      console.log("🌐 [WEB] Picker options (direct files):", options);
+      if (__DEV__) {
+        console.log("🌐 [WEB] Picker options (direct files):", options);
+      }
       return options;
     }
 
@@ -37,11 +41,15 @@ const useDownloadVideo = () => {
         label: `${file.resolution.label} (${formatFileSize(file.size)})`,
         value: file.fileDownloadUrl,
       }));
-      console.warn("⚠️ [WEB] WARNING: Using streaming playlist files (may not download correctly):", options);
+      if (__DEV__) {
+        console.warn("⚠️ [WEB] WARNING: Using streaming playlist files (may not download correctly):", options);
+      }
       return options;
     }
 
-    console.log("🌐 [WEB] No picker options available");
+    if (__DEV__) {
+      console.log("🌐 [WEB] No picker options available");
+    }
     return [];
   }, [videoData]);
 
@@ -55,12 +63,16 @@ const useDownloadVideo = () => {
     if (!videoData || !params?.backend || !params?.id) return;
 
     if (needsAuthentication) {
-      console.log("Video requires authentication, fetching token...");
+      if (__DEV__) {
+        console.log("Video requires authentication, fetching token...");
+      }
       setIsLoadingToken(true);
       ApiServiceImpl.requestVideoToken(params.backend, params.id)
         .then((tokenData) => {
           if (tokenData?.files?.token) {
-            console.log("Video token received successfully");
+            if (__DEV__) {
+              console.log("Video token received successfully");
+            }
             setVideoFileToken(tokenData.files.token);
           }
         })
@@ -71,17 +83,23 @@ const useDownloadVideo = () => {
           setIsLoadingToken(false);
         });
     } else {
-      console.log("Video is public, no authentication needed");
+      if (__DEV__) {
+        console.log("Video is public, no authentication needed");
+      }
     }
   }, [videoData, params?.backend, params?.id, needsAuthentication]);
 
   useEffect(() => {
-    console.log("useEffect triggered, pickerOptions length:", pickerOptions.length);
+    if (__DEV__) {
+      console.log("useEffect triggered, pickerOptions length:", pickerOptions.length);
+    }
 
     if (pickerOptions && pickerOptions.length > 0) {
       // If only one option, use it
       if (pickerOptions.length === 1) {
-        console.log("Only one option available, selecting:", pickerOptions[0]);
+        if (__DEV__) {
+          console.log("Only one option available, selecting:", pickerOptions[0]);
+        }
         setSelectedFile(pickerOptions[0].value);
         return;
       }
@@ -90,7 +108,9 @@ const useDownloadVideo = () => {
       const lowestQualityOption = pickerOptions.at(pickerOptions.at(-1)?.label.startsWith("Audio only") ? -2 : -1);
 
       if (lowestQualityOption) {
-        console.log("Selected lowest quality option:", lowestQualityOption);
+        if (__DEV__) {
+          console.log("Selected lowest quality option:", lowestQualityOption);
+        }
         setSelectedFile(lowestQualityOption.value);
       }
     }
@@ -101,22 +121,28 @@ const useDownloadVideo = () => {
     if (needsAuthentication && videoFileToken) {
       const separator = url.includes("?") ? "&" : "?";
       const authenticatedUrl = `${url}${separator}videoFileToken=${videoFileToken}`;
-      console.log("Using authenticated download URL");
+      if (__DEV__) {
+        console.log("Using authenticated download URL");
+      }
       return authenticatedUrl;
     }
     return url;
   };
 
   const handleDownloadFile = async () => {
-    console.log("🌐 [WEB] Download button clicked!");
-    console.log("🌐 [WEB] Current selectedFile:", selectedFile);
-    console.log("🌐 [WEB] Available pickerOptions:", pickerOptions);
+    if (__DEV__) {
+      console.log("🌐 [WEB] Download button clicked!");
+      console.log("🌐 [WEB] Current selectedFile:", selectedFile);
+      console.log("🌐 [WEB] Available pickerOptions:", pickerOptions);
+    }
 
     // If no file is selected, try to use the first available option as fallback
     let fileToDownload = selectedFile;
 
     if (!fileToDownload && pickerOptions.length > 0) {
-      console.warn("No file was selected, using first available option as fallback");
+      if (__DEV__) {
+        console.warn("No file was selected, using first available option as fallback");
+      }
       fileToDownload = pickerOptions[0].value;
       setSelectedFile(fileToDownload);
     }
@@ -151,7 +177,9 @@ const useDownloadVideo = () => {
       return;
     }
 
-    console.log("Starting download for:", fileToDownload);
+    if (__DEV__) {
+      console.log("Starting download for:", fileToDownload);
+    }
 
     // Close the modal first
     toggleModal(false);
@@ -172,11 +200,15 @@ const useDownloadVideo = () => {
       link.download = fileToDownload.split("/").pop()?.split("?")[0] || "video.mp4";
       document.body.appendChild(link);
 
-      console.log("Triggering download link click");
+      if (__DEV__) {
+        console.log("Triggering download link click");
+      }
       link.click();
 
       document.body.removeChild(link);
-      console.log("Download initiated successfully");
+      if (__DEV__) {
+        console.log("Download initiated successfully");
+      }
 
       // Show success toast after a brief delay
       setTimeout(() => {

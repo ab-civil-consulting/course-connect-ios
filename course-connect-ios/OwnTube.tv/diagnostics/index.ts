@@ -11,7 +11,9 @@ try {
   PostHog = require("posthog-react-native").default;
   DeviceInfo = require("react-native-device-info").default;
 } catch (error) {
-  console.warn("PostHog or DeviceInfo not available (likely running in Expo Go). Analytics disabled.");
+  if (__DEV__) {
+    console.warn("PostHog or DeviceInfo not available (likely running in Expo Go). Analytics disabled.");
+  }
 }
 
 // Create a mock PostHog instance if the real one isn't available

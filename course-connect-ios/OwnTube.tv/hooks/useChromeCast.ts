@@ -132,7 +132,9 @@ export const useChromeCast = ({
   const setupRemotePlayerListeners = () => {
     // Only setup RemotePlayer after Cast framework is fully initialized
     if (!window.cast?.framework) {
-      console.warn('[useChromeCast] Cast framework not available for RemotePlayer setup');
+      if (__DEV__) {
+        console.warn('[useChromeCast] Cast framework not available for RemotePlayer setup');
+      }
       return;
     }
 
@@ -180,7 +182,9 @@ export const useChromeCast = ({
         },
       );
 
-      console.log('[useChromeCast] RemotePlayer listeners setup successfully');
+      if (__DEV__) {
+        console.log('[useChromeCast] RemotePlayer listeners setup successfully');
+      }
     } catch (error) {
       console.error('[useChromeCast] Error setting up RemotePlayer:', error);
       captureError(error as Error, CustomPostHogExceptions.ChromecastError);
@@ -237,7 +241,9 @@ export const useChromeCast = ({
       setIsCastInitialized(true);
       setupRemotePlayerListeners();
 
-      console.log('[useChromeCast] Cast API initialized successfully');
+      if (__DEV__) {
+        console.log('[useChromeCast] Cast API initialized successfully');
+      }
     } catch (error) {
       console.error('[useChromeCast] Error initializing Cast API:', error);
       captureError(error as Error, CustomPostHogExceptions.ChromecastError);

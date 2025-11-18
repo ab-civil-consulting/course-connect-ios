@@ -12,7 +12,9 @@ import Toast from "react-native-toast-message";
 import { useAuthSessionStore } from "../../store";
 
 const useDownloadVideo = () => {
-  console.log("🔵 [MOBILE/NATIVE] useDownloadVideo hook loaded - using expo-file-system");
+  if (__DEV__) {
+    console.log("🔵 [MOBILE/NATIVE] useDownloadVideo hook loaded - using expo-file-system");
+  }
   const { toggleModal } = useFullScreenModalContext();
   const params = useGlobalSearchParams<RootStackParams[ROUTES.VIDEO]>();
   const [selectedFile, setSelectedFile] = useState<string>();
@@ -30,7 +32,9 @@ const useDownloadVideo = () => {
         label: `${file.resolution.label} (${formatFileSize(file.size)})`,
         value: file.fileDownloadUrl,
       }));
-      console.log("🔵 [MOBILE/NATIVE] Generated picker options from direct files:", options);
+      if (__DEV__) {
+        console.log("🔵 [MOBILE/NATIVE] Generated picker options from direct files:", options);
+      }
       return options;
     }
 
@@ -41,11 +45,15 @@ const useDownloadVideo = () => {
         label: `${file.resolution.label} (${formatFileSize(file.size)})`,
         value: file.fileDownloadUrl,
       }));
-      console.log("⚠️ [MOBILE/NATIVE] WARNING: Using streaming playlist files (may not download correctly):", options);
+      if (__DEV__) {
+        console.log("⚠️ [MOBILE/NATIVE] WARNING: Using streaming playlist files (may not download correctly):", options);
+      }
       return options;
     }
 
-    console.log("🔵 [MOBILE/NATIVE] No picker options available");
+    if (__DEV__) {
+      console.log("🔵 [MOBILE/NATIVE] No picker options available");
+    }
     return [];
   }, [videoData]);
 
@@ -59,12 +67,16 @@ const useDownloadVideo = () => {
     if (!videoData || !params?.backend || !params?.id) return;
 
     if (needsAuthentication) {
-      console.log("Video requires authentication, fetching token...");
+      if (__DEV__) {
+        console.log("Video requires authentication, fetching token...");
+      }
       setIsLoadingToken(true);
       ApiServiceImpl.requestVideoToken(params.backend, params.id)
         .then((tokenData) => {
           if (tokenData?.files?.token) {
-            console.log("Video token received successfully");
+            if (__DEV__) {
+              console.log("Video token received successfully");
+            }
             setVideoFileToken(tokenData.files.token);
           }
         })
@@ -75,7 +87,9 @@ const useDownloadVideo = () => {
           setIsLoadingToken(false);
         });
     } else {
-      console.log("Video is public, no authentication needed");
+      if (__DEV__) {
+        console.log("Video is public, no authentication needed");
+      }
     }
   }, [videoData, params?.backend, params?.id, needsAuthentication]);
 
@@ -94,27 +108,35 @@ const useDownloadVideo = () => {
     if (needsAuthentication && videoFileToken) {
       const separator = url.includes("?") ? "&" : "?";
       const authenticatedUrl = `${url}${separator}videoFileToken=${videoFileToken}`;
-      console.log("Using authenticated download URL");
+      if (__DEV__) {
+        console.log("Using authenticated download URL");
+      }
       return authenticatedUrl;
     }
     return url;
   };
 
   const handleDownloadFile = async () => {
-    console.log("🔵 [MOBILE/NATIVE] handleDownloadFile called with selectedFile:", selectedFile);
-    console.log("🔵 [MOBILE/NATIVE] Available pickerOptions:", pickerOptions);
+    if (__DEV__) {
+      console.log("🔵 [MOBILE/NATIVE] handleDownloadFile called with selectedFile:", selectedFile);
+      console.log("🔵 [MOBILE/NATIVE] Available pickerOptions:", pickerOptions);
+    }
 
     // If no file is selected, try to use the first available option as fallback
     let fileToDownload = selectedFile;
 
     if (!fileToDownload && pickerOptions.length > 0) {
-      console.log("🔵 [MOBILE/NATIVE] No file was selected, using first available option as fallback");
+      if (__DEV__) {
+        console.log("🔵 [MOBILE/NATIVE] No file was selected, using first available option as fallback");
+      }
       fileToDownload = pickerOptions[0].value;
       setSelectedFile(fileToDownload);
     }
 
     if (!fileToDownload) {
-      console.log("🔵 [MOBILE/NATIVE] No file to download and no fallback available, returning early");
+      if (__DEV__) {
+        console.log("🔵 [MOBILE/NATIVE] No file to download and no fallback available, returning early");
+      }
       Toast.show({
         type: "error",
         text1: "Download failed",
@@ -180,9 +202,13 @@ const useDownloadVideo = () => {
         downloadOptions.headers = {
           Authorization: `${session.tokenType || 'Bearer'} ${session.accessToken}`,
         };
-        console.log("🔵 [MOBILE/NATIVE] Using Bearer token authentication for download");
+        if (__DEV__) {
+          console.log("🔵 [MOBILE/NATIVE] Using Bearer token authentication for download");
+        }
       } else {
-        console.log("🔵 [MOBILE/NATIVE] No session found, relying on query parameter authentication only");
+        if (__DEV__) {
+          console.log("🔵 [MOBILE/NATIVE] No session found, relying on query parameter authentication only");
+        }
       }
 
       // Download the file with authenticated URL and headers
@@ -217,7 +243,9 @@ const useDownloadVideo = () => {
   };
 
   const handleFileSelection = (value: string | undefined) => {
-    console.log("🔵 [MOBILE/NATIVE] File selected via picker:", value);
+    if (__DEV__) {
+      console.log("🔵 [MOBILE/NATIVE] File selected via picker:", value);
+    }
     setSelectedFile(value);
   };
 

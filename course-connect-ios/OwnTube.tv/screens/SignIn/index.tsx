@@ -82,13 +82,17 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
   );
 
   const handleSignIn = async (formValues: z.infer<typeof signInFormValidationSchema>) => {
-    console.log('[SignIn] handleSignIn called with backend:', backend);
+    if (__DEV__) {
+      console.log('[SignIn] handleSignIn called with backend:', backend);
+    }
     if (loginPrerequisites) {
       let loginResponse: UserLoginResponse;
 
       try {
         loginResponse = await login({ loginPrerequisites, ...formValues });
-        console.log('[SignIn] Login successful');
+        if (__DEV__) {
+          console.log('[SignIn] Login successful');
+        }
       } catch (e) {
         const { code } = e as { code: string };
         console.error('[SignIn] Login failed:', e);
@@ -103,13 +107,19 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
       }
 
       const authSessionData = parseAuthSessionData(loginResponse, backend);
-      console.log('[SignIn] Auth session data parsed');
+      if (__DEV__) {
+        console.log('[SignIn] Auth session data parsed');
+      }
 
       if (loginResponse) {
         await addSession(backend, authSessionData);
-        console.log('[SignIn] Session added to store');
+        if (__DEV__) {
+          console.log('[SignIn] Session added to store');
+        }
         await selectSession(backend);
-        console.log('[SignIn] Session selected');
+        if (__DEV__) {
+          console.log('[SignIn] Session selected');
+        }
 
         const { data: userInfoResponse } = await getUserInfo();
 
@@ -119,11 +129,15 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
             userInfoResponse,
             email: userInfoResponse.email,
           });
-          console.log('[SignIn] User info updated');
+          if (__DEV__) {
+            console.log('[SignIn] User info updated');
+          }
         }
 
         captureDiagnosticsEvent(CustomPostHogEvents.Login, { backend });
-        console.log('[SignIn] Navigating to home with backend:', backend);
+        if (__DEV__) {
+          console.log('[SignIn] Navigating to home with backend:', backend);
+        }
         router.navigate({ pathname: ROUTES.HOME, params: { backend } });
       }
     } else {
@@ -265,11 +279,15 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                       <Spacer height={spacing.sm} />
                       <Button
                         onPress={() => {
-                          console.log('[SignIn] Create Account button clicked');
-                          console.log('[SignIn] Navigating to:', `/(home)/${ROUTES.SIGNUP}`);
-                          console.log('[SignIn] With backend:', backend);
+                          if (__DEV__) {
+                            console.log('[SignIn] Create Account button clicked');
+                            console.log('[SignIn] Navigating to:', `/(home)/${ROUTES.SIGNUP}`);
+                            console.log('[SignIn] With backend:', backend);
+                          }
                           router.push({ pathname: `/(home)/${ROUTES.SIGNUP}`, params: { backend } });
-                          console.log('[SignIn] router.push called');
+                          if (__DEV__) {
+                            console.log('[SignIn] router.push called');
+                          }
                         }}
                         style={styles.height48}
                         contrast="high"
@@ -397,11 +415,15 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                         <Spacer height={spacing.sm} />
                         <Button
                           onPress={() => {
-                            console.log('[SignIn] Create Account button clicked');
-                            console.log('[SignIn] Navigating to:', `/(home)/${ROUTES.SIGNUP}`);
-                            console.log('[SignIn] With backend:', backend);
+                            if (__DEV__) {
+                              console.log('[SignIn] Create Account button clicked');
+                              console.log('[SignIn] Navigating to:', `/(home)/${ROUTES.SIGNUP}`);
+                              console.log('[SignIn] With backend:', backend);
+                            }
                             router.push({ pathname: `/(home)/${ROUTES.SIGNUP}`, params: { backend } });
-                            console.log('[SignIn] router.push called');
+                            if (__DEV__) {
+                              console.log('[SignIn] router.push called');
+                            }
                           }}
                           style={styles.height48}
                           contrast="high"

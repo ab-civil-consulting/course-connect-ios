@@ -121,7 +121,7 @@ export const AppConfigContextProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const { ApiServiceImpl } = require("../api/peertubeVideosApi");
     ApiServiceImpl.debugLogging = isDebugMode;
-    if (isDebugMode) {
+    if (isDebugMode && __DEV__) {
       console.log("[Debug Mode] API debug logging enabled");
     }
   }, [isDebugMode]);

@@ -253,12 +253,18 @@ const VideoView = ({
     // Configure VHS to add token to all HLS requests
     const vhs = player.tech()?.vhs;
     if (vhs && token) {
-      console.log('[VideoView] Configuring VHS with token:', token.substring(0, 20) + '...');
+      if (__DEV__) {
+        console.log('[VideoView] Configuring VHS with token:', token.substring(0, 20) + '...');
+      }
       vhs.xhr.beforeRequest = (options: any) => {
-        console.log('[VideoView] VHS beforeRequest:', options.uri);
+        if (__DEV__) {
+          console.log('[VideoView] VHS beforeRequest:', options.uri);
+        }
         const separator = options.uri.includes("?") ? "&" : "?";
         options.uri = `${options.uri}${separator}videoFileToken=${token}`;
-        console.log('[VideoView] Modified URI:', options.uri);
+        if (__DEV__) {
+          console.log('[VideoView] Modified URI:', options.uri);
+        }
         return options;
       };
     }

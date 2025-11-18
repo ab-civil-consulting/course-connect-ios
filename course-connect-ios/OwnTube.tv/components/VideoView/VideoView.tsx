@@ -312,12 +312,14 @@ const VideoView = ({
     const isMP4 = uri.includes('.mp4') || uri.includes('/download/videos/');
     const isWebM = uri.includes('.webm');
 
-    console.log('[VideoView] Creating video source:', {
-      isHLS,
-      isMP4,
-      isWebM,
-      uri: uri.substring(0, 100) + '...',
-    });
+    if (__DEV__) {
+      console.log('[VideoView] Creating video source:', {
+        isHLS,
+        isMP4,
+        isWebM,
+        uri: uri.substring(0, 100) + '...',
+      });
+    }
 
     const sourceConfig: any = {
       uri,
@@ -335,13 +337,19 @@ const VideoView = ({
     // Set appropriate content type for ExoPlayer
     if (isHLS) {
       sourceConfig.type = 'application/x-mpegurl';
-      console.log('[VideoView] Set content type to HLS');
+      if (__DEV__) {
+        console.log('[VideoView] Set content type to HLS');
+      }
     } else if (isMP4) {
       sourceConfig.type = 'video/mp4';
-      console.log('[VideoView] Set content type to MP4');
+      if (__DEV__) {
+        console.log('[VideoView] Set content type to MP4');
+      }
     } else if (isWebM) {
       sourceConfig.type = 'video/webm';
-      console.log('[VideoView] Set content type to WebM');
+      if (__DEV__) {
+        console.log('[VideoView] Set content type to WebM');
+      }
     }
 
     // Add authentication token to headers if available
@@ -349,7 +357,9 @@ const VideoView = ({
       sourceConfig.headers = {
         'X-Video-File-Token': videoToken,
       };
-      console.log('[VideoView] Added token to source headers');
+      if (__DEV__) {
+        console.log('[VideoView] Added token to source headers');
+      }
     }
 
     return sourceConfig;

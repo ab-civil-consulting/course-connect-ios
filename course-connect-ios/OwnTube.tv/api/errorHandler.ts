@@ -30,7 +30,9 @@ export function handleAxiosErrorWithRetry(error: unknown, target: string): Promi
   }
 
   if (retryAfter) {
-    console.info(`Too many requests. Retrying to fetch ${target} in ${retryAfter} seconds...`);
+    if (__DEV__) {
+      console.info(`Too many requests. Retrying to fetch ${target} in ${retryAfter} seconds...`);
+    }
     postHogInstance.captureException(error, { errorType: `${CustomPostHogExceptions.RateLimitError} (${target})` });
   } else {
     postHogInstance.captureException(error, { errorType: `${CustomPostHogExceptions.HttpRequestError} (${target})` });

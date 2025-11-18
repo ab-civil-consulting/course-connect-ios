@@ -155,9 +155,11 @@ const RootStack = () => {
 
   if (!session && !isAuthRoute) {
     const signInBackend = backend || primaryBackend || storedBackend;
-    console.log('[RootStack] Auth guard triggered - pathname:', pathname);
-    console.log('[RootStack] Is auth route:', isAuthRoute);
-    console.log('[RootStack] Rendering SignIn with backend:', signInBackend, { backend, primaryBackend, storedBackend });
+    if (__DEV__) {
+      console.log('[RootStack] Auth guard triggered - pathname:', pathname);
+      console.log('[RootStack] Is auth route:', isAuthRoute);
+      console.log('[RootStack] Rendering SignIn with backend:', signInBackend, { backend, primaryBackend, storedBackend });
+    }
     return (
       <>
         <StatusBar style="light" />

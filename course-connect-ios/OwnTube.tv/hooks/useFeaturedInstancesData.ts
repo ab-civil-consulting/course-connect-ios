@@ -12,9 +12,13 @@ export const useFeaturedInstancesData = () => {
 
   const getFeaturedList = async () => {
     try {
-      console.log('[useFeaturedInstancesData] Starting to load featured instances...');
+      if (__DEV__) {
+        console.log('[useFeaturedInstancesData] Starting to load featured instances...');
+      }
       const [{ localUri }] = await Asset.loadAsync(require("../public/featured-instances.json5"));
-      console.log('[useFeaturedInstancesData] Asset loaded, localUri:', localUri);
+      if (__DEV__) {
+        console.log('[useFeaturedInstancesData] Asset loaded, localUri:', localUri);
+      }
 
       if (localUri) {
         if (Platform.OS === "web") {
@@ -35,7 +39,9 @@ export const useFeaturedInstancesData = () => {
   useEffect(() => {
     getFeaturedList()
       .then((instances) => {
-        console.log('[useFeaturedInstancesData] Successfully loaded', instances.length, 'featured instances');
+        if (__DEV__) {
+          console.log('[useFeaturedInstancesData] Successfully loaded', instances.length, 'featured instances');
+        }
         setFeaturedInstances(instances);
       })
       .catch((err) => {

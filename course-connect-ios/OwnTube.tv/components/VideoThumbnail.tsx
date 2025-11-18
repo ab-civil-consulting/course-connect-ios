@@ -90,7 +90,9 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
 
   // Only show warning if backend is truly missing or dimensions are invalid after initial layout
   if (!backend) {
-    console.warn('[VideoThumbnail] No backend available:', { backendProp, primaryBackend });
+    if (__DEV__) {
+      console.warn('[VideoThumbnail] No backend available:', { backendProp, primaryBackend });
+    }
     return null;
   }
 
