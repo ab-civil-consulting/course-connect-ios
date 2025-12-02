@@ -14,7 +14,7 @@ const icon =
 
 export default {
   slug: process.env.EXPO_PUBLIC_APP_SLUG || "course-connect",
-  name: process.env.EXPO_PUBLIC_APP_NAME || "MC Assist",
+  name: process.env.EXPO_PUBLIC_APP_NAME || "Course Connect",
   icon,
   owner: "adam_bower",
   scheme: "mcassist",
@@ -133,8 +133,8 @@ export default {
     [
       "expo-media-library",
       {
-        photosPermission: "Allow MC Assist to save downloaded videos to your photo library.",
-        savePhotosPermission: "Allow MC Assist to save downloaded videos to your photo library.",
+        photosPermission: "Allow Course Connect to save downloaded videos to your photo library.",
+        savePhotosPermission: "Allow Course Connect to save downloaded videos to your photo library.",
       },
     ],
     "./plugins/withKotlinJvmTarget.js",

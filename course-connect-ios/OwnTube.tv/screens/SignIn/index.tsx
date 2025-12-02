@@ -172,9 +172,19 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
             {Platform.OS === "web" ? (
               <View>
                 <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
-                  {t("signInToApp", { appName: currentInstanceConfig?.customizations?.pageTitle || instanceInfo?.name })}
+                  {t("signInToApp", { appName: "Course Connect" })}
                 </Typography>
-                <Spacer height={spacing.xxl} />
+                <Spacer height={spacing.lg} />
+                <View style={styles.noticeBanner}>
+                  <Typography fontWeight="SemiBold" fontSize="sizeXS" color="#92400e" style={styles.textAlignCenter}>
+                    {t("newAppNoticeTitle")}
+                  </Typography>
+                  <Spacer height={spacing.xs} />
+                  <Typography fontSize="sizeXS" color="#78350f" style={styles.textAlignCenter}>
+                    {t("newAppNoticeMessage")}
+                  </Typography>
+                </View>
+                <Spacer height={spacing.xl} />
                 <Controller
                   name="username"
                   control={control}
@@ -303,9 +313,19 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
               <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View>
                   <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
-                    {t("signInToApp", { appName: currentInstanceConfig?.customizations?.pageTitle || instanceInfo?.name })}
+                    {t("signInToApp", { appName: "Course Connect" })}
                   </Typography>
-                  <Spacer height={spacing.xxl} />
+                  <Spacer height={spacing.lg} />
+                  <View style={styles.noticeBanner}>
+                    <Typography fontWeight="SemiBold" fontSize="sizeXS" color="#92400e" style={styles.textAlignCenter}>
+                      {t("newAppNoticeTitle")}
+                    </Typography>
+                    <Spacer height={spacing.xs} />
+                    <Typography fontSize="sizeXS" color="#78350f" style={styles.textAlignCenter}>
+                      {t("newAppNoticeMessage")}
+                    </Typography>
+                  </View>
+                  <Spacer height={spacing.xl} />
                   <Controller
                     name="username"
                     control={control}
@@ -455,6 +475,14 @@ const styles = StyleSheet.create({
   height48: { height: 48 },
   keyboardAvoidingView: {
     flex: 1,
+  },
+  noticeBanner: {
+    backgroundColor: "#fef3c7",
+    borderColor: "#f59e0b",
+    borderRadius: borderRadius.radiusSm,
+    borderWidth: 1,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   scrollViewContent: {
     flexGrow: 1,

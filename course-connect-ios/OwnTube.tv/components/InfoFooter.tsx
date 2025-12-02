@@ -21,7 +21,7 @@ export const InfoFooter = ({ showBuildInfo }: InfoFooterProps) => {
       <View style={styles.logoContainer}>
         <Image
           resizeMode="contain"
-          source={require("../assets/mc-assist-logo-blue.png")}
+          source={require("../assets/course-connect-logo-blue.png")}
           style={{ width: 32, height: 32 }}
         />
         <Typography fontSize="sizeLg" fontWeight="SemiBold" color={colors.theme950}>

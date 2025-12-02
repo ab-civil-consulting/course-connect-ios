@@ -261,11 +261,11 @@
     logoUrl: "https://owntube-tv.github.io/web-client/logos/swebbtube.se.png",
   },
   {
-    name: "MC Assist",
+    name: "Course Connect",
     description: "AB Civil training videos and courses",
     hostname: "course-connect.ab-civil.com",
     customizations: {
-      pageTitle: "MC Assist",
+      pageTitle: "Course Connect",
       loginWithUsernameAndPassword: true,
       showMoreSize: 24,
       searchPageSize: 24,

@@ -1,7 +1,7 @@
 {
-  "short_name": "MC Assist",
-  "name": "MC Assist",
-  "description": "MC Assist - Professional development and training platform",
+  "short_name": "Course Connect",
+  "name": "Course Connect",
+  "description": "Course Connect - Professional development and training platform",
   "icons": [
     {
       "src": "favicon.ico",
@@ -29,14 +29,14 @@
       "sizes": "1280x576",
       "type": "image/jpeg",
       "form_factor": "wide",
-      "label": "MC Assist"
+      "label": "Course Connect"
     },
     {
       "src": "screenshot_narrow.jpeg",
       "sizes": "576x1280",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "MC Assist"
+      "label": "Course Connect"
     }
   ]
 }
