@@ -3,7 +3,6 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { Typography } from "./Typography";
 import { useTheme } from "@react-navigation/native";
 import { useGetInstanceInfoQuery } from "../api";
-import { useMemo } from "react";
 import { InstanceLogo } from "./InstanceLogo";
 import { useAppConfigContext } from "../contexts";
 
@@ -17,9 +16,8 @@ export const InstanceInfo = ({ backend, showText = true }: InstanceInfoProps) =>
   const { data, isFetching } = useGetInstanceInfoQuery(backend);
   const { currentInstanceConfig } = useAppConfigContext();
 
-  const logoSrc = useMemo(() => {
-    return data?.avatars?.[0] ? `https://${backend}${data?.avatars[0]?.path}` : currentInstanceConfig?.logoUrl || "";
-  }, [data, backend, currentInstanceConfig]);
+  // Always use local logo from public/logo192.png (ignore server avatar)
+  const logoSrc = "";
 
   return (
     <View

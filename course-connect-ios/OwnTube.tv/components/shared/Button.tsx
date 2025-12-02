@@ -32,12 +32,17 @@ export const Button = forwardRef<View, ButtonProps>(
       customColor,
       customHoverColor,
       hideFocusBorder = false,
+      accessibilityLabel,
+      accessibilityHint,
       ...props
     },
     ref,
   ) => {
     const { colors } = useTheme();
     const { isHovered, toggleHovered } = useHoverState();
+
+    // Auto-generate accessibility label from text or icon if not provided
+    const computedAccessibilityLabel = accessibilityLabel || text || icon || "Button";
 
     const { regularColor, hoverColor } = useMemo(() => {
       // If custom colors provided, use them
@@ -72,6 +77,11 @@ export const Button = forwardRef<View, ButtonProps>(
     return (
       <Pressable
         {...props}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel={computedAccessibilityLabel}
+        accessibilityHint={accessibilityHint}
+        accessibilityState={{ disabled: !!disabled }}
         onHoverIn={(e) => {
           props.onHoverIn?.(e);
           toggleHovered();

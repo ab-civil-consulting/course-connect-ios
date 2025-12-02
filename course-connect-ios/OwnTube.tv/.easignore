@@ -1,6 +1,39 @@
 # EAS Build Ignore File
 # EAS already respects .gitignore, this file is for additional exclusions
 
+# ===========================================
+# BUILD ARTIFACTS & CACHES (Industry Standard)
+# EAS rebuilds everything fresh - no need to upload these
+# ===========================================
+
+# Android build artifacts
+android/app/build/
+android/.gradle/
+android/build/
+
+# iOS build artifacts
+ios/build/
+ios/Pods/
+ios/DerivedData/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+
+# Node modules (EAS installs fresh)
+node_modules/
+
+# Expo cache
+.expo/
+
+# Web/dist build output
+dist/
+
+# Log files
+*.log
+
+# ===========================================
+# DOCUMENTATION & DEV FILES
+# ===========================================
+
 # Documentation (not needed for builds)
 *.md
 !README.md
@@ -54,7 +87,6 @@ scripts/
 
 # Development dependencies source
 patches/
-.expo/
 .metro-health-check*
 
 # Unused font files (we only need the ones referenced in app.config)

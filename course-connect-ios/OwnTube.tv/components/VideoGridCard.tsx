@@ -47,6 +47,10 @@ export const VideoGridCard = forwardRef<View, VideoGridCardProps>(({ video, back
         onHoverIn={toggleHovered}
         onHoverOut={toggleHovered}
         ref={ref}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel={`Play video: ${video.name}`}
+        accessibilityHint="Opens the video player"
       >
         {/* Thumbnail Container */}
         <View
