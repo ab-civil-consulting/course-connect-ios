@@ -29,12 +29,12 @@ export default {
 
   extra: {
     eas: {
-      projectId: "512d37de-e7c0-42f4-912e-ff850d3e9e57",
+      projectId: "428ef2e5-50ec-459c-b1c0-f4aaadd7110f",
     },
     primaryBackend: process.env.EXPO_PUBLIC_PRIMARY_BACKEND || undefined,
   },
   updates: {
-    url: "https://u.expo.dev/512d37de-e7c0-42f4-912e-ff850d3e9e57",
+    url: "https://u.expo.dev/428ef2e5-50ec-459c-b1c0-f4aaadd7110f",
   },
   runtimeVersion: {
     policy: "appVersion",
