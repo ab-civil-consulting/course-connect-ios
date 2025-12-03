@@ -1,0 +1,39 @@
+{
+  "cli": {
+    "version": ">= 16.19.3",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "prebuildCommand": "npx expo prebuild --clean",
+      "env": {
+        "npm_config_legacy_peer_deps": "true"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "prebuildCommand": "npx expo prebuild --clean",
+      "env": {
+        "npm_config_legacy_peer_deps": "true"
+      }
+    },
+    "production": {
+      "developmentClient": false,
+      "prebuildCommand": "npx expo prebuild --clean",
+      "env": {
+        "npm_config_legacy_peer_deps": "true",
+        "EXPO_PUBLIC_PRIMARY_BACKEND": "course-connect.ab-civil.com",
+        "EXPO_PUBLIC_APP_NAME": "Course Connect",
+        "EXPO_PUBLIC_APP_SLUG": "course-connect",
+        "EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER": "tv.uscreen.adamswebsite",
+        "EXPO_PUBLIC_ANDROID_PACKAGE": "tv.uscreen.adamswebsite",
+        "EXPO_PUBLIC_APP_VERSION": "4.0.1"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
