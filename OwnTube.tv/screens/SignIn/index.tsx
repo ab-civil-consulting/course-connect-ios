@@ -172,7 +172,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
             {Platform.OS === "web" ? (
               <View>
                 <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
-                  {t("signInToApp", { appName: "Course Connect" })}
+                  {t("signInToApp", { appName: "MC Assist" })}
                 </Typography>
                 <Spacer height={spacing.lg} />
                 <View style={styles.noticeBanner}>
@@ -313,7 +313,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
               <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View>
                   <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
-                    {t("signInToApp", { appName: "Course Connect" })}
+                    {t("signInToApp", { appName: "MC Assist" })}
                   </Typography>
                   <Spacer height={spacing.lg} />
                   <View style={styles.noticeBanner}>

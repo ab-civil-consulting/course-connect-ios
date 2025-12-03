@@ -13,8 +13,8 @@ const icon =
   process.env.EXPO_PUBLIC_ICON || (process.env.EXPO_TV ? "./assets/appleTV/icon_1280x768.png" : "./assets/icon.png");
 
 export default {
-  slug: process.env.EXPO_PUBLIC_APP_SLUG || "course-connect",
-  name: process.env.EXPO_PUBLIC_APP_NAME || "Course Connect",
+  slug: process.env.EXPO_PUBLIC_APP_SLUG || "mc-assist",
+  name: process.env.EXPO_PUBLIC_APP_NAME || "MC Assist",
   icon,
   owner: "adam_bower",
   scheme: "mcassist",
@@ -59,7 +59,7 @@ export default {
     },
     buildNumber: getBuildNumber({ platform: "ios" }),
     supportsTablet: true,
-    bundleIdentifier: process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER || "com.abcivil.mcassist.v2",
+    bundleIdentifier: process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER || "com.abcivil.mcassist",
     associatedDomains: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL
       ? [`applinks:${process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL}`]
       : undefined,
@@ -78,7 +78,7 @@ export default {
       "READ_MEDIA_IMAGES",
     ],
     versionCode: getBuildNumber({ platform: "android" }),
-    package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.mcassist.v2",
+    package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.mcassist",
     intentFilters: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL
       ? [
           {
@@ -133,8 +133,8 @@ export default {
     [
       "expo-media-library",
       {
-        photosPermission: "Allow Course Connect to save downloaded videos to your photo library.",
-        savePhotosPermission: "Allow Course Connect to save downloaded videos to your photo library.",
+        photosPermission: "Allow MC Assist to save downloaded videos to your photo library.",
+        savePhotosPermission: "Allow MC Assist to save downloaded videos to your photo library.",
       },
     ],
     "./plugins/withKotlinJvmTarget.js",
