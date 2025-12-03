@@ -37,3 +37,8 @@ yarn-error.*
 # native mobile files
 /android/
 /ios/
+
+# Google Service Account key (sensitive - never commit)
+google-service-account.json
+*-serviceaccount-*.json
+google-service-account-key/

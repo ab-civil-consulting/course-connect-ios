@@ -48,7 +48,6 @@
     "expo-router": "~6.0.14",
     "expo-screen-orientation": "~9.0.7",
     "expo-status-bar": "~3.0.8",
-    "expo-updates": "~29.0.12",
     "i18next": "^23.11.5",
     "intl-pluralrules": "^2.0.1",
     "jest-expo": "~54.0.13",

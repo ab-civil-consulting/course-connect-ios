@@ -34,6 +34,10 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account-key/eco-folder-408116-c6609fe30f0e.json"
+      }
+    }
   }
 }

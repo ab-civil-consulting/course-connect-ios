@@ -33,12 +33,8 @@ export default {
     },
     primaryBackend: process.env.EXPO_PUBLIC_PRIMARY_BACKEND || undefined,
   },
-  updates: {
-    url: "https://u.expo.dev/428ef2e5-50ec-459c-b1c0-f4aaadd7110f",
-  },
-  runtimeVersion: {
-    policy: "appVersion",
-  },
+  // expo-updates temporarily disabled due to iOS crash bug (GitHub issue #37182)
+  // Will be re-enabled in v1.0.1 after first release is stable
 
   splash: {
     image: process.env.EXPO_PUBLIC_SPLASH_IMAGE || "./assets/splash.png",
