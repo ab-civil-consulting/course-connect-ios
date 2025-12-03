@@ -138,7 +138,10 @@ export default {
       },
     ],
     "./plugins/withKotlinJvmTarget.js",
-    "react-native-google-cast",
+    // Google Cast plugins - Android only (causes native crash on iOS)
+    ...(process.env.EAS_BUILD_PLATFORM !== "ios"
+      ? ["react-native-google-cast", "./plugins/fixAndroidChromecastLib.js"]
+      : []),
     [
       "./plugins/withReleaseSigningConfig.js",
       {
@@ -148,7 +151,6 @@ export default {
         keyPassword: process.env.EXPO_PUBLIC_ANDROID_RELEASE_SIGNING_KEY_PASSWORD,
       },
     ],
-    "./plugins/fixAndroidChromecastLib.js",
     "./plugins/withAndroidNotificationControls.js",
   ],
 };
