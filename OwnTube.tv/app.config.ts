@@ -119,9 +119,12 @@ export default {
           kotlinVersion: "2.1.20",
           kspVersion: "2.1.20-2.0.1",
           targetSdkVersion: 35,
+          jsEngine: "hermes",
         },
         ios: {
-          buildReactNativeFromSource: true,
+          // Use Hermes (default for Expo SDK 54)
+          // Removed buildReactNativeFromSource as it conflicts with jsEngine
+          jsEngine: "hermes",
         },
       },
     ],

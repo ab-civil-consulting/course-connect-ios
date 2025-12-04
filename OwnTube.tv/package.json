@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "homepage": "https://course-connect.ab-civil.com/",
+  "expo": {
+    "autolinking": {
+      "ios": {
+        "exclude": [
+          "react-native-google-cast"
+        ]
+      }
+    }
+  },
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "start": "expo start",
@@ -59,7 +68,7 @@
     "react-dom": "19.1.0",
     "react-hook-form": "^7.56.4",
     "react-i18next": "^14.1.2",
-    "react-native": "0.81.5",
+    "react-native": "^0.81.5",
     "react-native-airplay-button": "^1.1.0",
     "react-native-device-info": "^14.0.4",
     "react-native-gesture-handler": "~2.28.0",
