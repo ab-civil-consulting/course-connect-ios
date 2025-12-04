@@ -69,16 +69,30 @@ export type PeertubeInstance = {
 };
 
 export class ApiError {
-  constructor({ text, code, message, status }: { text?: string; code?: string; message: string; status?: number }) {
+  constructor({
+    text,
+    code,
+    message,
+    status,
+    detail,
+  }: {
+    text?: string;
+    code?: string;
+    message: string;
+    status?: number;
+    detail?: string;
+  }) {
     this.text = text || "Unexpected";
     this.code = code;
     this.message = message;
     this.status = status;
+    this.detail = detail;
   }
   public text: string;
   public code?: string;
   public message: string;
   public status?: number;
+  public detail?: string;
 }
 
 export type UserLoginResponse = UserLogin & { expires_in: number; refresh_token_expires_in: number };

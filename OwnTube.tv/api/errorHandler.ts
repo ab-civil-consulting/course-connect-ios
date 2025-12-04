@@ -47,6 +47,7 @@ export function handleAxiosErrorWithRetry(error: unknown, target: string): Promi
             status: response?.status,
             code: (response?.data as { code: string })?.code,
             message,
+            detail: (response?.data as { detail?: string })?.detail,
           }),
         );
       },

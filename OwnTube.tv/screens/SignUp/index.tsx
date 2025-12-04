@@ -89,11 +89,15 @@ export const SignUp = () => {
       const e = error as {
         response?: { data?: { detail?: string; "invalid-params"?: Record<string, { msg?: string }> } };
         message?: string;
+        detail?: string; // ApiError.detail from error handler
       };
       console.error("Registration failed:", e);
 
       // Try to extract specific error message from PeerTube response
-      if (e?.response?.data?.detail) {
+      // Check ApiError.detail first (from error handler), then raw response
+      if (e?.detail) {
+        setServerErrorMessage(e.detail);
+      } else if (e?.response?.data?.detail) {
         setServerErrorMessage(e.response.data.detail);
       } else if (e?.response?.data?.["invalid-params"]) {
         // Parse field-specific errors
