@@ -3,15 +3,6 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "homepage": "https://course-connect.ab-civil.com/",
-  "expo": {
-    "autolinking": {
-      "ios": {
-        "exclude": [
-          "react-native-google-cast"
-        ]
-      }
-    }
-  },
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "start": "expo start",

@@ -13,7 +13,7 @@ const icon =
   process.env.EXPO_PUBLIC_ICON || (process.env.EXPO_TV ? "./assets/appleTV/icon_1280x768.png" : "./assets/icon.png");
 
 export default {
-  slug: process.env.EXPO_PUBLIC_APP_SLUG || "mc-assist",
+  slug: process.env.EXPO_PUBLIC_APP_SLUG || "course-connect",
   name: process.env.EXPO_PUBLIC_APP_NAME || "MC Assist",
   icon,
   owner: "adam_bower",
@@ -29,12 +29,16 @@ export default {
 
   extra: {
     eas: {
-      projectId: "428ef2e5-50ec-459c-b1c0-f4aaadd7110f",
+      projectId: "512d37de-e7c0-42f4-912e-ff850d3e9e57",
     },
     primaryBackend: process.env.EXPO_PUBLIC_PRIMARY_BACKEND || undefined,
   },
-  // expo-updates temporarily disabled due to iOS crash bug (GitHub issue #37182)
-  // Will be re-enabled in v1.0.1 after first release is stable
+  updates: {
+    url: "https://u.expo.dev/512d37de-e7c0-42f4-912e-ff850d3e9e57",
+  },
+  runtimeVersion: {
+    policy: "appVersion",
+  },
 
   splash: {
     image: process.env.EXPO_PUBLIC_SPLASH_IMAGE || "./assets/splash.png",
@@ -55,7 +59,7 @@ export default {
     },
     buildNumber: getBuildNumber({ platform: "ios" }),
     supportsTablet: true,
-    bundleIdentifier: process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER || "com.abcivil.mcassist",
+    bundleIdentifier: process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER || "com.abcivil.mcassist.v2",
     associatedDomains: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL
       ? [`applinks:${process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL}`]
       : undefined,
@@ -74,7 +78,7 @@ export default {
       "READ_MEDIA_IMAGES",
     ],
     versionCode: getBuildNumber({ platform: "android" }),
-    package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.mcassist",
+    package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.mcassist.v2",
     intentFilters: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL
       ? [
           {
@@ -119,12 +123,9 @@ export default {
           kotlinVersion: "2.1.20",
           kspVersion: "2.1.20-2.0.1",
           targetSdkVersion: 35,
-          jsEngine: "hermes",
         },
         ios: {
-          // Use Hermes (default for Expo SDK 54)
-          // Removed buildReactNativeFromSource as it conflicts with jsEngine
-          jsEngine: "hermes",
+          buildReactNativeFromSource: true,
         },
       },
     ],
@@ -137,10 +138,7 @@ export default {
       },
     ],
     "./plugins/withKotlinJvmTarget.js",
-    // Google Cast plugins - Android only (causes native crash on iOS)
-    ...(process.env.EAS_BUILD_PLATFORM !== "ios"
-      ? ["react-native-google-cast", "./plugins/fixAndroidChromecastLib.js"]
-      : []),
+    "react-native-google-cast",
     [
       "./plugins/withReleaseSigningConfig.js",
       {
@@ -150,6 +148,7 @@ export default {
         keyPassword: process.env.EXPO_PUBLIC_ANDROID_RELEASE_SIGNING_KEY_PASSWORD,
       },
     ],
+    "./plugins/fixAndroidChromecastLib.js",
     "./plugins/withAndroidNotificationControls.js",
   ],
 };

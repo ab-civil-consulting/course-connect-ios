@@ -1,7 +1,7 @@
 {
   "cli": {
     "version": ">= 16.19.3",
-    "appVersionSource": "local"
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
@@ -20,24 +20,18 @@
       }
     },
     "production": {
+      "autoIncrement": true,
       "developmentClient": false,
       "prebuildCommand": "npx expo prebuild --clean",
       "env": {
         "npm_config_legacy_peer_deps": "true",
         "EXPO_PUBLIC_PRIMARY_BACKEND": "course-connect.ab-civil.com",
         "EXPO_PUBLIC_APP_NAME": "MC Assist",
-        "EXPO_PUBLIC_APP_SLUG": "mc-assist",
-        "EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER": "com.abcivil.mcassist",
-        "EXPO_PUBLIC_ANDROID_PACKAGE": "com.abcivil.mcassist",
-        "EXPO_PUBLIC_APP_VERSION": "1.0.0"
+        "EXPO_PUBLIC_APP_SLUG": "course-connect"
       }
     }
   },
   "submit": {
-    "production": {
-      "android": {
-        "serviceAccountKeyPath": "./google-service-account-key/eco-folder-408116-c6609fe30f0e.json"
-      }
-    }
+    "production": {}
   }
 }
