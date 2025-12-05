@@ -14,7 +14,7 @@ const icon =
 
 export default {
   slug: process.env.EXPO_PUBLIC_APP_SLUG || "course-connect",
-  name: process.env.EXPO_PUBLIC_APP_NAME || "Course Connect",
+  name: process.env.EXPO_PUBLIC_APP_NAME || "MC Assist",
   icon,
   owner: "adam_bower",
   scheme: "mcassist",
@@ -33,13 +33,6 @@ export default {
     },
     primaryBackend: process.env.EXPO_PUBLIC_PRIMARY_BACKEND || undefined,
   },
-  updates: {
-    url: "https://u.expo.dev/512d37de-e7c0-42f4-912e-ff850d3e9e57",
-  },
-  runtimeVersion: {
-    policy: "appVersion",
-  },
-
   splash: {
     image: process.env.EXPO_PUBLIC_SPLASH_IMAGE || "./assets/splash.png",
     resizeMode: "contain",
@@ -125,7 +118,7 @@ export default {
           targetSdkVersion: 35,
         },
         ios: {
-          buildReactNativeFromSource: true,
+          jsEngine: "jsc",
         },
       },
     ],
@@ -133,12 +126,12 @@ export default {
     [
       "expo-media-library",
       {
-        photosPermission: "Allow Course Connect to save downloaded videos to your photo library.",
-        savePhotosPermission: "Allow Course Connect to save downloaded videos to your photo library.",
+        photosPermission: "Allow MC Assist to save downloaded videos to your photo library.",
+        savePhotosPermission: "Allow MC Assist to save downloaded videos to your photo library.",
       },
     ],
     "./plugins/withKotlinJvmTarget.js",
-    "react-native-google-cast",
+    ...(process.env.EXPO_TV ? ["react-native-google-cast"] : []),
     [
       "./plugins/withReleaseSigningConfig.js",
       {

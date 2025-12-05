@@ -26,7 +26,7 @@ import Toast from "react-native-toast-message";
 import { AppDesktopHeader, FullScreenModal, InfoToast, Sidebar, ErrorBoundary, Loader } from "../components";
 import "../i18n";
 import { useTranslation } from "react-i18next";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { readFromAsyncStorage } from "../utils";
 import { colorSchemes } from "../theme";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -41,6 +41,7 @@ import { SHAREABLE_ROUTE_MODAL_TITLES } from "../navigation/constants";
 import { GLOBAL_QUERY_STALE_TIME } from "../api";
 import { useAuthSessionSync } from "../hooks/useAuthSessionSync";
 import { postHogInstance } from "../diagnostics";
+import * as Updates from "expo-updates";
 
 // Try to import PostHog components - may not be available in Expo Go
 let PostHogProvider: any = null;
@@ -249,6 +250,30 @@ const RootStack = () => {
   );
 };
 
+
+// Clear error recovery cache once on app start to prevent iOS 18 crash
+const useErrorRecoveryClear = () => {
+  const hasCleared = useRef(false);
+
+  useEffect(() => {
+    const clearCache = async () => {
+      if (!hasCleared.current && !__DEV__) {
+        hasCleared.current = true;
+        try {
+          // @ts-ignore - clearErrorRecoveryCache may not be in types yet
+          if (Updates.clearErrorRecoveryCache) {
+            await Updates.clearErrorRecoveryCache();
+            console.log("[ErrorRecovery] Cache cleared successfully");
+          }
+        } catch (e) {
+          console.log("[ErrorRecovery] Cache clear failed:", e);
+        }
+      }
+    };
+    clearCache();
+  }, []);
+};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -258,6 +283,7 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout() {
+  useErrorRecoveryClear();
   const isWeb = Platform.OS === "web";
 
   const [fontsLoaded, fontError] = useFonts({

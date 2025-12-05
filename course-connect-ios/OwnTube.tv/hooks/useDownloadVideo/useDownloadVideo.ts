@@ -223,16 +223,16 @@ const useDownloadVideo = () => {
 
       // Try to add to album, but don't fail if album creation fails
       try {
-        const album = await MediaLibrary.getAlbumAsync("Course Connect");
+        const album = await MediaLibrary.getAlbumAsync("MC Assist");
         if (album) {
           await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
         } else {
-          await MediaLibrary.createAlbumAsync("Course Connect", asset, false);
+          await MediaLibrary.createAlbumAsync("MC Assist", asset, false);
         }
       } catch (albumError) {
         // Album creation/addition failed, but the asset is already saved to the library
         if (__DEV__) {
-          console.log("Could not add to Course Connect album, but video is saved:", albumError);
+          console.log("Could not add to MC Assist album, but video is saved:", albumError);
         }
       }
 

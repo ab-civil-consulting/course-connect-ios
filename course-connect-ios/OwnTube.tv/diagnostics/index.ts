@@ -21,6 +21,7 @@ const createMockPostHog = () => ({
   screen: () => {},
   identify: () => {},
   reset: () => {},
+  debug: () => {},
   getSessionId: () => "expo-go-mock-session",
 });
 

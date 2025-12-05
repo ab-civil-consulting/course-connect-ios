@@ -42,7 +42,7 @@ export const InstanceInfo = ({ backend, showText = true }: InstanceInfoProps) =>
               color={colors.theme950}
               numberOfLines={1}
             >
-              {currentInstanceConfig?.customizations?.pageTitle || data?.name}
+              {currentInstanceConfig?.customizations?.pageTitle || data?.name || "MC Assist"}
             </Typography>
           )}
         </>

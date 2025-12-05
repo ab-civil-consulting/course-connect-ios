@@ -26,7 +26,7 @@
       "env": {
         "npm_config_legacy_peer_deps": "true",
         "EXPO_PUBLIC_PRIMARY_BACKEND": "course-connect.ab-civil.com",
-        "EXPO_PUBLIC_APP_NAME": "Course Connect",
+        "EXPO_PUBLIC_APP_NAME": "MC Assist",
         "EXPO_PUBLIC_APP_SLUG": "course-connect"
       }
     }
