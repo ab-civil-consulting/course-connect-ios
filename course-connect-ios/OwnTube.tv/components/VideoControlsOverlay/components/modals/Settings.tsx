@@ -16,14 +16,11 @@ import { STORAGE } from "../../../../types";
 import Constants from "expo-constants";
 import DeviceCapabilities from "../../../DeviceCapabilities";
 import Picker from "../../../shared/Picker";
-import { useGetInstanceInfoQuery, useGetMyUserInfoQuery } from "../../../../api";
-import { usePostHog } from "posthog-react-native";
-import { useState, useEffect } from "react";
-import { PostHogPersistedProperty } from "posthog-react-native";
-import { ChangeEmailForm } from "../../../ChangeEmailForm";
-import { ChangePasswordForm } from "../../../ChangePasswordForm";
+import { useGetInstanceInfoQuery } from "../../../../api";
+import { useEffect } from "react";
 import { useSettingsStore } from "../../../../store";
 import { useAuthSessionStore } from "../../../../store";
+import { ROUTES } from "../../../../types";
 
 interface SettingsProps {
   onClose: () => void;
@@ -31,21 +28,16 @@ interface SettingsProps {
 
 export const Settings = ({ onClose }: SettingsProps) => {
   const { backend } = useGlobalSearchParams<RootStackParams["index"]>();
-  const { isDebugMode, setIsDebugMode, primaryBackend } = useAppConfigContext();
+  const { primaryBackend } = useAppConfigContext();
   const { currentLang, handleChangeLang, t } = useSelectLocale();
   const { dark: isDarkTheme, colors } = useTheme();
   const router = useRouter();
-  const posthog = usePostHog();
 
   const { data: instanceInfo } = useGetInstanceInfoQuery(backend);
   const { currentInstanceConfig } = useAppConfigContext();
   const { session } = useAuthSessionStore();
-  const { data: userInfo } = useGetMyUserInfoQuery(backend);
 
   const { settings, loadSettings, updatePlaybackSettings, updateDownloadSettings, isLoaded } = useSettingsStore();
-
-  const [showChangeEmail, setShowChangeEmail] = useState(false);
-  const [showChangePassword, setShowChangePassword] = useState(false);
 
   // Load settings on mount
   useEffect(() => {
@@ -100,60 +92,16 @@ export const Settings = ({ onClose }: SettingsProps) => {
               </Typography>
               <Spacer height={spacing.md} />
 
-              {!showChangeEmail && !showChangePassword && (
-                <>
-                  <View style={{ alignSelf: "flex-start" }}>
-                    <Button
-                      onPress={() => setShowChangeEmail(true)}
-                      contrast="low"
-                      text={t("changeEmail")}
-                    />
-                  </View>
-                  <Spacer height={spacing.sm} />
-                  <View style={{ alignSelf: "flex-start" }}>
-                    <Button
-                      onPress={() => setShowChangePassword(true)}
-                      contrast="low"
-                      text={t("changePassword")}
-                    />
-                  </View>
-                </>
-              )}
-
-              {showChangeEmail && (
-                <>
-                  <ChangeEmailForm
-                    backend={backend!}
-                    currentEmail={userInfo?.email || session.email}
-                    onSuccess={() => setShowChangeEmail(false)}
-                  />
-                  <Spacer height={spacing.sm} />
-                  <View style={{ alignSelf: "flex-start" }}>
-                    <Button
-                      onPress={() => setShowChangeEmail(false)}
-                      contrast="none"
-                      text={t("cancel")}
-                    />
-                  </View>
-                </>
-              )}
-
-              {showChangePassword && (
-                <>
-                  <ChangePasswordForm
-                    backend={backend!}
-                    onSuccess={() => setShowChangePassword(false)}
-                  />
-                  <Spacer height={spacing.sm} />
-                  <View style={{ alignSelf: "flex-start" }}>
-                    <Button
-                      onPress={() => setShowChangePassword(false)}
-                      contrast="none"
-                      text={t("cancel")}
-                    />
-                  </View>
-                </>
-              )}
+              <View style={{ alignSelf: "flex-start" }}>
+                <Button
+                  onPress={() => {
+                    onClose();
+                    router.push(`/password-reset?backend=${backend}`);
+                  }}
+                  contrast="low"
+                  text={t("changePassword")}
+                />
+              </View>
 
               <Spacer height={spacing.lg} />
               <Separator />
