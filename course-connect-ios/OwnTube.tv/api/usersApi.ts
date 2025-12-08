@@ -17,8 +17,8 @@ export class UsersApi extends AxiosInstanceBasedApi {
    *
    */
   async getMyUserInfo(baseURL: string): Promise<User> {
-    if (!baseURL || baseURL === 'undefined') {
-      throw new Error('[UsersApi] Backend URL is required but was not provided or is undefined');
+    if (!baseURL || baseURL === "undefined") {
+      throw new Error("[UsersApi] Backend URL is required but was not provided or is undefined");
     }
 
     try {
@@ -63,8 +63,8 @@ export class UsersApi extends AxiosInstanceBasedApi {
       currentPassword: string;
     }
   ): Promise<void> {
-    if (!baseURL || baseURL === 'undefined') {
-      throw new Error('[UsersApi] Backend URL is required but was not provided or is undefined');
+    if (!baseURL || baseURL === "undefined") {
+      throw new Error("[UsersApi] Backend URL is required but was not provided or is undefined");
     }
 
     try {
@@ -73,6 +73,28 @@ export class UsersApi extends AxiosInstanceBasedApi {
       });
     } catch (error: unknown) {
       return handleAxiosErrorWithRetry(error, "update user info");
+    }
+  }
+
+  /**
+   * Delete *my* account permanently
+   *
+   * @param baseURL - PeerTube instance URL
+   * @param currentPassword - Current password for verification
+   * @returns Promise that resolves when deletion is successful
+   */
+  async deleteMyAccount(baseURL: string, currentPassword: string): Promise<void> {
+    if (!baseURL || baseURL === "undefined") {
+      throw new Error("[UsersApi] Backend URL is required but was not provided or is undefined");
+    }
+
+    try {
+      await this.instance.delete("users/me", {
+        baseURL: `https://${baseURL}/api/v1`,
+        data: { currentPassword },
+      });
+    } catch (error: unknown) {
+      return handleAxiosErrorWithRetry(error, "delete account");
     }
   }
 }

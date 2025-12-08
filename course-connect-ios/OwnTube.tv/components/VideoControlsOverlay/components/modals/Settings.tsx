@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Spacer } from "../../../shared/Spacer";
 import { spacing } from "../../../../theme";
 import { Button, Checkbox, Separator } from "../../../shared";
-import { useAppConfigContext } from "../../../../contexts";
+import { useAppConfigContext, useFullScreenModalContext } from "../../../../contexts";
 import { useSelectLocale } from "../../../../hooks";
 import { LANGUAGE_OPTIONS } from "../../../../i18n";
 import { useTheme } from "@react-navigation/native";
@@ -21,6 +21,7 @@ import { useEffect } from "react";
 import { useSettingsStore } from "../../../../store";
 import { useAuthSessionStore } from "../../../../store";
 import { ROUTES } from "../../../../types";
+import { DeleteAccountModal } from "./DeleteAccount";
 
 interface SettingsProps {
   onClose: () => void;
@@ -32,10 +33,15 @@ export const Settings = ({ onClose }: SettingsProps) => {
   const { currentLang, handleChangeLang, t } = useSelectLocale();
   const { dark: isDarkTheme, colors } = useTheme();
   const router = useRouter();
+  const { setContent } = useFullScreenModalContext();
 
   const { data: instanceInfo } = useGetInstanceInfoQuery(backend);
   const { currentInstanceConfig } = useAppConfigContext();
   const { session } = useAuthSessionStore();
+
+  const handleOpenDeleteAccount = () => {
+    setContent(<DeleteAccountModal handleClose={onClose} />);
+  };
 
   const { settings, loadSettings, updatePlaybackSettings, updateDownloadSettings, isLoaded } = useSettingsStore();
 
@@ -76,7 +82,11 @@ export const Settings = ({ onClose }: SettingsProps) => {
   ];
 
   return (
-    <Animated.View entering={SlideInUp} exiting={SlideOutUp} style={[styles.animatedContainer, { pointerEvents: "box-none" }]}>
+    <Animated.View
+      entering={SlideInUp}
+      exiting={SlideOutUp}
+      style={[styles.animatedContainer, { pointerEvents: "box-none" }]}
+    >
       <ModalContainer
         showCloseButton
         onClose={onClose}
@@ -101,6 +111,12 @@ export const Settings = ({ onClose }: SettingsProps) => {
                   contrast="low"
                   text={t("changePassword")}
                 />
+              </View>
+
+              <Spacer height={spacing.md} />
+
+              <View style={{ alignSelf: "flex-start" }}>
+                <Button onPress={handleOpenDeleteAccount} contrast="high" text={t("deleteAccount")} />
               </View>
 
               <Spacer height={spacing.lg} />
@@ -173,7 +189,7 @@ export const Settings = ({ onClose }: SettingsProps) => {
             placeholder={{}}
             value={settings.downloads.defaultQuality || "720p"}
             onValueChange={(value) => updateDownloadSettings({ defaultQuality: value })}
-            items={qualityOptions.filter(q => q.value !== "auto")}
+            items={qualityOptions.filter((q) => q.value !== "auto")}
           />
           <Spacer height={spacing.md} />
 
@@ -182,7 +198,12 @@ export const Settings = ({ onClose }: SettingsProps) => {
             label={t("wifiOnlyMode")}
             onToggle={(checked) => updateDownloadSettings({ cellularDataLimit: checked })}
           />
-          <Typography color={colors.themeDesaturated500} fontWeight="Regular" fontSize="sizeXS" style={{ marginLeft: spacing.xxl }}>
+          <Typography
+            color={colors.themeDesaturated500}
+            fontWeight="Regular"
+            fontSize="sizeXS"
+            style={{ marginLeft: spacing.xxl }}
+          >
             {t("wifiOnlyModeDescription")}
           </Typography>
 
@@ -236,6 +257,41 @@ export const Settings = ({ onClose }: SettingsProps) => {
               </Typography>
             </>
           )}
+
+          <Spacer height={spacing.lg} />
+          <Separator />
+          <Spacer height={spacing.lg} />
+
+          {/* Legal Section */}
+          <Typography fontSize="sizeMd" fontWeight="Bold" color={colors.theme950}>
+            {t("legalSection")}
+          </Typography>
+          <Spacer height={spacing.md} />
+
+          <View style={{ alignSelf: "flex-start" }}>
+            <Button
+              onPress={() => {
+                onClose();
+                router.push(ROUTES.PRIVACY);
+              }}
+              contrast="none"
+              icon="Info"
+              text={t("privacyPolicy")}
+            />
+          </View>
+          <Spacer height={spacing.sm} />
+
+          <View style={{ alignSelf: "flex-start" }}>
+            <Button
+              onPress={() => {
+                onClose();
+                router.push(ROUTES.TERMS);
+              }}
+              contrast="none"
+              icon="Info"
+              text={t("termsOfService")}
+            />
+          </View>
 
           <Spacer height={spacing.xl} />
         </ScrollView>

@@ -41,3 +41,12 @@ export const useUpdateMyUserInfoMutation = (backend: string) => {
     },
   });
 };
+
+export const useDeleteMyAccountMutation = (backend: string) => {
+  return useMutation({
+    mutationKey: [MUTATION_KEYS.deleteAccount, backend],
+    mutationFn: async (currentPassword: string) => {
+      return await UsersApiImpl.deleteMyAccount(backend, currentPassword);
+    },
+  });
+};
