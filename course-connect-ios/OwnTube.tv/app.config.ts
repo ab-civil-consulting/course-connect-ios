@@ -63,12 +63,10 @@ export default {
       : undefined,
   },
   android: {
-    blockedPermissions: ["RECORD_AUDIO"],
+    blockedPermissions: ["RECORD_AUDIO", "READ_MEDIA_VIDEO", "READ_MEDIA_IMAGES"],
     permissions: [
       "READ_EXTERNAL_STORAGE",
       "WRITE_EXTERNAL_STORAGE",
-      "READ_MEDIA_VIDEO",
-      "READ_MEDIA_IMAGES",
     ],
     versionCode: getBuildNumber({ platform: "android" }),
     package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.mcassist.v2",
