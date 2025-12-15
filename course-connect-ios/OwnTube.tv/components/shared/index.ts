@@ -4,3 +4,4 @@ export * from "./Checkbox";
 export * from "./Input";
 export * from "./Picker/Picker";
 export * from "./Setting";
+export * from "./Spacer";

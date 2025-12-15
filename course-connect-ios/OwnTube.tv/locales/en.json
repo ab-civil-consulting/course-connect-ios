@@ -232,6 +232,7 @@
   "rememberPassword": "Remember your password?",
   "noAccountCreateOne": "Don't have an account?",
   "signInDataIncorrect": "Username or password is incorrect",
+  "signInDataIncorrectOrAlreadyRegistered": "Login failed. Please check your credentials or you may already have an account.",
   "email": "Email",
   "requiredField": "This field is required",
   "signedOut": "You have been signed out",

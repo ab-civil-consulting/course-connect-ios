@@ -38,7 +38,7 @@ export const Input = forwardRef<TextInput, InputProps>(
               backgroundColor: colors.theme100,
               borderWidth: isFocused || error ? 2 : variant === "default" ? 0 : 1,
               color: props.readOnly ? colors.themeDesaturated500 : colors.theme950,
-              padding: Platform.OS === "web" ? 15 : (isFocused || error ? 15 : 16) - (Platform.isTVOS ? 16 : 0),
+              padding: Platform.OS === "web" ? 15 : (isFocused || error ? 15 : 16) - (Platform.isTV ? 16 : 0),
             },
             props.style,
           ]}
@@ -77,9 +77,11 @@ const styles = StyleSheet.create({
     height: 48,
   },
   trailingIconContainer: {
-    bottom: 6,
     position: "absolute",
     right: 6,
-    top: 6,
+    top: 0,
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

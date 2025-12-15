@@ -42,7 +42,7 @@ const AndroidFocusHelperContainer = forwardRef<View, PropsWithChildren<{ isVisib
 
 AndroidFocusHelperContainer.displayName = "AndroidFocusHelperContainer";
 
-const INTERFACE_SCALE = Platform.isTVOS ? 3 : 1;
+const INTERFACE_SCALE = Platform.isTV ? 3 : 1;
 
 const VideoControlsOverlay = ({
   children,
@@ -302,7 +302,7 @@ const VideoControlsOverlay = ({
                   tvParallaxProperties={{ enabled: false }}
                   onFocus={() => setIsSeekBarFocused(true)}
                   onBlur={() => setIsSeekBarFocused(false)}
-                  style={({ focused }) => [styles.scrubBarContainer, { borderWidth: focused ? 1 : 0 }]}
+                  style={({ focused }: { pressed?: boolean; focused?: boolean }) => [styles.scrubBarContainer, { borderWidth: focused ? 1 : 0 }]}
                 >
                   <ScrubBar
                     isExpanded={isSeekBarFocused}

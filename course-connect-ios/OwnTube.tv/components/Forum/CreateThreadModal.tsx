@@ -48,7 +48,7 @@ export const CreateThreadModal = ({ isOpen, onClose, onSubmit, isLoading }: Crea
             onPress={(e) => e.stopPropagation()}
           >
             <View style={styles.modalHeader}>
-              <Typography variant="h2" style={{ color: colors.text, flex: 1 }}>
+              <Typography fontSize="sizeLg" fontWeight="SemiBold" style={{ color: colors.text, flex: 1 }}>
                 {t("forum.createNewThread")}
               </Typography>
               <Pressable onPress={onClose} style={styles.closeButton}>
@@ -57,7 +57,7 @@ export const CreateThreadModal = ({ isOpen, onClose, onSubmit, isLoading }: Crea
             </View>
 
             <View style={styles.inputContainer}>
-              <Typography variant="body" style={{ color: colors.text, marginBottom: spacing.xs }}>
+              <Typography fontSize="sizeMd" style={{ color: colors.text, marginBottom: spacing.xs }}>
                 {t("forum.title")}
               </Typography>
               <TextInput
@@ -80,14 +80,14 @@ export const CreateThreadModal = ({ isOpen, onClose, onSubmit, isLoading }: Crea
                 editable={!isLoading}
               />
               {errors.title && (
-                <Typography variant="caption" style={{ color: colors.notification, marginTop: spacing.xs }}>
+                <Typography fontSize="sizeXS" style={{ color: colors.notification, marginTop: spacing.xs }}>
                   {errors.title}
                 </Typography>
               )}
             </View>
 
             <View style={styles.inputContainer}>
-              <Typography variant="body" style={{ color: colors.text, marginBottom: spacing.xs }}>
+              <Typography fontSize="sizeMd" style={{ color: colors.text, marginBottom: spacing.xs }}>
                 {t("forum.content")}
               </Typography>
               <TextInput
@@ -113,11 +113,11 @@ export const CreateThreadModal = ({ isOpen, onClose, onSubmit, isLoading }: Crea
                 editable={!isLoading}
               />
               {errors.content && (
-                <Typography variant="caption" style={{ color: colors.notification, marginTop: spacing.xs }}>
+                <Typography fontSize="sizeXS" style={{ color: colors.notification, marginTop: spacing.xs }}>
                   {errors.content}
                 </Typography>
               )}
-              <Typography variant="caption" style={{ color: colors.text, opacity: 0.6, marginTop: spacing.xs }}>
+              <Typography fontSize="sizeXS" style={{ color: colors.text, opacity: 0.6, marginTop: spacing.xs }}>
                 {content.length}/5000
               </Typography>
             </View>
@@ -125,16 +125,16 @@ export const CreateThreadModal = ({ isOpen, onClose, onSubmit, isLoading }: Crea
             <View style={styles.modalFooter}>
               <Button
                 onPress={onClose}
-                label={t("forum.cancel")}
-                variant="secondary"
+                text={t("forum.cancel")}
+                contrast="low"
                 style={{ marginRight: spacing.sm }}
                 disabled={isLoading}
               />
               <Button
                 onPress={validateAndSubmit}
-                label={t("forum.createThread")}
+                text={t("forum.createThread")}
+                contrast="high"
                 disabled={isLoading || !title.trim() || !content.trim()}
-                loading={isLoading}
               />
             </View>
           </Pressable>

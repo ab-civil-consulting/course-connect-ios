@@ -22,7 +22,7 @@ export const DropdownItem = ({
     <Pressable
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
-      style={({ focused }) => [
+      style={({ focused }: { pressed?: boolean; focused?: boolean }) => [
         {
           backgroundColor: colors[isHovered || focused ? "theme200" : "theme100"],
         },

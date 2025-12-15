@@ -72,6 +72,14 @@ const RootStack = () => {
   useEffect(() => {
     readFromAsyncStorage(STORAGE.LOCALE).then(i18n.changeLanguage);
   }, []);
+
+  // Initialize auth store on mount (loads session from AsyncStorage)
+  const { isInitialized, initializeAuthStore } = useAuthSessionStore();
+  useEffect(() => {
+    initializeAuthStore();
+  }, []);
+
+  // Sync session with backend changes after initialization
   const { isSessionDataLoaded } = useAuthSessionSync();
 
   const breakpoints = useBreakpoints();
@@ -143,13 +151,15 @@ const RootStack = () => {
 
   const { session } = useAuthSessionStore();
 
-  if (!isSessionDataLoaded) {
+  // Wait for both auth store initialization and session sync
+  if (!isInitialized || !isSessionDataLoaded) {
     return <Loader />;
   }
 
   // If no session and not on sign-in related routes, show sign-in page directly
   // Check for both /(home)/route and /route formats (web strips the (home) prefix)
-  const authRoutes = [ROUTES.SIGNIN, ROUTES.SIGNUP, ROUTES.PASSWORD_RESET, ROUTES.OTP];
+  // Include PRIVACY and TERMS so users can view legal pages without being logged in
+  const authRoutes = [ROUTES.SIGNIN, ROUTES.SIGNUP, ROUTES.PASSWORD_RESET, ROUTES.OTP, ROUTES.PRIVACY, ROUTES.TERMS];
   const isAuthRoute = authRoutes.some(route =>
     pathname === `/(home)/${route}` || pathname === `/${route}`
   );

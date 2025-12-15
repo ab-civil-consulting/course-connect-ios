@@ -1,4 +1,4 @@
-import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import { Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import { Button, FormComponent, Input, Separator, Typography } from "../../components";
 import { useTranslation } from "react-i18next";
 import {
@@ -20,7 +20,8 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { SignInFormLoader } from "../../components/loaders/SignInFormLoader";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
+import { Feather } from "@expo/vector-icons";
 import { useCustomFocusManager } from "../../hooks";
 import { useAuthSessionStore } from "../../store";
 import { parseAuthSessionData } from "../../utils/auth";
@@ -58,6 +59,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
   useCustomFocusManager();
   const { addSession, selectSession, updateSession } = useAuthSessionStore();
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const { control, handleSubmit, reset, formState } = useForm({
     values: {
@@ -171,6 +173,14 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
           >
             {Platform.OS === "web" ? (
               <View>
+                <View style={styles.logoContainer}>
+                  <Image
+                    source={require("../../assets/Backup Icons/ab-civil-primary-blue.png")}
+                    style={styles.logo}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Spacer height={spacing.xxl} />
                 <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
                   {t("signInToApp", { appName: "MC Assist" })}
                 </Typography>
@@ -220,7 +230,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                         ref={passwordFieldRef}
                         autoCorrect={false}
                         value={field.value}
-                        secureTextEntry
+                        secureTextEntry={!showPassword}
                         onChangeText={field.onChange}
                         onBlur={field.onBlur}
                         onSubmitEditing={() => {
@@ -233,6 +243,20 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                         placeholderTextColor={colors.themeDesaturated500}
                         error={fieldState.error?.message && t(fieldState.error?.message)}
                         enterKeyHint="done"
+                        trailingIcon={
+                          <Pressable
+                            onPress={() => setShowPassword(!showPassword)}
+                            style={styles.eyeIconButton}
+                            accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+                            accessibilityRole="button"
+                          >
+                            <Feather
+                              name={showPassword ? "eye-off" : "eye"}
+                              size={20}
+                              color={colors.themeDesaturated500}
+                            />
+                          </Pressable>
+                        }
                       />
                     );
                   }}
@@ -253,7 +277,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                 {(isLoginError || isUserInfoError) && (
                   <>
                     <Typography style={styles.textAlignCenter} fontSize="sizeXS" color={colors.error500}>
-                      {t("signInDataIncorrect")}
+                      {t("signInDataIncorrectOrAlreadyRegistered")}
                     </Typography>
                     <Spacer height={spacing.xl} />
                   </>
@@ -312,6 +336,14 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
             ) : (
               <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View>
+                  <View style={styles.logoContainer}>
+                    <Image
+                      source={require("../../assets/Backup Icons/ab-civil-primary-blue.png")}
+                      style={styles.logo}
+                      resizeMode="contain"
+                    />
+                  </View>
+                  <Spacer height={spacing.xxl} />
                   <Typography fontWeight="ExtraBold" fontSize="sizeXL" style={styles.textAlignCenter}>
                     {t("signInToApp", { appName: "MC Assist" })}
                   </Typography>
@@ -361,7 +393,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                           ref={passwordFieldRef}
                           autoCorrect={false}
                           value={field.value}
-                          secureTextEntry
+                          secureTextEntry={!showPassword}
                           onChangeText={field.onChange}
                           onBlur={field.onBlur}
                           onSubmitEditing={() => {
@@ -374,6 +406,20 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                           placeholderTextColor={colors.themeDesaturated500}
                           error={fieldState.error?.message && t(fieldState.error?.message)}
                           enterKeyHint="done"
+                          trailingIcon={
+                            <Pressable
+                              onPress={() => setShowPassword(!showPassword)}
+                              style={styles.eyeIconButton}
+                              accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+                              accessibilityRole="button"
+                            >
+                              <Feather
+                                name={showPassword ? "eye-off" : "eye"}
+                                size={20}
+                                color={colors.themeDesaturated500}
+                              />
+                            </Pressable>
+                          }
                         />
                       );
                     }}
@@ -394,7 +440,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                   {(isLoginError || isUserInfoError) && (
                     <>
                       <Typography style={styles.textAlignCenter} fontSize="sizeXS" color={colors.error500}>
-                        {t("signInDataIncorrect")}
+                        {t("signInDataIncorrectOrAlreadyRegistered")}
                       </Typography>
                       <Spacer height={spacing.xl} />
                     </>
@@ -404,7 +450,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                       onPress={() => {
                         router.push({ pathname: `/(home)/${ROUTES.PASSWORD_RESET}`, params: { backend } });
                       }}
-                      style={({ focused }) => ({
+                      style={({ focused }: { pressed?: boolean; focused?: boolean }) => ({
                         borderWidth: focused ? 2 : 0,
                         margin: focused ? -2 : 0,
                         borderRadius: borderRadius.radiusSm,
@@ -476,6 +522,14 @@ const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
   },
+  logo: {
+    height: 80,
+    width: 200,
+  },
+  logoContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
   noticeBanner: {
     backgroundColor: "#fef3c7",
     borderColor: "#f59e0b",
@@ -488,4 +542,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   textAlignCenter: { textAlign: "center" },
+  eyeIconButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    paddingHorizontal: spacing.sm,
+  },
 });

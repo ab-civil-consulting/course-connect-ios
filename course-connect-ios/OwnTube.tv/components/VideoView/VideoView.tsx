@@ -599,7 +599,7 @@ const VideoView = ({
             onPlaybackStateChanged={({ isPlaying: isPlayingState }) => {
               isPlayingRef.current = isPlayingState;
               setIsPlaying(isPlayingState);
-              if (!isPlayingState && Platform.isTVOS) {
+              if (!isPlayingState && Platform.isTV) {
                 handleOverlayPress();
               }
             }}
@@ -632,7 +632,7 @@ const VideoView = ({
             onReadyForDisplay={toggleLoading(false)}
           />
         )}
-        {isMobile && !Platform.isTVOS && isControlsVisible && (
+        {isMobile && !Platform.isTV && isControlsVisible && (
           <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.opacityOverlay} />
         )}
       </VideoControlsOverlay>

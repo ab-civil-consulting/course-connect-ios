@@ -18,7 +18,7 @@ export const ShareButton = forwardRef<View, ShareButtonProps>(({ onPress, isMobi
   return (
     <Pressable
       onPress={onPress}
-      style={({ focused }) => [
+      style={({ focused }: { pressed?: boolean; focused?: boolean }) => [
         styles.container,
         { padding: spacing.md - (focused ? 2 : 0), borderWidth: focused ? 2 : 0, borderColor: colors.white94 },
       ]}

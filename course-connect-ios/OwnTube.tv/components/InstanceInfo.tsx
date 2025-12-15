@@ -37,7 +37,7 @@ export const InstanceInfo = ({ backend, showText = true }: InstanceInfoProps) =>
           ) : (
             <Typography
               style={styles.textContainer}
-              fontSize="sizeSm"
+              fontSize="sizeLg"
               fontWeight="SemiBold"
               color={colors.theme950}
               numberOfLines={1}

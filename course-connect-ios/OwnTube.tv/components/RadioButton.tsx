@@ -25,7 +25,7 @@ export const RadioButton = ({ selected, onPress, label }: RadioButtonProps) => {
 
   return (
     <Pressable
-      style={({ focused }) => ({
+      style={({ focused }: { pressed?: boolean; focused?: boolean }) => ({
         flexDirection: "row",
         alignItems: "center",
         borderWidth: focused ? 2 : 0,

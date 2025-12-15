@@ -3,7 +3,7 @@ import { Platform, Settings } from "react-native";
 
 export const writeToAsyncStorage = async (key: string, value: object | string) => {
   try {
-    if (Platform.isTVOS) {
+    if (Platform.isTV) {
       Settings.set({ [key]: JSON.stringify(value) });
     } else {
       await AsyncStorage.setItem(key, JSON.stringify(value));
@@ -15,7 +15,7 @@ export const writeToAsyncStorage = async (key: string, value: object | string) =
 
 export const readFromAsyncStorage = async (key: string) => {
   try {
-    const value = Platform.isTVOS ? Settings.get(key) || null : await AsyncStorage.getItem(key);
+    const value = Platform.isTV ? Settings.get(key) || null : await AsyncStorage.getItem(key);
     return JSON.parse(value as string);
   } catch (error) {
     console.error(error);
@@ -24,7 +24,7 @@ export const readFromAsyncStorage = async (key: string) => {
 
 export const deleteFromAsyncStorage = async (keys: string[]) => {
   try {
-    if (Platform.isTVOS) {
+    if (Platform.isTV) {
       keys.forEach((key: string) => {
         Settings.set({ [key]: "" });
       });
@@ -39,7 +39,7 @@ export const deleteFromAsyncStorage = async (keys: string[]) => {
 
 export const multiGetFromAsyncStorage = async (keys: string[]) => {
   try {
-    if (Platform.isTVOS) {
+    if (Platform.isTV) {
       return keys.map((key: string) => {
         return [key, Settings.get(key)];
       });

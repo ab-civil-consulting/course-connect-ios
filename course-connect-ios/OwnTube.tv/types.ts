@@ -36,6 +36,7 @@ export enum ROUTES {
   PLAYLISTS = "playlists",
   PLAYLIST = "playlist",
   PRIVACY = "privacy",
+  TERMS = "terms",
   SIGNIN = "signin",
   SIGNUP = "signup",
   OTP = "otp",

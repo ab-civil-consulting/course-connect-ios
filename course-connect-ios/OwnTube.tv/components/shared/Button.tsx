@@ -90,20 +90,25 @@ export const Button = forwardRef<View, ButtonProps>(
           props.onHoverOut?.(e);
           toggleHovered();
         }}
-        style={({ pressed, focused }) => {
+        style={({ pressed, focused }: { pressed: boolean; focused?: boolean }) => {
           // Check if custom style is a function (for state-based styles)
-          const customStyle = typeof props.style === 'function' ? props.style({ pressed, focused }) : props.style;
+          const customStyle = typeof props.style === 'function' ? props.style({ pressed, focused: focused || false }) : props.style;
           const customStyleArray = Array.isArray(customStyle) ? customStyle : [customStyle];
 
           // Extract backgroundColor from custom styles if provided
-          const customBackgroundColor = customStyleArray.reduce((acc, style) => {
+          const customBackgroundColor = customStyleArray.reduce<string | null | undefined>((acc, style) => {
             return style?.backgroundColor || acc;
           }, null);
+
+          // Get padding from static style (not function)
+          const staticStyle = typeof props.style === 'function' ? undefined : props.style;
+          const basePaddingH = (staticStyle as ViewStyle | undefined)?.paddingHorizontal;
+          const basePaddingV = (staticStyle as ViewStyle | undefined)?.paddingVertical;
 
           return [
             styles.container,
             // Apply custom style (function or static)
-            typeof props.style === 'function' ? props.style({ pressed, focused }) : props.style,
+            typeof props.style === 'function' ? props.style({ pressed, focused: focused || false }) : props.style,
             {
               // Only use theme backgroundColor if no custom backgroundColor is provided
               ...(!customBackgroundColor ? { backgroundColor: getBackgroundColor(pressed) } : {}),
@@ -111,9 +116,9 @@ export const Button = forwardRef<View, ButtonProps>(
               borderWidth: !hideFocusBorder && focused ? 2 : 0,
               borderColor: colors.theme950,
               paddingHorizontal:
-                (Number(props.style?.paddingHorizontal) || styles.container.paddingHorizontal || 0) - (!hideFocusBorder && focused ? 2 : 0),
+                (Number(basePaddingH) || styles.container.paddingHorizontal || 0) - (!hideFocusBorder && focused ? 2 : 0),
               paddingVertical:
-                (Number(props.style?.paddingVertical) || styles.container.paddingVertical || 0) - (!hideFocusBorder && focused ? 2 : 0),
+                (Number(basePaddingV) || styles.container.paddingVertical || 0) - (!hideFocusBorder && focused ? 2 : 0),
             },
           ];
         }}

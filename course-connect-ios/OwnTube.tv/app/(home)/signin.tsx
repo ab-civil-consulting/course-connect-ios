@@ -11,7 +11,8 @@ export default function signin() {
   const { session } = useAuthSessionStore();
   const { backend } = useLocalSearchParams<{ backend: string }>();
 
-  if (session) {
+  // Only redirect if session exists AND matches current backend
+  if (session && session.backend === backend) {
     return <Redirect href={{ pathname: ROUTES.HOME, params: { backend } }} />;
   }
 

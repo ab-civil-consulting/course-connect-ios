@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   categoryCard: {
-    borderRadius: borderRadius.lg,
+    borderRadius: borderRadius.radiusLg,
     height: Platform.select({ web: 140, default: 120 }),
     marginRight: spacing.md,
     overflow: "hidden",

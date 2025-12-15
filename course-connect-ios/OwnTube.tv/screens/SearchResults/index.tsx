@@ -160,7 +160,7 @@ export const SearchResultsScreen = () => {
         padding: 0,
         paddingRight: breakpoints.isMobile ? spacing.sm : spacing.xl,
         paddingLeft: breakpoints.isMobile ? spacing.sm : spacing.xl,
-        paddingTop: Platform.isTVOS ? spacing.xxxl : 0,
+        paddingTop: Platform.isTV ? spacing.xxxl : 0,
       }}
     >
       <Spacer height={spacing.xl} />

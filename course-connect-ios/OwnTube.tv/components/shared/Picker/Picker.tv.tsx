@@ -33,7 +33,7 @@ const Picker = (props: PickerSelectProps) => {
             isExpandedSV.value = 0;
             expandButtonRef.current?.requestTVFocus();
           }}
-          style={({ focused }) => [
+          style={({ focused }: { pressed?: boolean; focused?: boolean }) => [
             styles.listItemContainer,
             {
               backgroundColor: colors.theme100,

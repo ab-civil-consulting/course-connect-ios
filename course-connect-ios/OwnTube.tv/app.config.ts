@@ -65,7 +65,6 @@ export default {
   android: {
     blockedPermissions: ["RECORD_AUDIO", "READ_MEDIA_VIDEO", "READ_MEDIA_IMAGES"],
     permissions: [
-      "READ_EXTERNAL_STORAGE",
       "WRITE_EXTERNAL_STORAGE",
     ],
     versionCode: getBuildNumber({ platform: "android" }),

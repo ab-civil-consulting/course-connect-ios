@@ -10,7 +10,7 @@ import { QUERY_KEYS } from "../api";
 
 export const useAuthSessionSync = () => {
   const { backend } = useGlobalSearchParams<RootStackParams[ROUTES.INDEX]>();
-  const { session, selectSession, clearSession } = useAuthSessionStore();
+  const { session, selectSession, isInitialized } = useAuthSessionStore();
   const { setContent, toggleModal } = useFullScreenModalContext();
   const [isSessionDataLoaded, setIsSessionDataLoaded] = useState(false);
   const queryClient = useQueryClient();
@@ -26,17 +26,23 @@ export const useAuthSessionSync = () => {
   }, [session]);
 
   useEffect(() => {
+    // Wait for auth store to be initialized before syncing
+    if (!isInitialized) {
+      return;
+    }
+
     const loadSession = async () => {
+      // Only select session if backend is provided
+      // The auth store is already initialized with the correct session from AsyncStorage
+      // so we don't need to clear it when backend is undefined
       if (backend) {
         await selectSession(backend);
-      } else {
-        clearSession();
       }
       setIsSessionDataLoaded(true);
     };
 
     loadSession();
-  }, [backend]);
+  }, [backend, isInitialized]);
 
   return { isSessionDataLoaded };
 };

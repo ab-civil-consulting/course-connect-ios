@@ -175,7 +175,7 @@ export const PasswordReset = () => {
             <Spacer height={spacing.xs} />
             <Pressable
               onPress={navigateToSignIn}
-              style={({ focused }) => ({
+              style={({ focused }: { pressed?: boolean; focused?: boolean }) => ({
                 borderWidth: focused ? 2 : 0,
                 margin: focused ? -2 : 0,
                 borderRadius: borderRadius.radiusSm,

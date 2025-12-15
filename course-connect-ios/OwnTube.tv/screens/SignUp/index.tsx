@@ -1,7 +1,16 @@
 import { Keyboard, Platform, Pressable, StyleSheet, TextInput, View } from "react-native";
 import { Button, FormComponent, Input, Typography } from "../../components";
 import { useTranslation } from "react-i18next";
-import { useGetInstanceInfoQuery, useGetInstanceServerConfigQuery, useRegisterMutation } from "../../api";
+import {
+  useGetInstanceInfoQuery,
+  useGetInstanceServerConfigQuery,
+  useGetLoginPrerequisitesQuery,
+  useGetMyUserInfoQuery,
+  useLoginWithUsernameAndPasswordMutation,
+  useRegisterMutation,
+} from "../../api";
+import { useAuthSessionStore } from "../../store";
+import { parseAuthSessionData } from "../../utils/auth";
 import { useAppConfigContext } from "../../contexts";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { RootStackParams } from "../../app/_layout";
@@ -15,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { SignInFormLoader } from "../../components/loaders/SignInFormLoader";
 import { useCallback, useRef, useState } from "react";
+import { Feather } from "@expo/vector-icons";
 import { useCustomFocusManager } from "../../hooks";
 
 /**
@@ -53,12 +63,17 @@ export const SignUp = () => {
   const { colors } = useTheme();
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [serverErrorMessage, setServerErrorMessage] = useState<string>("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const { data: instanceInfo, isLoading: isLoadingInstanceInfo } = useGetInstanceInfoQuery(backend);
   const { data: instanceServerConfig, isLoading: isLoadingInstanceServerConfig } = useGetInstanceServerConfigQuery({
     hostname: backend,
   });
   const { mutateAsync: register, isPending: isRegistering } = useRegisterMutation(backend!);
+  const { data: loginPrerequisites } = useGetLoginPrerequisitesQuery(backend);
+  const { mutateAsync: login, isPending: isLoggingIn } = useLoginWithUsernameAndPasswordMutation(backend);
+  const { refetch: getUserInfo } = useGetMyUserInfoQuery(backend);
+  const { addSession, selectSession, updateSession } = useAuthSessionStore();
   const { currentInstanceConfig } = useAppConfigContext();
   const { top } = useSafeAreaInsets();
   useCustomFocusManager();
@@ -83,6 +98,42 @@ export const SignUp = () => {
         email: formValues.email,
         password: formValues.password,
       });
+
+      // Auto-login after successful registration
+      if (loginPrerequisites) {
+        try {
+          // Use email as username for login (PeerTube accepts email in username field)
+          const loginResponse = await login({
+            loginPrerequisites,
+            username: formValues.email,
+            password: formValues.password,
+          });
+
+          const authSessionData = parseAuthSessionData(loginResponse, backend!);
+          await addSession(backend!, authSessionData);
+          await selectSession(backend!);
+
+          const { data: userInfoResponse } = await getUserInfo();
+          if (userInfoResponse) {
+            await updateSession(backend!, {
+              userInfoUpdatedAt: new Date().toISOString(),
+              userInfoResponse,
+              email: userInfoResponse.email,
+            });
+          }
+
+          reset();
+          router.navigate({ pathname: ROUTES.HOME, params: { backend } });
+          return;
+        } catch (loginError) {
+          // If auto-login fails, show success message and let user login manually
+          if (__DEV__) {
+            console.log("[SignUp] Auto-login failed, showing success message:", loginError);
+          }
+        }
+      }
+
+      // Fallback: show success message if auto-login not possible
       setRegistrationSuccess(true);
       reset();
     } catch (error: unknown) {
@@ -193,7 +244,7 @@ export const SignUp = () => {
                   ref={passwordFieldRef}
                   autoCorrect={false}
                   value={field.value}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                   onChangeText={field.onChange}
                   onBlur={field.onBlur}
                   autoComplete="new-password"
@@ -205,6 +256,20 @@ export const SignUp = () => {
                     confirmPasswordFieldRef.current?.focus?.();
                   }}
                   enterKeyHint="next"
+                  trailingIcon={
+                    <Pressable
+                      onPress={() => setShowPassword(!showPassword)}
+                      style={styles.eyeIconButton}
+                      accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+                      accessibilityRole="button"
+                    >
+                      <Feather
+                        name={showPassword ? "eye-off" : "eye"}
+                        size={20}
+                        color={colors.themeDesaturated500}
+                      />
+                    </Pressable>
+                  }
                 />
               );
             }}
@@ -219,7 +284,7 @@ export const SignUp = () => {
                   ref={confirmPasswordFieldRef}
                   autoCorrect={false}
                   value={field.value}
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                   onChangeText={field.onChange}
                   onBlur={field.onBlur}
                   autoComplete="new-password"
@@ -232,13 +297,27 @@ export const SignUp = () => {
                     handleSubmit(handleSignUp)();
                   }}
                   enterKeyHint="done"
+                  trailingIcon={
+                    <Pressable
+                      onPress={() => setShowPassword(!showPassword)}
+                      style={styles.eyeIconButton}
+                      accessibilityLabel={showPassword ? "Hide password" : "Show password"}
+                      accessibilityRole="button"
+                    >
+                      <Feather
+                        name={showPassword ? "eye-off" : "eye"}
+                        size={20}
+                        color={colors.themeDesaturated500}
+                      />
+                    </Pressable>
+                  }
                 />
               );
             }}
           />
           <Spacer height={spacing.xl} />
           <Button
-            disabled={isRegistering}
+            disabled={isRegistering || isLoggingIn}
             onPress={() => {
               Keyboard.dismiss();
               handleSubmit(handleSignUp)();
@@ -269,11 +348,6 @@ export const SignUp = () => {
             <Spacer height={spacing.xs} />
             <Pressable
               onPress={navigateToSignIn}
-              style={({ focused }) => ({
-                borderWidth: focused ? 2 : 0,
-                margin: focused ? -2 : 0,
-                borderRadius: borderRadius.radiusSm,
-              })}
             >
               <Typography
                 style={[{ color: colors.theme500 }, styles.textAlignCenter]}
@@ -300,4 +374,10 @@ const styles = StyleSheet.create({
   },
   height48: { height: 48 },
   textAlignCenter: { textAlign: "center" },
+  eyeIconButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    paddingHorizontal: spacing.sm,
+  },
 });

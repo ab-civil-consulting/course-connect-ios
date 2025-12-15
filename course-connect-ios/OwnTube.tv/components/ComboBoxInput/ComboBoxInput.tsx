@@ -36,7 +36,7 @@ const ComboBoxInput = ({
   return (
     <Pressable
       testID={testID}
-      style={({ focused }) => [
+      style={({ focused }: { pressed?: boolean; focused?: boolean }) => [
         styles.container,
         { backgroundColor: colors.theme100, borderColor: focused ? colors.theme950 : colors.theme200, width },
       ]}

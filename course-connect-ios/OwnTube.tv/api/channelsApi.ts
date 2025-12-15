@@ -93,13 +93,13 @@ export class ChannelsApi extends AxiosInstanceBasedApi {
 
       // Filter client-side if categoryOneOf is specified
       if (queryParams?.categoryOneOf && queryParams.categoryOneOf.length > 0) {
-        videos = videos.filter(video =>
+        videos = videos.filter((video: GetVideosVideo) =>
           queryParams.categoryOneOf!.includes(video.category?.id)
         );
       }
 
       // Sort client-side by originallyPublishedAt (newest first)
-      videos = videos.sort((a, b) => {
+      videos = videos.sort((a: GetVideosVideo, b: GetVideosVideo) => {
         const dateA = new Date(a.originallyPublishedAt || a.publishedAt).getTime();
         const dateB = new Date(b.originallyPublishedAt || b.publishedAt).getTime();
         return dateB - dateA;

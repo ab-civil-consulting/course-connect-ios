@@ -22,9 +22,9 @@ export const InfoFooter = ({ showBuildInfo }: InfoFooterProps) => {
         <Image
           resizeMode="contain"
           source={require("../assets/course-connect-logo-blue.png")}
-          style={{ width: 32, height: 32 }}
+          style={{ width: 48, height: 48 }}
         />
-        <Typography fontSize="sizeLg" fontWeight="SemiBold" color={colors.theme950}>
+        <Typography fontSize="sizeXL" fontWeight="SemiBold" color={colors.theme950}>
           AB CIVIL
         </Typography>
       </View>

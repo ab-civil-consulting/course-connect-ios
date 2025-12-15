@@ -52,8 +52,25 @@ export default function privacy() {
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">What information does the Application obtain and how is it used?</Typography>
         <Typography>
-          The Application does not collect, store, or process any personal data. No registration is required, and no
-          analytics, tracking, or user profiling is performed.
+          <Typography fontWeight="Bold">Optional User Registration:</Typography> Registration is optional but required for
+          certain features. When you register, your email and username are sent to a PeerTube instance where your account is
+          created.
+        </Typography>
+        <Typography>{"\n"}</Typography>
+        <Typography>
+          <Typography fontWeight="Bold">Watch History:</Typography> Your watch history is stored locally on your device
+          only. We do not collect this data on our servers. Your watch history is limited to 50 items.
+        </Typography>
+        <Typography>{"\n"}</Typography>
+        <Typography>
+          <Typography fontWeight="Bold">User Preferences:</Typography> Your preferences (theme, playback settings) are
+          stored locally on your device.
+        </Typography>
+        <Typography>{"\n"}</Typography>
+        <Typography>
+          <Typography fontWeight="Bold">Analytics:</Typography> We use PostHog for analytics to understand how the app is
+          used. PostHog tracks playback events, user actions, and device information. Data is sent to EU servers
+          (eu.i.posthog.com). You can disable analytics through app configuration.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">
@@ -65,7 +82,19 @@ export default function privacy() {
           Do third parties see and/or have access to personal information obtained by the Application?
         </Typography>
         <Typography>
-          Since the Application does not collect any personal information, no data is shared with third parties.
+          <Typography fontWeight="Bold">PeerTube:</Typography> Your email and username are shared with the PeerTube instance
+          where your account is created. Your watch history on that instance is governed by the PeerTube instance's privacy
+          policy.
+        </Typography>
+        <Typography>{"\n"}</Typography>
+        <Typography>
+          <Typography fontWeight="Bold">PostHog Analytics:</Typography> Analytics data (playback events, device information)
+          is sent to PostHog for analysis. Review PostHog's privacy policy for details on how they handle this data.
+        </Typography>
+        <Typography>{"\n"}</Typography>
+        <Typography>
+          <Typography fontWeight="Bold">Casting Services:</Typography> When using Chromecast, AirPlay, or similar features,
+          minimal device discovery information may be shared with those services.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">Children</Typography>
@@ -74,17 +103,18 @@ export default function privacy() {
           children under 13. If you believe a child has provided personal data, please contact us at{" "}
           <Link
             style={styles.link}
-            href={`mailto:${process.env.EXPO_PUBLIC_PROVIDER_LEGAL_EMAIL || "legal@owntube.tv"}`}
+            href={`mailto:${process.env.EXPO_PUBLIC_PROVIDER_LEGAL_EMAIL || "contact@ab-civil.com"}`}
           >
-            {process.env.EXPO_PUBLIC_PROVIDER_LEGAL_EMAIL || "legal@owntube.tv"}
+            {process.env.EXPO_PUBLIC_PROVIDER_LEGAL_EMAIL || "contact@ab-civil.com"}
           </Link>{" "}
           so that we can take appropriate action.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">Security</Typography>
         <Typography>
-          Since the Application does not collect or store user data, there are no security risks related to personal
-          information.
+          Watch history and preferences are stored locally on your device. Protect your device with strong authentication
+          (passcode or biometric). Keep your device and apps updated. Data sent to PeerTube and PostHog is protected by
+          those services' security measures.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">Changes</Typography>
@@ -94,7 +124,7 @@ export default function privacy() {
           regularly for any updates, as continued use is deemed approval of all changes.
         </Typography>
         <Typography>{"\n"}</Typography>
-        <Typography>This privacy policy is effective as of 2025-01-21</Typography>
+        <Typography>This privacy policy is effective as of December 2024</Typography>
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">Contact Us</Typography>
         <Typography>
@@ -102,9 +132,9 @@ export default function privacy() {
           via email at{" "}
           <Link
             style={styles.link}
-            href={`mailto:${process.env.EXPO_PUBLIC_PROVIDER_CONTACT_EMAIL || "hello@owntube.tv"}`}
+            href={`mailto:${process.env.EXPO_PUBLIC_PROVIDER_CONTACT_EMAIL || "contact@ab-civil.com"}`}
           >
-            {process.env.EXPO_PUBLIC_PROVIDER_CONTACT_EMAIL || "hello@owntube.tv"}
+            {process.env.EXPO_PUBLIC_PROVIDER_CONTACT_EMAIL || "contact@ab-civil.com"}
           </Link>
           .
         </Typography>

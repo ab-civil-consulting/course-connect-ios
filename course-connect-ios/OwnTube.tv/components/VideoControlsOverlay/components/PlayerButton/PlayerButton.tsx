@@ -32,7 +32,7 @@ const PlayerButton = forwardRef<View, PlayerButtonProps>(({ onPress, icon, onHov
       onHoverIn={handleHoverIn}
       onHoverOut={handleHoverOut}
       onPress={onPress}
-      style={({ focused }) => [
+      style={({ focused }: { pressed?: boolean; focused?: boolean }) => [
         styles.container,
         {
           padding: focused ? -2 : 0,

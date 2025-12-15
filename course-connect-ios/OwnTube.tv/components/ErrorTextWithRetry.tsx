@@ -17,7 +17,7 @@ export const ErrorTextWithRetry = ({ errorText, refetch }: ErrorTextWithRetryPro
       {errorText}{" "}
       <Pressable
         onPress={refetch}
-        style={({ focused }) => ({
+        style={({ focused }: { pressed?: boolean; focused?: boolean }) => ({
           borderWidth: focused ? 2 : 0,
           borderColor: colors.theme950,
           padding: focused ? 0 : 2,

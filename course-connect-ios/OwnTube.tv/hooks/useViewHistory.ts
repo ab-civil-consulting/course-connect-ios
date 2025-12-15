@@ -21,7 +21,7 @@ export const useViewHistory = (queryArg?: { enabled?: boolean; maxItems?: number
   const queryClient = useQueryClient();
   const {
     enabled = true,
-    maxItems = Platform.isTVOS ? MAX_HISTORY_ITEMS_TVOS : MAX_HISTORY_ITEMS_DEFAULT,
+    maxItems = Platform.isTV ? MAX_HISTORY_ITEMS_TVOS : MAX_HISTORY_ITEMS_DEFAULT,
     backendToFilter,
   } = queryArg || {};
 

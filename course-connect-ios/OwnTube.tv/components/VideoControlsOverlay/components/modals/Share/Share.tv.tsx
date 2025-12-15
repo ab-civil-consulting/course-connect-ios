@@ -50,7 +50,7 @@ const Share = ({ onClose, titleKey }: ShareProps) => {
                   <Checkbox label={t("startAt")} checked={isTimestampAdded} onChange={setIsTimestampAdded} />
                 </View>
                 <Input
-                  style={{ width: 96, ...(Platform.isTVOS ? { padding: 0 } : {}) }}
+                  style={{ width: 96, ...(Platform.isTV ? { padding: 0 } : {}) }}
                   editable={false}
                   readOnly
                   value={getHumanReadableDuration(addedTimestamp * 1000)}

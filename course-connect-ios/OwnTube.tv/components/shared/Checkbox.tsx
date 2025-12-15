@@ -31,7 +31,7 @@ export const Checkbox = ({ checked, onChange, disabled, label }: CheckboxProps) 
   return (
     <Pressable
       onPress={handleCheck}
-      style={({ focused }) => ({
+      style={({ focused }: { pressed?: boolean; focused?: boolean }) => ({
         padding: focused ? 0 : -2,
         margin: focused ? 0 : 2,
         borderWidth: focused ? 2 : 0,
