@@ -1,5 +1,5 @@
 import Head from "expo-router/head";
-import { Platform, ScrollView, StyleSheet } from "react-native";
+import { Platform, ScrollView } from "react-native";
 import { Button, Typography } from "../../components";
 import { Link, useRouter } from "expo-router";
 import { spacing } from "../../theme";
@@ -151,7 +151,7 @@ export default function terms() {
         <Typography>
           Questions? Concerns? Please contact us at{" "}
           <Link
-            style={styles.link}
+            style={{ color: colors.theme500, textDecorationLine: "underline" }}
             href={`mailto:${process.env.EXPO_PUBLIC_PROVIDER_CONTACT_EMAIL || "contact@ab-civil.com"}`}
           >
             {process.env.EXPO_PUBLIC_PROVIDER_CONTACT_EMAIL || "contact@ab-civil.com"}
@@ -164,6 +164,3 @@ export default function terms() {
   );
 }
 
-const styles = StyleSheet.create({
-  link: { color: colors.blue, textDecorationLine: "underline" },
-});
