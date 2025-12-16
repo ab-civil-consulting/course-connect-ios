@@ -1,3 +1,21 @@
-import { View } from "react-native";
+import { forwardRef } from "react";
+import { View, ViewProps } from "react-native";
 
-export default View;
+interface TVFocusGuideHelperProps extends ViewProps {
+  autoFocus?: boolean;
+  trapFocusUp?: boolean;
+  trapFocusDown?: boolean;
+  trapFocusLeft?: boolean;
+  trapFocusRight?: boolean;
+}
+
+const TVFocusGuideHelper = forwardRef<View, TVFocusGuideHelperProps>(
+  ({ autoFocus, trapFocusUp, trapFocusDown, trapFocusLeft, trapFocusRight, ...props }, ref) => {
+    // TV-specific props are handled by React Native TV internally
+    return <View ref={ref} {...props} />;
+  }
+);
+
+TVFocusGuideHelper.displayName = "TVFocusGuideHelper";
+
+export default TVFocusGuideHelper;

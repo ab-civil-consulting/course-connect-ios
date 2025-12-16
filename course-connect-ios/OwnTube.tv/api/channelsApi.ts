@@ -94,7 +94,7 @@ export class ChannelsApi extends AxiosInstanceBasedApi {
       // Filter client-side if categoryOneOf is specified
       if (queryParams?.categoryOneOf && queryParams.categoryOneOf.length > 0) {
         videos = videos.filter((video: GetVideosVideo) =>
-          queryParams.categoryOneOf!.includes(video.category?.id)
+          video.category?.id !== null && queryParams.categoryOneOf!.includes(video.category.id)
         );
       }
 

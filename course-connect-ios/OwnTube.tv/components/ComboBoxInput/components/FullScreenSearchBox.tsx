@@ -86,7 +86,7 @@ export const FullScreenSearchBox: FC<FullScreenSearchBoxProps> = ({
           onPress={handleClose}
           icon="Close"
           style={componentStyles.closeBtn}
-          nextFocusLeft={inputRef?.current}
+          nextFocusLeft={inputRef as unknown as number}
         />
       </View>
       {Platform.isTV ? (
@@ -102,7 +102,7 @@ export const FullScreenSearchBox: FC<FullScreenSearchBoxProps> = ({
               })
             }
             onKeyPress={(key: string) => setInputValue((prev) => prev + key)}
-            nextFocusUp={closeButtonRef}
+            nextFocusUp={closeButtonRef as unknown as number}
           />
         </View>
       ) : (

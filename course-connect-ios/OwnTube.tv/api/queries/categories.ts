@@ -62,7 +62,7 @@ export const useGetCategoriesCollectionQuery = (categories: Array<{ name: string
       retry,
       enabled: !!backend,
     })),
-    combine: combineCollectionQueryResults<{ name: string; id: number }>,
+    combine: (result) => combineCollectionQueryResults<{ name: string; id: number }>(result as any),
   });
 };
 

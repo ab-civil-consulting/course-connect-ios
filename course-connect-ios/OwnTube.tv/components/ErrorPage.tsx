@@ -1,3 +1,4 @@
+import React from "react";
 import { Typography } from "./Typography";
 import { useTheme } from "@react-navigation/native";
 import { StyleSheet, View } from "react-native";
@@ -8,7 +9,7 @@ import { spacing } from "../theme";
 interface ErrorPageProps {
   title: string;
   description?: string;
-  logo: JSX.Element;
+  logo: React.ReactNode;
   button: { action: () => void; text: string };
 }
 

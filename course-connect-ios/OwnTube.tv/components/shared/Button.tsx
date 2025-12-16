@@ -17,6 +17,12 @@ interface ButtonProps extends PropsWithChildren<PressableProps> {
   customColor?: string;
   customHoverColor?: string;
   hideFocusBorder?: boolean;
+  // TV-specific navigation props
+  hasTVPreferredFocus?: boolean;
+  nextFocusUp?: number;
+  nextFocusDown?: number;
+  nextFocusLeft?: number;
+  nextFocusRight?: number;
 }
 
 export const Button = forwardRef<View, ButtonProps>(

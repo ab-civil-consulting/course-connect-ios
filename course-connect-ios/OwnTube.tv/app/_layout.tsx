@@ -79,8 +79,8 @@ const RootStack = () => {
     initializeAuthStore();
   }, []);
 
-  // Sync session with backend changes after initialization
-  const { isSessionDataLoaded } = useAuthSessionSync();
+  // Sync session with backend changes (shows modal when session expires)
+  useAuthSessionSync();
 
   const breakpoints = useBreakpoints();
   const { isManuallyExpanded } = useSidebarContext();
@@ -151,8 +151,8 @@ const RootStack = () => {
 
   const { session } = useAuthSessionStore();
 
-  // Wait for both auth store initialization and session sync
-  if (!isInitialized || !isSessionDataLoaded) {
+  // Wait for auth store initialization (loads session from AsyncStorage)
+  if (!isInitialized) {
     return <Loader />;
   }
 

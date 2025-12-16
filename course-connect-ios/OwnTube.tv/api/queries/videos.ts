@@ -40,7 +40,7 @@ export const useGetVideosQuery = <TResult = GetVideosVideo[]>({
       let filteredData = result.data;
       if (params?.categoryOneOf && params.categoryOneOf.length > 0) {
         filteredData = result.data.filter(video =>
-          params.categoryOneOf!.includes(video.category?.id)
+          video.category?.id !== null && params.categoryOneOf!.includes(video.category.id)
         );
       }
 
@@ -100,7 +100,7 @@ export const useInfiniteVideosQuery = (
       let filteredData = result.data;
       if (queryParams?.categoryOneOf && queryParams.categoryOneOf.length > 0) {
         filteredData = result.data.filter(video =>
-          queryParams.categoryOneOf!.includes(video.category?.id)
+          video.category?.id !== null && queryParams.categoryOneOf!.includes(video.category.id)
         );
       }
 

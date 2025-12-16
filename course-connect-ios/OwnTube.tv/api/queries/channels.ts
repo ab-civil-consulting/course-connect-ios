@@ -110,6 +110,6 @@ export const useGetChannelsCollectionQuery = (channelIds: string[] = []) => {
       retry,
       enabled: !!backend,
     })),
-    combine: combineCollectionQueryResults<{ id: string }>,
+    combine: (result) => combineCollectionQueryResults<{ id: string }>(result as any),
   });
 };

@@ -2,7 +2,7 @@ import { GetVideosVideo, ApiError } from "./models";
 import { QUERY_KEYS } from "./constants";
 import { UseQueryResult } from "@tanstack/react-query";
 
-const jsonPaths: Record<keyof typeof QUERY_KEYS, string> = {
+const jsonPaths: Partial<Record<keyof typeof QUERY_KEYS, string>> = {
   videos: require("./../assets/testResponse-videos.json"),
   video: require("./../assets/testResponse-video.json"),
 };

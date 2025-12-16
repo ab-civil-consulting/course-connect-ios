@@ -7,7 +7,7 @@ import { Button } from "../shared";
 import { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { ForumCategory } from "../../api/models/forum";
-import { Picker } from "../shared/Picker";
+import Picker from "../shared/Picker";
 
 interface EditCategoryModalProps {
   isOpen: boolean;
@@ -138,7 +138,7 @@ export const EditCategoryModal = ({
             onPress={(e) => e.stopPropagation()}
           >
             <View style={styles.modalHeader}>
-              <Typography variant="h2" style={{ color: colors.text, flex: 1 }}>
+              <Typography fontSize="sizeXL" fontWeight="SemiBold" style={{ color: colors.text, flex: 1 }}>
                 {isEditMode ? t("forum.editCategory") : t("forum.createNewCategory")}
               </Typography>
               <Pressable onPress={onClose} style={styles.closeButton}>
@@ -147,7 +147,7 @@ export const EditCategoryModal = ({
             </View>
 
             <View style={styles.inputContainer}>
-              <Typography variant="body" style={{ color: colors.text, marginBottom: spacing.xs }}>
+              <Typography fontSize="sizeMd" style={{ color: colors.text, marginBottom: spacing.xs }}>
                 {t("forum.categoryName")}
               </Typography>
               <TextInput
@@ -170,14 +170,14 @@ export const EditCategoryModal = ({
                 editable={!isLoading}
               />
               {errors.name && (
-                <Typography variant="caption" style={{ color: colors.notification, marginTop: spacing.xs }}>
+                <Typography fontSize="sizeXS" style={{ color: colors.notification, marginTop: spacing.xs }}>
                   {errors.name}
                 </Typography>
               )}
             </View>
 
             <View style={styles.inputContainer}>
-              <Typography variant="body" style={{ color: colors.text, marginBottom: spacing.xs }}>
+              <Typography fontSize="sizeMd" style={{ color: colors.text, marginBottom: spacing.xs }}>
                 {t("forum.categoryDescription")}
               </Typography>
               <TextInput
@@ -200,7 +200,7 @@ export const EditCategoryModal = ({
                 editable={!isLoading}
               />
               {errors.description && (
-                <Typography variant="caption" style={{ color: colors.notification, marginTop: spacing.xs }}>
+                <Typography fontSize="sizeXS" style={{ color: colors.notification, marginTop: spacing.xs }}>
                   {errors.description}
                 </Typography>
               )}
@@ -208,7 +208,7 @@ export const EditCategoryModal = ({
 
             <View style={styles.row}>
               <View style={[styles.inputContainer, { flex: 1, marginRight: spacing.sm }]}>
-                <Typography variant="body" style={{ color: colors.text, marginBottom: spacing.xs }}>
+                <Typography fontSize="sizeMd" style={{ color: colors.text, marginBottom: spacing.xs }}>
                   {t("forum.categorySlug")}
                 </Typography>
                 <TextInput
@@ -231,14 +231,14 @@ export const EditCategoryModal = ({
                   editable={!isLoading}
                 />
                 {errors.slug && (
-                  <Typography variant="caption" style={{ color: colors.notification, marginTop: spacing.xs }}>
+                  <Typography fontSize="sizeXS" style={{ color: colors.notification, marginTop: spacing.xs }}>
                     {errors.slug}
                   </Typography>
                 )}
               </View>
 
               <View style={[styles.inputContainer, { flex: 1 }]}>
-                <Typography variant="body" style={{ color: colors.text, marginBottom: spacing.xs }}>
+                <Typography fontSize="sizeMd" style={{ color: colors.text, marginBottom: spacing.xs }}>
                   {t("forum.categoryOrder")}
                 </Typography>
                 <TextInput
@@ -262,7 +262,7 @@ export const EditCategoryModal = ({
             </View>
 
             <View style={styles.inputContainer}>
-              <Typography variant="body" style={{ color: colors.text, marginBottom: spacing.xs }}>
+              <Typography fontSize="sizeMd" style={{ color: colors.text, marginBottom: spacing.xs }}>
                 {t("forum.categoryIcon")}
               </Typography>
               <Picker
@@ -280,7 +280,7 @@ export const EditCategoryModal = ({
               />
               <View style={styles.iconPreview}>
                 <Feather name={icon as keyof typeof Feather.glyphMap} size={24} color={colors.primary} />
-                <Typography variant="caption" style={{ color: colors.text, marginLeft: spacing.sm }}>
+                <Typography fontSize="sizeXS" style={{ color: colors.text, marginLeft: spacing.sm }}>
                   {t("forum.iconPreview")}
                 </Typography>
               </View>
@@ -297,7 +297,7 @@ export const EditCategoryModal = ({
                   >
                     {isLocked && <Feather name="check" size={16} color={colors.card} />}
                   </View>
-                  <Typography variant="body" style={{ color: colors.text, marginLeft: spacing.sm }}>
+                  <Typography fontSize="sizeMd" style={{ color: colors.text, marginLeft: spacing.sm }}>
                     {t("forum.lockCategory")}
                   </Typography>
                 </Pressable>
@@ -308,8 +308,8 @@ export const EditCategoryModal = ({
               {isEditMode && onDelete && (
                 <Button
                   onPress={handleDelete}
-                  label={t("forum.delete")}
-                  variant="danger"
+                  text={t("forum.delete")}
+                  contrast="high"
                   style={{ flex: 1, marginRight: spacing.sm }}
                   disabled={isLoading}
                 />
@@ -317,16 +317,16 @@ export const EditCategoryModal = ({
               <View style={{ flexDirection: "row", flex: 1 }}>
                 <Button
                   onPress={onClose}
-                  label={t("forum.cancel")}
-                  variant="secondary"
+                  text={t("forum.cancel")}
+                  contrast="low"
                   style={{ flex: 1, marginRight: spacing.sm }}
                   disabled={isLoading}
                 />
                 <Button
                   onPress={validateAndSubmit}
-                  label={isEditMode ? t("forum.saveChanges") : t("forum.createCategory")}
+                  text={isEditMode ? t("forum.saveChanges") : t("forum.createCategory")}
+                  contrast="high"
                   disabled={isLoading || !name.trim() || !description.trim() || !slug.trim()}
-                  loading={isLoading}
                   style={{ flex: 1 }}
                 />
               </View>

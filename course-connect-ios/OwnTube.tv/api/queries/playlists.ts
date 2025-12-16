@@ -98,10 +98,10 @@ export const useGetPlaylistsCollectionQuery = (playlists: Array<VideoPlaylist> =
       retry,
       enabled: !!backend,
     })),
-    combine: combineCollectionQueryResults<{
+    combine: (result) => combineCollectionQueryResults<{
       id: number;
       displayName: string;
       videoChannel: VideoPlaylist["videoChannel"];
-    }>,
+    }>(result as any),
   });
 };
