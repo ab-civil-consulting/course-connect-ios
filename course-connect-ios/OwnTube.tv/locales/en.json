@@ -335,5 +335,8 @@
   "wifiOnlyModeDescription": "Only download and stream videos when connected to Wi-Fi",
   "deviceLanguageSettings": "Device & Language",
   "expandSidebar": "Expand sidebar",
-  "collapseSidebar": "Collapse sidebar"
+  "collapseSidebar": "Collapse sidebar",
+  "notificationsSettings": "Notifications",
+  "enablePushNotifications": "Enable push notifications",
+  "pushNotificationsDescription": "Get notified when new videos are available"
 }

@@ -35,7 +35,7 @@ import "../global.css";
 import { Drawer } from "expo-router/drawer";
 import { AppHeader } from "../components/AppHeader";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
-import { useAppStateDiagnostics, useBreakpoints } from "../hooks";
+import { useAppStateDiagnostics, useBreakpoints, usePushNotifications } from "../hooks";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
 import { SHAREABLE_ROUTE_MODAL_TITLES } from "../navigation/constants";
 import { GLOBAL_QUERY_STALE_TIME } from "../api";
@@ -81,6 +81,13 @@ const RootStack = () => {
 
   // Sync session with backend changes (shows modal when session expires)
   useAuthSessionSync();
+
+  // Initialize push notifications
+  const { getLastNotificationResponse } = usePushNotifications();
+  useEffect(() => {
+    // Handle cold-start notifications (when app opens from a notification tap)
+    getLastNotificationResponse();
+  }, []);
 
   const breakpoints = useBreakpoints();
   const { isManuallyExpanded } = useSidebarContext();

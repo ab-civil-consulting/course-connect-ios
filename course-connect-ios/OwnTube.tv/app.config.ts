@@ -32,6 +32,7 @@ export default {
       projectId: "512d37de-e7c0-42f4-912e-ff850d3e9e57",
     },
     primaryBackend: process.env.EXPO_PUBLIC_PRIMARY_BACKEND || undefined,
+    notificationServerUrl: process.env.EXPO_PUBLIC_NOTIFICATION_SERVER_URL || undefined,
   },
   splash: {
     image: process.env.EXPO_PUBLIC_SPLASH_IMAGE || "./assets/splash.png",
@@ -120,6 +121,13 @@ export default {
       },
     ],
     "expo-asset",
+    [
+      "expo-notifications",
+      {
+        icon: "./assets/icon.png",
+        color: "#ffffff",
+      },
+    ],
     [
       "expo-media-library",
       {

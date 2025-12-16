@@ -9,14 +9,16 @@
       "distribution": "internal",
       "prebuildCommand": "npx expo prebuild --clean",
       "env": {
-        "npm_config_legacy_peer_deps": "true"
+        "npm_config_legacy_peer_deps": "true",
+        "EXPO_PUBLIC_NOTIFICATION_SERVER_URL": "https://course-connect.ab-civil.com/notifications"
       }
     },
     "preview": {
       "distribution": "internal",
       "prebuildCommand": "npx expo prebuild --clean",
       "env": {
-        "npm_config_legacy_peer_deps": "true"
+        "npm_config_legacy_peer_deps": "true",
+        "EXPO_PUBLIC_NOTIFICATION_SERVER_URL": "https://course-connect.ab-civil.com/notifications"
       }
     },
     "production": {
@@ -27,7 +29,8 @@
         "npm_config_legacy_peer_deps": "true",
         "EXPO_PUBLIC_PRIMARY_BACKEND": "course-connect.ab-civil.com",
         "EXPO_PUBLIC_APP_NAME": "MC Assist",
-        "EXPO_PUBLIC_APP_SLUG": "course-connect"
+        "EXPO_PUBLIC_APP_SLUG": "course-connect",
+        "EXPO_PUBLIC_NOTIFICATION_SERVER_URL": "https://course-connect.ab-civil.com/notifications"
       }
     }
   },

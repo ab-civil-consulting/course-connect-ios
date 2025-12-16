@@ -20,6 +20,7 @@ export enum STORAGE {
   DEFAULT_DOWNLOAD_QUALITY = "default_download_quality",
   SUBTITLES_ENABLED = "subtitles_enabled",
   SUBTITLE_LANGUAGE = "subtitle_language",
+  PUSH_NOTIFICATION_STATE = "push_notification_state",
 }
 
 export enum ROUTES {

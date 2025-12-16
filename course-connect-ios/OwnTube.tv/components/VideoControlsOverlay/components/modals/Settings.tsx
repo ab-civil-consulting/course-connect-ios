@@ -22,6 +22,7 @@ import { useSettingsStore } from "../../../../store";
 import { useAuthSessionStore } from "../../../../store";
 import { ROUTES } from "../../../../types";
 import { DeleteAccountModal } from "./DeleteAccount";
+import { usePushNotifications } from "../../../../hooks";
 
 interface SettingsProps {
   onClose: () => void;
@@ -44,6 +45,12 @@ export const Settings = ({ onClose }: SettingsProps) => {
   };
 
   const { settings, loadSettings, updatePlaybackSettings, updateDownloadSettings, isLoaded } = useSettingsStore();
+  const {
+    isEnabled: notificationsEnabled,
+    isRegistering: notificationsRegistering,
+    registerForPushNotifications,
+    unregisterFromPushNotifications,
+  } = usePushNotifications();
 
   // Load settings on mount
   useEffect(() => {
@@ -61,6 +68,14 @@ export const Settings = ({ onClose }: SettingsProps) => {
 
   const handleSelectLanguage = (langCode: string) => {
     handleChangeLang(langCode);
+  };
+
+  const handleToggleNotifications = async (enabled: boolean) => {
+    if (enabled) {
+      await registerForPushNotifications();
+    } else {
+      await unregisterFromPushNotifications();
+    }
   };
 
   // Quality options for video playback
@@ -205,6 +220,31 @@ export const Settings = ({ onClose }: SettingsProps) => {
             style={{ marginLeft: spacing.xxl }}
           >
             {t("wifiOnlyModeDescription")}
+          </Typography>
+
+          <Spacer height={spacing.lg} />
+          <Separator />
+          <Spacer height={spacing.lg} />
+
+          {/* Notifications Section */}
+          <Typography fontSize="sizeMd" fontWeight="Bold" color={colors.theme950}>
+            {t("notificationsSettings")}
+          </Typography>
+          <Spacer height={spacing.md} />
+
+          <Checkbox
+            checked={notificationsEnabled}
+            label={t("enablePushNotifications")}
+            onChange={handleToggleNotifications}
+            disabled={notificationsRegistering}
+          />
+          <Typography
+            color={colors.themeDesaturated500}
+            fontWeight="Regular"
+            fontSize="sizeXS"
+            style={{ marginLeft: spacing.xxl }}
+          >
+            {t("pushNotificationsDescription")}
           </Typography>
 
           <Spacer height={spacing.lg} />
