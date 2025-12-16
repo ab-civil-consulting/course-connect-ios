@@ -18,7 +18,7 @@ export default {
   icon,
   owner: "adam_bower",
   scheme: "mcassist",
-  version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.0",
+  version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.1",
   assetBundlePatterns: [
     "assets/fonts/**/*",
     "assets/categories/**/*",
