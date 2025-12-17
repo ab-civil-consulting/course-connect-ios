@@ -17,10 +17,6 @@ interface PeerTubeVideo {
     id: number;
     label: string;
   };
-  state: {
-    id: number;
-    label: string;
-  };
   channel?: {
     name: string;
     displayName: string;
@@ -115,11 +111,6 @@ export const checkForNewVideos = async (): Promise<void> => {
     for (const video of videos) {
       // Skip private videos (privacy.id === 3)
       if (video.privacy.id === 3) {
-        continue;
-      }
-
-      // Skip videos that aren't published/transcoded yet (state.id !== 1)
-      if (video.state.id !== 1) {
         continue;
       }
 
