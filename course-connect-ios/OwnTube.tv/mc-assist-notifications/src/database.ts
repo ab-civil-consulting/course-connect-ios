@@ -75,6 +75,14 @@ export const markVideoNotified = async (uuid: string) => {
   });
 };
 
+export const hasBeenNotified = async (uuid: string): Promise<boolean> => {
+  const video = await prisma.video.findUnique({
+    where: { uuid },
+    select: { notifiedAt: true },
+  });
+  return video !== null && video.notifiedAt !== null;
+};
+
 export const logNotification = async (data: {
   type: string;
   title: string;

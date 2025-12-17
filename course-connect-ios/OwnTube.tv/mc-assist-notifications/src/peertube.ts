@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getLastNotifiedVideo, saveVideo, markVideoNotified } from "./database";
+import { saveVideo, markVideoNotified, hasBeenNotified } from "./database";
 import { sendNewVideoNotification } from "./expo-push";
 
 const PEERTUBE_BACKEND = process.env.PEERTUBE_BACKEND || "course-connect.ab-civil.com";
@@ -13,6 +13,10 @@ interface PeerTubeVideo {
   uuid: string;
   name: string;
   publishedAt: string;
+  privacy: {
+    id: number;
+    label: string;
+  };
   channel?: {
     name: string;
     displayName: string;
@@ -72,7 +76,7 @@ const getAccessToken = async (): Promise<string> => {
   }
 };
 
-export const fetchLatestVideos = async (count = 10): Promise<PeerTubeVideo[]> => {
+export const fetchLatestVideos = async (count = 50): Promise<PeerTubeVideo[]> => {
   try {
     const token = await getAccessToken();
 
@@ -95,29 +99,28 @@ export const fetchLatestVideos = async (count = 10): Promise<PeerTubeVideo[]> =>
 
 export const checkForNewVideos = async (): Promise<void> => {
   try {
-    const videos = await fetchLatestVideos(10);
+    const videos = await fetchLatestVideos();
 
     if (videos.length === 0) {
       console.log("[PeerTube] No videos found");
       return;
     }
 
-    const lastNotified = await getLastNotifiedVideo();
-    const lastNotifiedDate = lastNotified?.publishedAt || new Date(0);
+    let notifiedCount = 0;
 
-    const newVideos = videos.filter(
-      (video) => new Date(video.publishedAt) > lastNotifiedDate
-    );
+    for (const video of videos) {
+      // Skip private videos (privacy.id === 3)
+      if (video.privacy.id === 3) {
+        continue;
+      }
 
-    if (newVideos.length === 0) {
-      console.log("[PeerTube] No new videos since last check");
-      return;
-    }
+      // Check if already notified
+      const alreadyNotified = await hasBeenNotified(video.uuid);
+      if (alreadyNotified) {
+        continue;
+      }
 
-    console.log(`[PeerTube] Found ${newVideos.length} new video(s)`);
-
-    // Process oldest first
-    for (const video of newVideos.reverse()) {
+      // Save and notify about this video
       await saveVideo({
         uuid: video.uuid,
         name: video.name,
@@ -133,8 +136,15 @@ export const checkForNewVideos = async (): Promise<void> => {
       });
 
       await markVideoNotified(video.uuid);
+      notifiedCount++;
 
       console.log(`[PeerTube] Notified about video: ${video.name}`);
+    }
+
+    if (notifiedCount === 0) {
+      console.log("[PeerTube] No new public/internal videos to notify about");
+    } else {
+      console.log(`[PeerTube] Sent ${notifiedCount} notification(s)`);
     }
   } catch (error) {
     console.error("[PeerTube] Error checking for new videos:", error);
