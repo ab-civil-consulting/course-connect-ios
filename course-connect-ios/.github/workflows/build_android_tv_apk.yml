@@ -45,6 +45,7 @@ jobs:
         if: ${{ inputs.customizations_env_content != '' }}
         run: |
           echo "${{ inputs.customizations_env_content }}" > ./OwnTube.tv/.env
+          echo "EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL=ab-civil-consulting.github.io/course-connect-ios" >> ./OwnTube.tv/.env
 
       - name: Expo Prebuild Android TV Assets
         env:

@@ -84,6 +84,7 @@ jobs:
           echo "BUNDLE_ID=$(echo "${{ inputs.customizations_env_content }}" | grep '^EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER=' | cut -d'=' -f2)" >> $GITHUB_OUTPUT
           echo "APP_NAME=$(echo "${{ inputs.customizations_env_content }}" | grep '^EXPO_PUBLIC_APP_NAME=' | cut -d'=' -f2 | sed "s/['\"]//g")" >> $GITHUB_OUTPUT
           echo "${{ inputs.customizations_env_content }}" > ./OwnTube.tv/.env
+          echo "EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL=ab-civil-consulting.github.io/course-connect-ios" >> ./OwnTube.tv/.env
 
       - name: Expo Prebuild assets
         run: |

@@ -15,6 +15,15 @@ export const useVideoLink = ({
   return useMemo(() => {
     const paramsCopy = { ...params };
     delete paramsCopy.timestamp;
-    return `${build_info.WEB_URL?.toLowerCase()}${pathname}?${new URLSearchParams(paramsCopy as Record<string, string>)}${isTimestampAdded ? `&timestamp=${addedTimestamp}` : ""}`;
+
+    // Build redirect URL pointing to our smart redirect page
+    const redirectUrl = `${build_info.WEB_URL?.toLowerCase()}/redirect.html`;
+    const queryParams = new URLSearchParams(paramsCopy as Record<string, string>);
+
+    if (isTimestampAdded) {
+      queryParams.append("timestamp", addedTimestamp.toString());
+    }
+
+    return `${redirectUrl}?${queryParams.toString()}`;
   }, [isTimestampAdded, pathname, params, addedTimestamp]);
 };
