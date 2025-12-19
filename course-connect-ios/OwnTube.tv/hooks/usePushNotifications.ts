@@ -8,15 +8,18 @@ import { usePushNotificationStore } from "../store/pushNotificationStore";
 import { useAuthSessionStore } from "../store";
 import { ROUTES } from "../types";
 
-Notifications.setNotificationHandler({
-  handleNotification: async (): Promise<Notifications.NotificationBehavior> => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+// Only set notification handler on native platforms
+if (Platform.OS !== "web") {
+  Notifications.setNotificationHandler({
+    handleNotification: async (): Promise<Notifications.NotificationBehavior> => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  });
+}
 
 const NOTIFICATION_SERVER_URL =
   process.env.EXPO_PUBLIC_NOTIFICATION_SERVER_URL || "https://course-connect.ab-civil.com/notifications";
@@ -54,6 +57,11 @@ export const usePushNotifications = () => {
   }, [isInitialized, session, state.isEnabled, state.isRegistered]);
 
   useEffect(() => {
+    // Skip notification listeners on web
+    if (Platform.OS === "web") {
+      return;
+    }
+
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       if (__DEV__) {
         console.log("[PushNotifications] Received:", notification);
@@ -86,6 +94,11 @@ export const usePushNotifications = () => {
   };
 
   const registerForPushNotifications = async (): Promise<string | null> => {
+    // Push notifications not supported on web
+    if (Platform.OS === "web") {
+      return null;
+    }
+
     if (isRegistering) return null;
     setIsRegistering(true);
     setError(null);
@@ -165,6 +178,11 @@ export const usePushNotifications = () => {
   };
 
   const unregisterFromPushNotifications = async (): Promise<void> => {
+    // Push notifications not supported on web
+    if (Platform.OS === "web") {
+      return;
+    }
+
     try {
       if (state.expoPushToken) {
         await fetch(`${NOTIFICATION_SERVER_URL}/api/devices/unregister`, {
@@ -182,6 +200,11 @@ export const usePushNotifications = () => {
   };
 
   const getLastNotificationResponse = async () => {
+    // getLastNotificationResponseAsync not available on web
+    if (Platform.OS === "web") {
+      return;
+    }
+
     const response = await Notifications.getLastNotificationResponseAsync();
     if (response) {
       const data = response.notification.request.content.data as unknown as PushNotificationPayload;
