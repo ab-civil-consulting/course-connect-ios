@@ -65,15 +65,15 @@ jobs:
           node-version: 20.x
 
       - name: Install Dependencies
-        run: cd OwnTube.tv/ && npm install
+        run: cd course-connect-ios/course-connect-ios/OwnTube.tv/ && npm install
 
       - name: Create .env File
         id: create_env
         if: ${{ inputs.customizations_env_content != '' }}
         run: |
           echo "BUNDLE_ID=$(echo "${{ inputs.customizations_env_content }}" | grep '^EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER=' | cut -d'=' -f2)" >> $GITHUB_OUTPUT
-          echo "${{ inputs.customizations_env_content }}" > ./OwnTube.tv/.env
-          echo "EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL=ab-civil-consulting.github.io/course-connect-ios" >> ./OwnTube.tv/.env
+          echo "${{ inputs.customizations_env_content }}" > ./course-connect-ios/course-connect-ios/OwnTube.tv/.env
+          echo "EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL=ab-civil-consulting.github.io/course-connect-ios" >> ./course-connect-ios/course-connect-ios/OwnTube.tv/.env
 
       - name: Expo Prebuild assets
         env:
@@ -84,7 +84,7 @@ jobs:
           if [ "${{ inputs.isTV }}" == "true" ]; then
             export EXPO_TV=1
           fi
-          cd OwnTube.tv/ && npx expo prebuild --clean --platform android
+          cd course-connect-ios/course-connect-ios/OwnTube.tv/ && npx expo prebuild --clean --platform android
 
       - name: Set Up JDK
         uses: actions/setup-java@v4
@@ -98,20 +98,20 @@ jobs:
 
       - name: Inject Build Info
         run: |
-          cat > ./OwnTube.tv/build-info.json << 'EOF'
+          cat > ./course-connect-ios/course-connect-ios/OwnTube.tv/build-info.json << 'EOF'
           ${{ inputs.build_info }}
           EOF
 
       - name: Add keystore file
         run: |
-          echo "${{ secrets.RELEASE_KEYSTORE_CONTENT_BASE64 }}" | base64 --decode > ./OwnTube.tv/android/app/release-key.jks
+          echo "${{ secrets.RELEASE_KEYSTORE_CONTENT_BASE64 }}" | base64 --decode > ./course-connect-ios/course-connect-ios/OwnTube.tv/android/app/release-key.jks
 
       - name: Build app artifact
         run: |
           if [ "${{ inputs.isTV }}" == "true" ]; then
             export EXPO_TV=1
           fi
-          cd OwnTube.tv/android
+          cd course-connect-ios/course-connect-ios/OwnTube.tv/android
           ./gradlew clean bundleRelease
 
       - name: Upload app to Google Play
@@ -119,7 +119,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: ${{ steps.create_env.outputs.BUNDLE_ID }}
-          releaseFiles: ./OwnTube.tv/android/app/build/outputs/bundle/release/app-release.aab
+          releaseFiles: ./course-connect-ios/course-connect-ios/OwnTube.tv/android/app/build/outputs/bundle/release/app-release.aab
           track: ${{ inputs.isTV == true && 'tv:' || '' }}${{ inputs.track }}
           status: draft
           inAppUpdatePriority: 1
