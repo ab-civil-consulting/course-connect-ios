@@ -107,10 +107,6 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     width: "100%",
   },
-  thumbnailContainer: {
-    width: "100%",
-    aspectRatio: 16 / 9, // Maintain 16:9 aspect ratio
-  },
   linkWrapper: {
     flex: 1,
     width: "100%",
@@ -131,5 +127,9 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.md, // Space below text to prevent collapse
     width: "100%",
     minHeight: 50, // Ensure enough space for at least 2 lines of text
+  },
+  thumbnailContainer: {
+    aspectRatio: 16 / 9,
+    width: "100%", // Maintain 16:9 aspect ratio
   },
 });

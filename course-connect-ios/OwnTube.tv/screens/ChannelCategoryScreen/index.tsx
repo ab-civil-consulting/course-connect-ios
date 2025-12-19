@@ -96,5 +96,5 @@ export const ChannelCategoryScreen = () => {
 const styles = StyleSheet.create({
   errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
   header: { marginBottom: -spacing.xl, paddingLeft: spacing.xl, textAlign: "left", width: "100%" },
-  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
+  signInButton: { height: 48, marginTop: spacing.lg, paddingHorizontal: spacing.xl },
 });

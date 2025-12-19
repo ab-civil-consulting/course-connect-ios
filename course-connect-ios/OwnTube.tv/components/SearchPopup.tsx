@@ -91,5 +91,5 @@ export const SearchPopup = ({ handleClose, backend }: { handleClose: () => void;
 const styles = StyleSheet.create({
   authContainer: { alignItems: "center", justifyContent: "center", padding: spacing.xl },
   modalWrapper: { alignItems: "center", flex: 1 },
-  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
+  signInButton: { height: 48, marginTop: spacing.lg, paddingHorizontal: spacing.xl },
 });

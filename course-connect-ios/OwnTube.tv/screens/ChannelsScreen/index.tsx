@@ -121,5 +121,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 0,
   },
-  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
+  signInButton: { height: 48, marginTop: spacing.lg, paddingHorizontal: spacing.xl },
 });

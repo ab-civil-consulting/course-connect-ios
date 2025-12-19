@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
     height: 48,
   },
   trailingIconContainer: {
+    alignItems: "center",
+    height: 48,
+    justifyContent: "center",
     position: "absolute",
     right: 6,
     top: 0,
-    height: 48,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

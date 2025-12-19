@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
     zIndex: undefined,
   },
   logoContainer: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     gap: spacing.sm,
   },
 });

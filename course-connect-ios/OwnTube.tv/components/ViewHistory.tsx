@@ -183,5 +183,5 @@ const styles = StyleSheet.create({
   screenContainer: { flex: 1 },
   sectionHeader: { paddingBottom: spacing.xl },
   sectionListContainer: { flex: 1 },
-  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
+  signInButton: { height: 48, marginTop: spacing.lg, paddingHorizontal: spacing.xl },
 });

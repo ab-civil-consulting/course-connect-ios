@@ -372,12 +372,12 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     width: "100%",
   },
-  height48: { height: 48 },
-  textAlignCenter: { textAlign: "center" },
   eyeIconButton: {
     alignItems: "center",
-    justifyContent: "center",
     height: "100%",
+    justifyContent: "center",
     paddingHorizontal: spacing.sm,
   },
+  height48: { height: 48 },
+  textAlignCenter: { textAlign: "center" },
 });

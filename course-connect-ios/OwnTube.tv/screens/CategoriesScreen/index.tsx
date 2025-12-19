@@ -132,5 +132,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
-  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
+  signInButton: { height: 48, marginTop: spacing.lg, paddingHorizontal: spacing.xl },
 });

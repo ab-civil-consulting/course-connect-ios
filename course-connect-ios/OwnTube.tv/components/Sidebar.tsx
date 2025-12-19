@@ -272,6 +272,12 @@ const styles = StyleSheet.create({
     height: 48,
     paddingVertical: 6,
   },
+  collapsedInstanceInfo: {
+    alignItems: "center",
+    flexDirection: "column",
+    gap: spacing.sm,
+    paddingBottom: spacing.lg,
+  },
   container: {
     paddingBottom: 8,
     paddingTop: 8,
@@ -283,12 +289,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingBottom: spacing.lg,
     paddingLeft: spacing.xs,
-  },
-  collapsedInstanceInfo: {
-    alignItems: "center",
-    flexDirection: "column",
-    gap: spacing.sm,
-    paddingBottom: spacing.lg,
   },
   paddingHHelper: {
     height: 48,

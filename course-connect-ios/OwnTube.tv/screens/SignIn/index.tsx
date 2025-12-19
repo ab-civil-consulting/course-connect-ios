@@ -518,6 +518,12 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     width: "100%",
   },
+  eyeIconButton: {
+    alignItems: "center",
+    height: "100%",
+    justifyContent: "center",
+    paddingHorizontal: spacing.sm,
+  },
   height48: { height: 48 },
   keyboardAvoidingView: {
     flex: 1,
@@ -542,10 +548,4 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   textAlignCenter: { textAlign: "center" },
-  eyeIconButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
-    paddingHorizontal: spacing.sm,
-  },
 });

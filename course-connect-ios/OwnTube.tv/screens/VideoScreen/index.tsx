@@ -558,7 +558,7 @@ const styles = StyleSheet.create({
   backButton: { alignSelf: "flex-start", height: 48, margin: spacing.sm, width: 48 },
   errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
   flex1: { flex: 1 },
-  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
+  signInButton: { height: 48, marginTop: spacing.lg, paddingHorizontal: spacing.xl },
   statusBarUnderlay: { backgroundColor: colorSchemes.dark.colors.black100, width: "100%" },
   videoContainer: { minHeight: "100%", minWidth: "100%" },
 });

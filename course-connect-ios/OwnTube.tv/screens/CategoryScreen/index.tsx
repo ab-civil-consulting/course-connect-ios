@@ -111,9 +111,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
-  scrollContent: {
-    flexGrow: 1,
-  },
   errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
   header: {
     alignItems: "center",
@@ -126,7 +123,10 @@ const styles = StyleSheet.create({
   placeholder: {
     width: 40 + spacing.md * 2, // Same width as back button for centering
   },
-  signInButton: { marginTop: spacing.lg, paddingHorizontal: spacing.xl, height: 48 },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  signInButton: { height: 48, marginTop: spacing.lg, paddingHorizontal: spacing.xl },
   title: {
     flex: 1,
     fontSize: 20,
