@@ -33,6 +33,12 @@ jest.mock("../../hooks", () => ({
   useViewHistory: jest.fn(() => ({ updateHistory: mockUpdHistory })),
   useInstanceConfig: jest.fn(() => ({ currentInstanceConfig: { hideVideoSiteLink: false } })),
 }));
+jest.mock("../../store", () => ({
+  useAuthSessionStore: jest.fn(() => ({
+    session: { token: "mock-token", user: { id: 1, username: "testuser" } },
+    isInitialized: true,
+  })),
+}));
 (useLocalSearchParams as jest.Mock).mockReturnValue({ id: 123, backend: "example.com" });
 jest.mock("@react-navigation/native", () => ({
   ...jest.requireActual("@react-navigation/native"),

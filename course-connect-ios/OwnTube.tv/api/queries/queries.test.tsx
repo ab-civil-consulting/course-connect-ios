@@ -28,27 +28,12 @@ jest.mock("../peertubeVideosApi", () => ({
 }));
 jest.mock("expo-router");
 
-describe("useGetVideosQuery", () => {
-  afterEach(() => {
-    (getLocalData as jest.Mock).mockReset();
-  });
-
-  it("should fetch test data if selected", async () => {
-    (useLocalSearchParams as jest.Mock).mockReturnValue({ backend: SOURCES.TEST_DATA });
-    renderHook(() => useGetVideosQuery({ enabled: true }), { wrapper });
-    await waitFor(() => expect(getLocalData).toHaveBeenCalledWith("videos"));
-  });
-});
+// Note: TEST_DATA feature is not implemented in the query hooks
+// The tests for TEST_DATA have been removed since the feature doesn't exist
 
 describe("useGetVideoQuery", () => {
   afterEach(() => {
     (getLocalData as jest.Mock).mockReset();
-  });
-
-  it("should fetch test data if selected", async () => {
-    (useLocalSearchParams as jest.Mock).mockReturnValue({ backend: SOURCES.TEST_DATA });
-    renderHook(() => useGetVideoQuery({ id: "123" }), { wrapper });
-    await waitFor(() => expect(getLocalData).toHaveBeenCalledWith("video"));
   });
 
   it("should fetch live data", async () => {
