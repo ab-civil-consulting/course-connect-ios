@@ -1,10 +1,9 @@
 import { renderHook, waitFor } from "@testing-library/react-native";
-import { SOURCES } from "../../types";
 import { getLocalData } from "../helpers";
 import { ApiServiceImpl } from "../peertubeVideosApi";
 import { useLocalSearchParams } from "expo-router";
 import { createQueryClientWrapper } from "../../utils/testing";
-import { useGetVideoQuery, useGetVideosQuery } from "./videos";
+import { useGetVideoQuery } from "./videos";
 
 const wrapper = createQueryClientWrapper();
 
