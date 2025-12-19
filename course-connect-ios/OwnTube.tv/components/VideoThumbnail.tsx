@@ -19,7 +19,12 @@ interface VideoThumbnailProps {
 
 const fallback = require("../assets/thumbnailFallback.png");
 
-export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backendProp, timestamp, imageDimensions }) => {
+export const VideoThumbnail: FC<VideoThumbnailProps> = ({
+  video,
+  backend: backendProp,
+  timestamp,
+  imageDimensions,
+}) => {
   const { colors } = useTheme();
   const { primaryBackend } = useAppConfigContext();
   const [isError, setIsError] = useState(false);
@@ -63,12 +68,12 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
 
   if (thumbnailPath && backend) {
     // Check if thumbnailPath is already a full URL
-    if (thumbnailPath.startsWith('http://') || thumbnailPath.startsWith('https://')) {
+    if (thumbnailPath.startsWith("http://") || thumbnailPath.startsWith("https://")) {
       // Already a full URL, use it directly
       imageUrl = thumbnailPath;
     } else {
       // Relative path, construct full URL with backend
-      const cleanBackend = backend.replace(/^https?:\/\//, '');
+      const cleanBackend = backend.replace(/^https?:\/\//, "");
       imageUrl = `https://${cleanBackend}${thumbnailPath}`;
     }
 
@@ -78,7 +83,7 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
     } catch (e) {
       const _urlValidationError = `Invalid URL: ${imageUrl}`;
       imageUrl = null;
-      console.error('[VideoThumbnail] URL validation failed:', { imageUrl, error: e });
+      console.error("[VideoThumbnail] URL validation failed:", { imageUrl, error: e });
     }
   }
 
@@ -90,7 +95,7 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
   // Only show warning if backend is truly missing or dimensions are invalid after initial layout
   if (!backend) {
     if (__DEV__) {
-      console.warn('[VideoThumbnail] No backend available:', { backendProp, primaryBackend });
+      console.warn("[VideoThumbnail] No backend available:", { backendProp, primaryBackend });
     }
     return null;
   }
@@ -98,16 +103,11 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
   if (!imageDimensions.width || !imageDimensions.height) {
     // During initial render, dimensions may be 0 while container measures itself
     // Return placeholder with proper aspect ratio to prevent layout shift
-    return (
-      <View style={[styles.videoThumbnailContainer, { backgroundColor: colors.themeDesaturated500 }]} />
-    );
+    return <View style={[styles.videoThumbnailContainer, { backgroundColor: colors.themeDesaturated500 }]} />;
   }
 
   return (
-    <View style={[
-      styles.videoThumbnailContainer,
-      { backgroundColor: colors.themeDesaturated500 }
-    ]}>
+    <View style={[styles.videoThumbnailContainer, { backgroundColor: colors.themeDesaturated500 }]}>
       <Image
         width={imageDimensions.width}
         height={imageDimensions.height}
@@ -116,10 +116,10 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
         style={[
           styles.videoImage,
           // iOS-specific: use explicit dimensions, not flex
-          Platform.OS === 'ios' && {
+          Platform.OS === "ios" && {
             width: imageDimensions.width,
             height: imageDimensions.height,
-          }
+          },
         ]}
         onError={(_error) => {
           // Retry logic: retry up to 2 times with exponential backoff
@@ -132,7 +132,7 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
             }, retryDelay);
           } else {
             // Only log when we've exhausted all retries and showing fallback
-            console.error('[VideoThumbnail] Failed to load thumbnail after retries, showing fallback:', {
+            console.error("[VideoThumbnail] Failed to load thumbnail after retries, showing fallback:", {
               uuid: video.uuid,
               videoName: video.name,
               backend,

@@ -135,7 +135,7 @@ export const ThreadList = ({ backend, categoryId, categoryName }: ThreadListProp
         console.error("Error creating thread:", error);
       }
     },
-    [createThreadMutation, categoryId, router, backend],
+    [createThreadMutation, categoryId, router, backend]
   );
 
   const content = useMemo(() => {

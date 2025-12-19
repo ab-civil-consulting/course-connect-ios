@@ -48,7 +48,7 @@ const VideoDetails = ({ onClose, name, channel, datePublished, description }: Vi
 
 **Description:**
 ${description}
-`,
+`
     );
     setCopyButtonText(t("detailsCopied"));
     clearTimeout(timeoutRef.current);

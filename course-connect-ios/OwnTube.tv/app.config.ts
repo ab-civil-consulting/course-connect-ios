@@ -18,13 +18,8 @@ export default {
   icon,
   owner: "adam_bower",
   scheme: "mcassist",
-  version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.1",
-  assetBundlePatterns: [
-    "assets/fonts/**/*",
-    "assets/categories/**/*",
-    "assets/*.png",
-    "assets/appleTV/**/*",
-  ],
+  version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.2",
+  assetBundlePatterns: ["assets/fonts/**/*", "assets/categories/**/*", "assets/*.png", "assets/appleTV/**/*"],
   userInterfaceStyle: process.env.EXPO_PUBLIC_USER_INTERFACE_STYLE || "light",
 
   extra: {
@@ -65,9 +60,7 @@ export default {
   },
   android: {
     blockedPermissions: ["RECORD_AUDIO", "READ_MEDIA_VIDEO", "READ_MEDIA_IMAGES"],
-    permissions: [
-      "WRITE_EXTERNAL_STORAGE",
-    ],
+    permissions: ["WRITE_EXTERNAL_STORAGE"],
     versionCode: getBuildNumber({ platform: "android" }),
     package: process.env.EXPO_PUBLIC_ANDROID_PACKAGE || "com.abcivil.mcassist.v2",
     intentFilters: process.env.EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL

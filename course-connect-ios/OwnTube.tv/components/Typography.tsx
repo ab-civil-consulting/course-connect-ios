@@ -11,7 +11,7 @@ export const Typography = (
       fontWeight?: keyof typeof fontWeights;
       hasOuterGlow?: boolean;
     }
-  >,
+  >
 ) => {
   const { colors } = useTheme();
 

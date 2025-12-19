@@ -9,7 +9,7 @@ import {
 } from "date-fns";
 
 export const groupHistoryEntriesByTime = (
-  entries: ViewHistoryEntry[],
+  entries: ViewHistoryEntry[]
 ): Array<{ titleKey: string; data: ViewHistoryEntry[] }> => {
   return entries.reduce(
     (groups, entry) => {
@@ -39,6 +39,6 @@ export const groupHistoryEntriesByTime = (
 
       return groups;
     },
-    [] as Array<{ titleKey: string; data: ViewHistoryEntry[] }>,
+    [] as Array<{ titleKey: string; data: ViewHistoryEntry[] }>
   );
 };

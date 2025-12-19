@@ -42,7 +42,7 @@ export class AuthApi extends AxiosInstanceBasedApi {
   async login(
     baseURL: string,
     data: { grant_type: string; refresh_token?: string; username?: string; password?: string } & OAuthClientLocal,
-    otp?: string,
+    otp?: string
   ): Promise<UserLoginResponse> {
     try {
       const response = await this.instance.post("users/token", data, {

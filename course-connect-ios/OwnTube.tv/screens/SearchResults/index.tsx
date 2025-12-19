@@ -81,7 +81,7 @@ export const SearchResultsScreen = () => {
       return () => {
         setIsSortExpanded(false);
       };
-    }, []),
+    }, [])
   );
 
   const renderContent = () => {
@@ -97,12 +97,7 @@ export const SearchResultsScreen = () => {
       return (
         <View style={styles.errorContainer}>
           <EmptyPage text={t("signInRequired")} />
-          <Button
-            onPress={handleSignIn}
-            contrast="high"
-            text={t("signInToViewVideos")}
-            style={styles.signInButton}
-          />
+          <Button onPress={handleSignIn} contrast="high" text={t("signInToViewVideos")} style={styles.signInButton} />
         </View>
       );
     }

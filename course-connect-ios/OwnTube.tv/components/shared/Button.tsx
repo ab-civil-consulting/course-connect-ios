@@ -42,7 +42,7 @@ export const Button = forwardRef<View, ButtonProps>(
       accessibilityHint,
       ...props
     },
-    ref,
+    ref
   ) => {
     const { colors } = useTheme();
     const { isHovered, toggleHovered } = useHoverState();
@@ -75,7 +75,7 @@ export const Button = forwardRef<View, ButtonProps>(
 
         return isHovered || isActive || pressed ? hoverColor : regularColor;
       },
-      [colors, isHovered, hoverColor, isActive, regularColor, disabled],
+      [colors, isHovered, hoverColor, isActive, regularColor, disabled]
     );
 
     const textColor = disabled ? colors.themeDesaturated500 : contrast === "high" ? colors.white94 : colors.theme900;
@@ -98,7 +98,8 @@ export const Button = forwardRef<View, ButtonProps>(
         }}
         style={({ pressed, focused }: { pressed: boolean; focused?: boolean }) => {
           // Check if custom style is a function (for state-based styles)
-          const customStyle = typeof props.style === 'function' ? props.style({ pressed, focused: focused || false }) : props.style;
+          const customStyle =
+            typeof props.style === "function" ? props.style({ pressed, focused: focused || false }) : props.style;
           const customStyleArray = Array.isArray(customStyle) ? customStyle : [customStyle];
 
           // Extract backgroundColor from custom styles if provided
@@ -107,14 +108,14 @@ export const Button = forwardRef<View, ButtonProps>(
           }, null);
 
           // Get padding from static style (not function)
-          const staticStyle = typeof props.style === 'function' ? undefined : props.style;
+          const staticStyle = typeof props.style === "function" ? undefined : props.style;
           const basePaddingH = (staticStyle as ViewStyle | undefined)?.paddingHorizontal;
           const basePaddingV = (staticStyle as ViewStyle | undefined)?.paddingVertical;
 
           return [
             styles.container,
             // Apply custom style (function or static)
-            typeof props.style === 'function' ? props.style({ pressed, focused: focused || false }) : props.style,
+            typeof props.style === "function" ? props.style({ pressed, focused: focused || false }) : props.style,
             {
               // Only use theme backgroundColor if no custom backgroundColor is provided
               ...(!customBackgroundColor ? { backgroundColor: getBackgroundColor(pressed) } : {}),
@@ -122,7 +123,8 @@ export const Button = forwardRef<View, ButtonProps>(
               borderWidth: !hideFocusBorder && focused ? 2 : 0,
               borderColor: colors.theme950,
               paddingHorizontal:
-                (Number(basePaddingH) || styles.container.paddingHorizontal || 0) - (!hideFocusBorder && focused ? 2 : 0),
+                (Number(basePaddingH) || styles.container.paddingHorizontal || 0) -
+                (!hideFocusBorder && focused ? 2 : 0),
               paddingVertical:
                 (Number(basePaddingV) || styles.container.paddingVertical || 0) - (!hideFocusBorder && focused ? 2 : 0),
             },
@@ -144,7 +146,7 @@ export const Button = forwardRef<View, ButtonProps>(
         )}
       </Pressable>
     );
-  },
+  }
 );
 
 Button.displayName = "Button";

@@ -66,8 +66,7 @@ export const LandingScreen = () => {
           (instanceConfigError as unknown as ApiError)?.status === WRONG_SERVER_VERSION_STATUS_CODE
             ? instanceConfigError.message
             : t("siteDidNotRespondError", {
-                errorCode:
-                  (instanceConfigError as unknown as ApiError)?.status || instanceConfigError.message || "",
+                errorCode: (instanceConfigError as unknown as ApiError)?.status || instanceConfigError.message || "",
               }),
         autoHide: false,
       });
@@ -77,13 +76,13 @@ export const LandingScreen = () => {
 
   const { recentInstances } = useRecentInstances();
   const { data: recentInstancesData, refetch: refetchInstancesData } = useGetInstanceInfoCollectionQuery(
-    recentInstances?.slice(0, 12) || [],
+    recentInstances?.slice(0, 12) || []
   );
 
   useFocusEffect(
     useCallback(() => {
       refetchInstancesData();
-    }, [recentInstances]),
+    }, [recentInstances])
   );
 
   const { width } = useWindowDimensions();

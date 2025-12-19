@@ -68,7 +68,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
             />
           </View>
         </ModalContainer>
-      </Animated.View>,
+      </Animated.View>
     );
   };
 

@@ -26,14 +26,14 @@ const withReleaseSigningConfig = (config, props) => {
            keyAlias '${props.keyAlias}'
            keyPassword '${props.keyPassword}' 
         }
-    }`,
+    }`
     );
 
     // change release signingConfig to actual release config that we just added
     modifiedContents = modifiedContents.replace(
       buildTypesRegex,
       `signingConfig signingConfigs.release
-            shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)`,
+            shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)`
     );
 
     config.modResults.contents = modifiedContents;

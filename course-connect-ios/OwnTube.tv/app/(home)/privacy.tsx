@@ -52,9 +52,9 @@ export default function privacy() {
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">What information does the Application obtain and how is it used?</Typography>
         <Typography>
-          <Typography fontWeight="Bold">Optional User Registration:</Typography> Registration is optional but required for
-          certain features. When you register, your email and username are sent to a PeerTube instance where your account is
-          created.
+          <Typography fontWeight="Bold">Optional User Registration:</Typography> Registration is optional but required
+          for certain features. When you register, your email and username are sent to a PeerTube instance where your
+          account is created.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography>
@@ -68,8 +68,8 @@ export default function privacy() {
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography>
-          <Typography fontWeight="Bold">Analytics:</Typography> We use PostHog for analytics to understand how the app is
-          used. PostHog tracks playback events, user actions, and device information. Data is sent to EU servers
+          <Typography fontWeight="Bold">Analytics:</Typography> We use PostHog for analytics to understand how the app
+          is used. PostHog tracks playback events, user actions, and device information. Data is sent to EU servers
           (eu.i.posthog.com). You can disable analytics through app configuration.
         </Typography>
         <Typography>{"\n"}</Typography>
@@ -82,19 +82,20 @@ export default function privacy() {
           Do third parties see and/or have access to personal information obtained by the Application?
         </Typography>
         <Typography>
-          <Typography fontWeight="Bold">PeerTube:</Typography> Your email and username are shared with the PeerTube instance
-          where your account is created. Your watch history on that instance is governed by the PeerTube instance&apos;s privacy
-          policy.
+          <Typography fontWeight="Bold">PeerTube:</Typography> Your email and username are shared with the PeerTube
+          instance where your account is created. Your watch history on that instance is governed by the PeerTube
+          instance&apos;s privacy policy.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography>
-          <Typography fontWeight="Bold">PostHog Analytics:</Typography> Analytics data (playback events, device information)
-          is sent to PostHog for analysis. Review PostHog&apos;s privacy policy for details on how they handle this data.
+          <Typography fontWeight="Bold">PostHog Analytics:</Typography> Analytics data (playback events, device
+          information) is sent to PostHog for analysis. Review PostHog&apos;s privacy policy for details on how they
+          handle this data.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography>
-          <Typography fontWeight="Bold">Casting Services:</Typography> When using Chromecast, AirPlay, or similar features,
-          minimal device discovery information may be shared with those services.
+          <Typography fontWeight="Bold">Casting Services:</Typography> When using Chromecast, AirPlay, or similar
+          features, minimal device discovery information may be shared with those services.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">Children</Typography>
@@ -112,9 +113,9 @@ export default function privacy() {
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">Security</Typography>
         <Typography>
-          Watch history and preferences are stored locally on your device. Protect your device with strong authentication
-          (passcode or biometric). Keep your device and apps updated. Data sent to PeerTube and PostHog is protected by
-          those services&apos; security measures.
+          Watch history and preferences are stored locally on your device. Protect your device with strong
+          authentication (passcode or biometric). Keep your device and apps updated. Data sent to PeerTube and PostHog
+          is protected by those services&apos; security measures.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">Changes</Typography>

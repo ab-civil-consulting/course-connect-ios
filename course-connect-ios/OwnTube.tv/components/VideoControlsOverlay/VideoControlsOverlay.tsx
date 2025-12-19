@@ -187,9 +187,7 @@ const VideoControlsOverlay = ({
               </View>
               <View style={styles.topRightControls}>
                 <ShareButton onPress={handleShare} isMobile={isMobile} />
-                {isDownloadAvailable && !isLiveVideo && (
-                  <PlayerButton onPress={handleDownload} icon="Arrow-Down" />
-                )}
+                {isDownloadAvailable && !isLiveVideo && <PlayerButton onPress={handleDownload} icon="Arrow-Down" />}
               </View>
             </LinearGradient>
           </Animated.View>

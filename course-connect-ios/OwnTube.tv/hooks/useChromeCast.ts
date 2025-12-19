@@ -74,7 +74,7 @@ export const useChromeCast = ({
             (error) => {
               console.error("Error playing media:", error);
               captureError(error, CustomPostHogExceptions.ChromecastError);
-            },
+            }
           );
         } else {
           player?.pause(
@@ -83,7 +83,7 @@ export const useChromeCast = ({
             (error) => {
               console.error("Error pausing media:", error);
               captureError(error, CustomPostHogExceptions.ChromecastError);
-            },
+            }
           );
         }
       }
@@ -105,7 +105,7 @@ export const useChromeCast = ({
           (error) => {
             console.error("Error seeking media:", error);
             captureError(error, CustomPostHogExceptions.ChromecastError);
-          },
+          }
         );
       }
     }
@@ -133,7 +133,7 @@ export const useChromeCast = ({
     // Only setup RemotePlayer after Cast framework is fully initialized
     if (!window.cast?.framework) {
       if (__DEV__) {
-        console.warn('[useChromeCast] Cast framework not available for RemotePlayer setup');
+        console.warn("[useChromeCast] Cast framework not available for RemotePlayer setup");
       }
       return;
     }
@@ -152,7 +152,7 @@ export const useChromeCast = ({
             });
             playerRef.current?.tech().setCurrentTime(value);
           }
-        },
+        }
       );
       remotePlayerController.addEventListener(
         window.cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED,
@@ -162,7 +162,7 @@ export const useChromeCast = ({
               volume: value,
             });
           }
-        },
+        }
       );
       remotePlayerController.addEventListener(
         window.cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED,
@@ -179,14 +179,14 @@ export const useChromeCast = ({
               currentTime: getHumanReadableDuration((playerRef.current?.currentTime() || 0) * 1000),
             });
           }
-        },
+        }
       );
 
       if (__DEV__) {
-        console.log('[useChromeCast] RemotePlayer listeners setup successfully');
+        console.log("[useChromeCast] RemotePlayer listeners setup successfully");
       }
     } catch (error) {
-      console.error('[useChromeCast] Error setting up RemotePlayer:', error);
+      console.error("[useChromeCast] Error setting up RemotePlayer:", error);
       captureError(error as Error, CustomPostHogExceptions.ChromecastError);
     }
   };
@@ -242,10 +242,10 @@ export const useChromeCast = ({
       setupRemotePlayerListeners();
 
       if (__DEV__) {
-        console.log('[useChromeCast] Cast API initialized successfully');
+        console.log("[useChromeCast] Cast API initialized successfully");
       }
     } catch (error) {
-      console.error('[useChromeCast] Error initializing Cast API:', error);
+      console.error("[useChromeCast] Error initializing Cast API:", error);
       captureError(error as Error, CustomPostHogExceptions.ChromecastError);
     }
   };

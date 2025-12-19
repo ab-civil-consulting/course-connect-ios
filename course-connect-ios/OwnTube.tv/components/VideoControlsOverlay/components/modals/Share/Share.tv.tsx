@@ -40,7 +40,11 @@ const Share = ({ onClose, titleKey }: ShareProps) => {
   const isTimestampShown = pathname === `/${ROUTES.VIDEO}`;
 
   return (
-    <Animated.View entering={SlideInUp} exiting={SlideOutUp} style={[styles.animatedContainer, { pointerEvents: "box-none" }]}>
+    <Animated.View
+      entering={SlideInUp}
+      exiting={SlideOutUp}
+      style={[styles.animatedContainer, { pointerEvents: "box-none" }]}
+    >
       <ModalContainer showCloseButton onClose={onClose} title={t(titleKey)} containerStyle={styles.modalContainer}>
         <ScrollView>
           {isTimestampShown && (

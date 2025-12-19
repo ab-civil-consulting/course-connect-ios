@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import { PostModel } from '../models/Post';
-import { UserModel } from '../models/User';
-import { AppError } from '../middleware/errorHandler';
+import { Request, Response } from "express";
+import { PostModel } from "../models/Post";
+import { UserModel } from "../models/User";
+import { AppError } from "../middleware/errorHandler";
 
 export const getPostsByThread = async (req: Request, res: Response) => {
   const { threadId } = req.params;
@@ -20,15 +20,11 @@ export const createPost = async (req: Request, res: Response) => {
   const { threadId, content, replyToId } = req.body;
 
   if (!threadId || !content) {
-    throw new AppError('ThreadId and content are required', 400);
+    throw new AppError("ThreadId and content are required", 400);
   }
 
   // For now, create a default user. In production, this would come from auth
-  const user = await UserModel.findOrCreate(
-    'anonymous',
-    'Anonymous User',
-    req.hostname || 'localhost'
-  );
+  const user = await UserModel.findOrCreate("anonymous", "Anonymous User", req.hostname || "localhost");
 
   const post = await PostModel.create(
     {
@@ -36,7 +32,7 @@ export const createPost = async (req: Request, res: Response) => {
       content,
       replyToId,
     },
-    user.id
+    user.id,
   );
 
   res.status(201).json(post);

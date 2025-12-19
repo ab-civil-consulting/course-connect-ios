@@ -10,7 +10,7 @@ const useLeaveInstancePermission = ({ state }: DrawerContentComponentProps) => {
   useEffect(() => {
     if (!backend) return;
     const isOpeningFromLandingPage = state.history.some(
-      (entry) => "key" in entry && entry.key.includes("(home)/index"),
+      (entry) => "key" in entry && entry.key.includes("(home)/index")
     );
 
     const currentBackendEntrypoint = instanceSessionEntrypoints[backend];

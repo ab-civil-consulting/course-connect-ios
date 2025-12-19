@@ -7,6 +7,7 @@
 This Privacy Policy applies to the MC Assist mobile application (hereafter referred to as the "Application") created by AB Civil Consulting, LLC (hereafter referred to as the "Service Provider"). The Application is provided as a free service on an "AS IS" basis.
 
 **Service Provider Contact Information:**
+
 - Email: info@abcivilconsulting.com
 - Company: AB Civil Consulting, LLC
 - Address: 420 Madison St. Suite B-2, Clarksville, TN 37040
@@ -18,6 +19,7 @@ This Privacy Policy applies to the MC Assist mobile application (hereafter refer
 Registration with the Application is **optional but may be required** for certain features (such as saving watch history, playlists, and preferences).
 
 When users choose to register, they create an account on a PeerTube instance. The following information is collected:
+
 - Email address
 - Username
 - Password (encrypted and never stored by the Application itself)
@@ -31,6 +33,7 @@ When you watch videos through the Application, your watch history is stored **lo
 ### 1.3 User Preferences
 
 The Application stores user preferences locally on your device, including:
+
 - Theme selection (light/dark mode)
 - Playback settings (subtitles, quality preferences)
 - Other display preferences
@@ -38,6 +41,7 @@ The Application stores user preferences locally on your device, including:
 ### 1.4 Analytics Data
 
 The Application uses **PostHog** for analytics to help us understand how the app is used and improve functionality. PostHog collects:
+
 - Playback events (play, pause, seek, completion)
 - User actions (navigation, feature usage)
 - Crash reports and error diagnostics
@@ -48,6 +52,7 @@ The Application uses **PostHog** for analytics to help us understand how the app
 ### 1.5 Device Information
 
 The Application collects limited device information for analytics and crash reporting:
+
 - Device model and manufacturer
 - Operating system and version
 - App version
@@ -60,17 +65,20 @@ When you use Chromecast, AirPlay, or similar casting features, basic device disc
 ## 2. How Is Your Information Used?
 
 ### 2.1 Core Functionality
+
 - Authenticating your account with the PeerTube instance
 - Storing and retrieving your watch history
 - Saving your user preferences
 
 ### 2.2 Analytics & Improvement
+
 - Understanding how users interact with the Application
 - Identifying and fixing bugs and crashes
 - Improving app performance and user experience
 - Analyzing usage patterns to prioritize features
 
 ### 2.3 Support & Communication
+
 - Responding to your inquiries and support requests
 - Notifying you of important updates or policy changes
 
@@ -79,17 +87,20 @@ When you use Chromecast, AirPlay, or similar casting features, basic device disc
 The Application uses the following third-party services, which have their own privacy policies:
 
 ### 3.1 PeerTube
+
 - **Purpose:** Video hosting and user account management
 - **Data Shared:** Your username, email, and viewing activity with the PeerTube instance operator
 - **Note:** Each PeerTube instance may have different privacy practices. Review the specific instance's privacy policy for details.
 
 ### 3.2 PostHog Analytics
+
 - **Purpose:** Analytics and crash reporting
 - **Data Shared:** Playback events, device information, and app usage data
 - **Server Location:** EU-hosted (eu.i.posthog.com)
 - **Configuration:** Analytics can be disabled via environment configuration
 
 ### 3.3 Casting Services
+
 - **Purpose:** Audio/video casting to other devices
 - **Services:** Chromecast, AirPlay, and similar protocols
 - **Data Shared:** Minimal device discovery information to enable casting
@@ -97,6 +108,7 @@ The Application uses the following third-party services, which have their own pr
 ## 4. Data Not Collected
 
 The Application **does not collect:**
+
 - Precise real-time location data
 - Payment information (the app is completely free with no in-app purchases)
 - Social media data or third-party login credentials
@@ -115,6 +127,7 @@ To delete your account and associated data on the PeerTube instance, contact the
 ## 6. Data Security
 
 The Application stores watch history and user preferences locally on your device. To protect this data:
+
 - Use device-level security features (passcodes, biometric authentication)
 - Keep your device's operating system and apps updated
 - Do not share your device with untrusted users
@@ -124,6 +137,7 @@ For data transmitted to third-party services (PeerTube, PostHog), those services
 ## 7. User Rights
 
 Depending on your location, you may have certain rights regarding your personal data:
+
 - Right to access your data
 - Right to correct inaccurate data
 - Right to delete your data
@@ -140,6 +154,7 @@ If you believe a child has provided personal data, please contact us at legal@ow
 ## 9. Policy Changes
 
 This Privacy Policy may be updated from time to time. The Service Provider will notify you of any material changes by:
+
 - Updating this policy on the website and in the Application
 - Sending an email notification to registered users (if applicable)
 

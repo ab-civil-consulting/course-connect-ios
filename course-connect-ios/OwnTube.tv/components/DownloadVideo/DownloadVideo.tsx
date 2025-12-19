@@ -18,7 +18,11 @@ const DownloadVideo = () => {
   const { handleDownloadFile, selectedFile, setSelectedFile, pickerOptions } = useDownloadVideo();
 
   return (
-    <Animated.View entering={SlideInUp} exiting={SlideOutUp} style={[styles.modalWrapper, { pointerEvents: "box-none" }]}>
+    <Animated.View
+      entering={SlideInUp}
+      exiting={SlideOutUp}
+      style={[styles.modalWrapper, { pointerEvents: "box-none" }]}
+    >
       <ModalContainer
         containerStyle={styles.modalContentContainer}
         onClose={() => toggleModal(false)}

@@ -22,7 +22,7 @@ export const useShareButton = () => {
         staticLink={staticLink}
         titleKey={staticHeaderKey || SHAREABLE_ROUTE_MODAL_TITLES[pathname]}
         onClose={() => toggleModal(false)}
-      />,
+      />
     );
 
     const routeAnalyticsEventType = SHAREABLE_ROUTE_ANALYTICS_EVENT_TYPES[pathname];

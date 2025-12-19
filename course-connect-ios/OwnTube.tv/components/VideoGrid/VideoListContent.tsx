@@ -39,7 +39,7 @@ export const VideoListContent = forwardRef<VideoListContentHandle, VideoListCont
         ))}
       </View>
     );
-  },
+  }
 );
 
 VideoListContent.displayName = "VideoListContent";

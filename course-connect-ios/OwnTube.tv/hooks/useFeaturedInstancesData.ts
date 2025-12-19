@@ -13,11 +13,11 @@ export const useFeaturedInstancesData = () => {
   const getFeaturedList = async () => {
     try {
       if (__DEV__) {
-        console.log('[useFeaturedInstancesData] Starting to load featured instances...');
+        console.log("[useFeaturedInstancesData] Starting to load featured instances...");
       }
       const [{ localUri }] = await Asset.loadAsync(require("../public/featured-instances.json5"));
       if (__DEV__) {
-        console.log('[useFeaturedInstancesData] Asset loaded, localUri:', localUri);
+        console.log("[useFeaturedInstancesData] Asset loaded, localUri:", localUri);
       }
 
       if (localUri) {
@@ -31,7 +31,7 @@ export const useFeaturedInstancesData = () => {
       }
       return [];
     } catch (err) {
-      console.error('[useFeaturedInstancesData] Failed to load featured instances:', err);
+      console.error("[useFeaturedInstancesData] Failed to load featured instances:", err);
       throw err;
     }
   };
@@ -40,12 +40,12 @@ export const useFeaturedInstancesData = () => {
     getFeaturedList()
       .then((instances) => {
         if (__DEV__) {
-          console.log('[useFeaturedInstancesData] Successfully loaded', instances.length, 'featured instances');
+          console.log("[useFeaturedInstancesData] Successfully loaded", instances.length, "featured instances");
         }
         setFeaturedInstances(instances);
       })
       .catch((err) => {
-        console.error('[useFeaturedInstancesData] Error in useEffect:', err);
+        console.error("[useFeaturedInstancesData] Error in useEffect:", err);
         setError(err);
       })
       .finally(() => {

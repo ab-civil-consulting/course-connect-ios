@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": ["Bash(ls:*)", "Bash(find:*)", "Bash(npx prettier:*)", "Bash(curl:*)"],
+    "deny": [],
+    "ask": []
+  }
+}

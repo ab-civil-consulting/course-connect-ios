@@ -254,16 +254,16 @@ const VideoView = ({
     const vhs = player.tech()?.vhs;
     if (vhs && token) {
       if (__DEV__) {
-        console.log('[VideoView] Configuring VHS with token:', token.substring(0, 20) + '...');
+        console.log("[VideoView] Configuring VHS with token:", token.substring(0, 20) + "...");
       }
       vhs.xhr.beforeRequest = (options: any) => {
         if (__DEV__) {
-          console.log('[VideoView] VHS beforeRequest:', options.uri);
+          console.log("[VideoView] VHS beforeRequest:", options.uri);
         }
         const separator = options.uri.includes("?") ? "&" : "?";
         options.uri = `${options.uri}${separator}videoFileToken=${token}`;
         if (__DEV__) {
-          console.log('[VideoView] Modified URI:', options.uri);
+          console.log("[VideoView] Modified URI:", options.uri);
         }
         return options;
       };
@@ -538,14 +538,14 @@ const VideoView = ({
       playerRef.current?.currentTime(
         !isInitialVideoLoadDone.current
           ? Number(viewHistoryEntry?.timestamp || timestamp || 0)
-          : Math.floor(position || 0),
+          : Math.floor(position || 0)
       );
       isInitialVideoLoadDone.current = true;
 
       return () => {
         playerRef.current?.autoplay(true);
       };
-    }, [uri]),
+    }, [uri])
   );
 
   useEffect(() => {
@@ -559,7 +559,7 @@ const VideoView = ({
               srclang: caption.language.id,
               label: caption.language.label,
             },
-            false,
+            false
           );
         }
       });
@@ -654,7 +654,7 @@ const VideoView = ({
           handleSetCCLang(locale);
         }, 500);
       }
-    }, [isCCAvailable, availableCCLangs]),
+    }, [isCCAvailable, availableCCLangs])
   );
 
   // Quality controls now work on all platforms with direct files (web videos)

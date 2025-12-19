@@ -9,13 +9,16 @@ This mobile app requires specific PeerTube server configurations for optimal vid
 If videos get stuck loading or show 404 errors on Android, the issue is typically that your PeerTube server only has HLS transcoding configured, but the transcoding hasn't completed or is broken.
 
 ### Symptoms
+
 - Videos load in browser but not in mobile app
 - 404 errors in Android logcat mentioning HLS playlists
 - `data.files` array is empty (length: 0)
 - Only `streamingPlaylists` are available
 
 ### Diagnosis Logs
+
 Check for these logs in the app:
+
 ```
 [VideoScreen] data.files?.length: 0
 [VideoScreen] streamingPlaylists length: 1
@@ -29,6 +32,7 @@ Check for these logs in the app:
 **Web Videos** (previously called WebTorrent) provides direct MP4 file URLs that work reliably on mobile devices.
 
 **Steps:**
+
 1. Log into your PeerTube instance as an administrator
 2. Go to **Administration → Settings → Transcoding**
 3. Enable **"Web Videos"** transcoding
@@ -37,6 +41,7 @@ Check for these logs in the app:
 6. For existing videos: Re-transcode them or upload new videos
 
 **Why Web Videos are better for mobile:**
+
 - ✅ Always available (original upload + transcoded versions)
 - ✅ Direct file URLs work on all platforms
 - ✅ No dependency on HLS segment availability
@@ -48,6 +53,7 @@ Check for these logs in the app:
 If you prefer HLS-only, ensure HLS transcoding is working properly.
 
 **Steps:**
+
 1. Check PeerTube transcoding job queue
 2. Verify ffmpeg is installed: `ffmpeg -version`
 3. Check PeerTube logs for transcoding errors:
@@ -58,6 +64,7 @@ If you prefer HLS-only, ensure HLS transcoding is working properly.
 5. Verify HLS files exist at: `/var/www/peertube/storage/streaming-playlists/hls/{video-uuid}/`
 
 **Note:** HLS-only works on web but may have issues on Android/iOS:
+
 - Android's ExoPlayer can fail if HLS segments are missing
 - iOS requires proper content-type headers
 - Authentication is more complex (tokens need to be passed to all segments)
@@ -92,6 +99,7 @@ transcoding:
 ## Verifying Configuration
 
 ### Check via PeerTube UI
+
 1. Open any video in your PeerTube instance
 2. Right-click the video player → **Inspect** (Chrome DevTools)
 3. Go to **Network** tab
@@ -101,11 +109,13 @@ transcoding:
    - `/static/streaming-playlists/hls/` (HLS)
 
 ### Check via API
+
 ```bash
 curl https://your-instance.com/api/v1/videos/{video-id} | jq '.files'
 ```
 
 **Expected response with Web Videos enabled:**
+
 ```json
 {
   "files": [
@@ -119,6 +129,7 @@ curl https://your-instance.com/api/v1/videos/{video-id} | jq '.files'
 ```
 
 **Problem response (Web Videos disabled):**
+
 ```json
 {
   "files": []
@@ -128,11 +139,13 @@ curl https://your-instance.com/api/v1/videos/{video-id} | jq '.files'
 ## Common Error Codes
 
 ### Error 22004
+
 **Symptom:** Video player shows error code 22004
 **Meaning:** ExoPlayer cannot load the video source (format error or file not found)
 **Cause:** The HLS playlist exists in PeerTube's database but the actual video files are missing (404)
 
 **Solutions:**
+
 1. **Enable Web Videos** (Recommended):
    - Go to PeerTube admin → Settings → Transcoding
    - Enable "Web Videos"
@@ -148,11 +161,13 @@ curl https://your-instance.com/api/v1/videos/{video-id} | jq '.files'
    - Ensure transcoding completes before sharing
 
 ### Error 2004
+
 **Meaning:** Failed to load video source
 **Cause:** Network issue or invalid URL
 **Solution:** Check network connection and verify video URL is accessible
 
 ### Error 2002
+
 **Meaning:** Network error
 **Cause:** Connection timeout or DNS failure
 **Solution:** Check internet connection and firewall settings
@@ -168,6 +183,7 @@ curl https://your-instance.com/api/v1/videos/{video-id} | jq '.files'
    - Wait for jobs to complete
 
 2. **Check transcoding job status:**
+
    ```bash
    # If using Redis
    redis-cli
@@ -183,6 +199,7 @@ curl https://your-instance.com/api/v1/videos/{video-id} | jq '.files'
 ### 404 errors persist
 
 If you still see 404 errors after enabling Web Videos:
+
 1. Verify nginx/apache is serving static files correctly
 2. Check firewall rules aren't blocking `/static/` URLs
 3. Verify the video files physically exist on disk
@@ -191,16 +208,19 @@ If you still see 404 errors after enabling Web Videos:
 ## Mobile App Behavior
 
 ### Android
+
 - **Prefers:** Web Videos (direct MP4 files)
 - **Fallback:** HLS (if Web Videos unavailable)
 - **Why:** ExoPlayer handles direct files more reliably than HLS
 
 ### iOS
+
 - **Prefers:** HLS (adaptive streaming)
 - **Fallback:** Web Videos
 - **Why:** Native player has excellent HLS support
 
 ### Web
+
 - **Uses:** HLS (via Video.js)
 - **Fallback:** Web Videos
 - **Why:** Better quality adaptation and bandwidth management
@@ -215,6 +235,7 @@ If you still see 404 errors after enabling Web Videos:
 ## Support
 
 If you continue experiencing issues after following this guide:
+
 1. Check PeerTube server logs
 2. Verify app logs show proper video data structure
 3. Test video URLs directly in browser

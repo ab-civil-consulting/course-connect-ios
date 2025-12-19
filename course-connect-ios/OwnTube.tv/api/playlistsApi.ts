@@ -43,7 +43,7 @@ export class PlaylistsApi extends AxiosInstanceBasedApi {
   async getPlaylistVideos(
     baseURL: string,
     playlistId: number,
-    queryParams?: VideosCommonQuery,
+    queryParams?: VideosCommonQuery
   ): Promise<{ data: GetVideosVideo[]; total: number }> {
     try {
       const response = await this.instance.get<{ data: Array<{ video: Video }>; total: number }>(
@@ -51,7 +51,7 @@ export class PlaylistsApi extends AxiosInstanceBasedApi {
         {
           params: { ...(queryParams || {}) },
           baseURL: `https://${baseURL}/api/v1`,
-        },
+        }
       );
 
       return {

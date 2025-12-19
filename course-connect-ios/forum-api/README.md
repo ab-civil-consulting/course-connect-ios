@@ -30,17 +30,20 @@ A production-ready forum backend service for PeerTube instances, built with Node
 ### Setup
 
 1. **Clone and install dependencies**:
+
    ```bash
    cd forum-api
    npm install
    ```
 
 2. **Create environment file**:
+
    ```bash
    cp .env.example .env
    ```
 
 3. **Configure environment variables** in `.env`:
+
    ```env
    PORT=3001
    NODE_ENV=development
@@ -55,6 +58,7 @@ A production-ready forum backend service for PeerTube instances, built with Node
    ```
 
 4. **Start PostgreSQL** (if not using Docker):
+
    ```bash
    # Using Docker for PostgreSQL only:
    docker run -d \\
@@ -66,6 +70,7 @@ A production-ready forum backend service for PeerTube instances, built with Node
    ```
 
 5. **Run database migrations**:
+
    ```bash
    npm run migrate
    ```
@@ -84,11 +89,13 @@ Server will be running at `http://localhost:3001`
 This is the easiest way to deploy - includes both the API and PostgreSQL database.
 
 1. **SSH into your Hetzner server**:
+
    ```bash
    ssh root@your-server-ip
    ```
 
 2. **Install Docker and Docker Compose** (if not already installed):
+
    ```bash
    # Update package list
    apt update
@@ -102,18 +109,21 @@ This is the easiest way to deploy - includes both the API and PostgreSQL databas
    ```
 
 3. **Create project directory**:
+
    ```bash
    mkdir -p /opt/forum-api
    cd /opt/forum-api
    ```
 
 4. **Copy your code** to the server:
+
    ```bash
    # From your local machine:
    scp -r /path/to/forum-api/* root@your-server-ip:/opt/forum-api/
    ```
 
 5. **Create production `.env` file**:
+
    ```bash
    cat > .env <<EOF
    PORT=3001
@@ -126,11 +136,13 @@ This is the easiest way to deploy - includes both the API and PostgreSQL databas
    ```
 
 6. **Build and start services**:
+
    ```bash
    docker-compose up -d --build
    ```
 
 7. **Run database migrations**:
+
    ```bash
    docker exec -it forum-api npm run migrate
    ```
@@ -145,6 +157,7 @@ This is the easiest way to deploy - includes both the API and PostgreSQL databas
 If you already have PostgreSQL running on your server (e.g., for PeerTube):
 
 1. **Create forum database**:
+
    ```bash
    sudo -u postgres psql
    CREATE DATABASE forum;
@@ -154,12 +167,14 @@ If you already have PostgreSQL running on your server (e.g., for PeerTube):
    ```
 
 2. **Install Node.js 20+**:
+
    ```bash
    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
    apt install -y nodejs
    ```
 
 3. **Deploy the application**:
+
    ```bash
    cd /opt/forum-api
    npm ci --production
@@ -169,11 +184,13 @@ If you already have PostgreSQL running on your server (e.g., for PeerTube):
 4. **Create `.env` file** (same as above)
 
 5. **Run migrations**:
+
    ```bash
    npm run migrate
    ```
 
 6. **Create systemd service**:
+
    ```bash
    cat > /etc/systemd/system/forum-api.service <<EOF
    [Unit]
@@ -234,6 +251,7 @@ server {
 ```
 
 Reload Nginx:
+
 ```bash
 nginx -t
 systemctl reload nginx
@@ -242,6 +260,7 @@ systemctl reload nginx
 ## API Endpoints
 
 ### Categories
+
 - `GET /api/v1/forum/categories` - List all categories
 - `GET /api/v1/forum/categories/:id` - Get category by ID
 - `POST /api/v1/forum/categories` - Create category (admin)
@@ -249,26 +268,31 @@ systemctl reload nginx
 - `DELETE /api/v1/forum/categories/:id` - Delete category (admin)
 
 ### Threads
+
 - `GET /api/v1/forum/categories/:categoryId/threads` - List threads in category
 - `GET /api/v1/forum/threads/:id` - Get thread by ID
 - `POST /api/v1/forum/threads` - Create new thread
 
 ### Posts
+
 - `GET /api/v1/forum/threads/:threadId/posts` - List posts in thread
 - `POST /api/v1/forum/posts` - Create new post
 
 ### Search
+
 - `GET /api/v1/forum/search?query=...` - Search threads
 
 ## Managing Forum Categories
 
 The default migration creates two categories:
+
 - **Announcements** (slug: `announcements`)
 - **General Discussion** (slug: `general`)
 
 ### Add New Categories
 
 Using curl:
+
 ```bash
 curl -X POST https://your-domain.com/api/v1/forum/categories \\
   -H "Content-Type: application/json" \\
@@ -282,6 +306,7 @@ curl -X POST https://your-domain.com/api/v1/forum/categories \\
 ```
 
 Or directly in the database:
+
 ```sql
 INSERT INTO forum_categories (id, name, description, slug, icon, "order", is_locked)
 VALUES (
@@ -298,6 +323,7 @@ VALUES (
 ## Monitoring
 
 ### Check service status:
+
 ```bash
 # Docker
 docker-compose ps
@@ -309,6 +335,7 @@ journalctl -u forum-api -f
 ```
 
 ### Health check:
+
 ```bash
 curl https://your-domain.com/api/v1/forum/categories
 ```
@@ -316,6 +343,7 @@ curl https://your-domain.com/api/v1/forum/categories
 ## Backup
 
 ### Database backup:
+
 ```bash
 # Docker
 docker exec forum-postgres pg_dump -U forum_user forum > forum_backup_$(date +%Y%m%d).sql
@@ -325,6 +353,7 @@ sudo -u postgres pg_dump forum > forum_backup_$(date +%Y%m%d).sql
 ```
 
 ### Restore:
+
 ```bash
 # Docker
 docker exec -i forum-postgres psql -U forum_user forum < forum_backup.sql
@@ -336,6 +365,7 @@ sudo -u postgres psql forum < forum_backup.sql
 ## Troubleshooting
 
 ### API not responding
+
 ```bash
 # Check if service is running
 systemctl status forum-api  # or docker-compose ps
@@ -348,11 +378,13 @@ docker exec forum-postgres psql -U forum_user -d forum -c "SELECT 1"
 ```
 
 ### Database connection errors
+
 - Verify database credentials in `.env`
 - Check if PostgreSQL is running
 - Ensure database exists and user has permissions
 
 ### CORS errors
+
 - Add your domain to `ALLOWED_ORIGINS` in `.env`
 - Restart the service after changes
 

@@ -32,7 +32,7 @@ export const SearchSortControls = ({ sort, setSort, isExpanded }: SearchSortCont
   const derivedHeight = useDerivedValue(() =>
     withTiming(height.value * Number(isExpandedSV.value), {
       duration: 300,
-    }),
+    })
   );
 
   const animatedContainerStyle = useAnimatedStyle(() => ({

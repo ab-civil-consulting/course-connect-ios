@@ -59,11 +59,7 @@ export const VideoGridCard = forwardRef<View, VideoGridCardProps>(({ video, back
           }}
           style={styles.thumbnailContainer}
         >
-          <Link
-            href={linkHref}
-            asChild
-            style={thumbnailLinkStyles}
-          >
+          <Link href={linkHref} asChild style={thumbnailLinkStyles}>
             <Pressable tabIndex={-1} onHoverIn={toggleHovered} onHoverOut={toggleHovered}>
               {focused && <FocusGuide height={containerWidth * (9 / 16)} width={containerWidth} />}
               <VideoThumbnail
@@ -78,7 +74,7 @@ export const VideoGridCard = forwardRef<View, VideoGridCardProps>(({ video, back
         {/* Video Title Container */}
         <TVFocusGuideHelper
           focusable={false}
-          style={[styles.textContainer, { backgroundColor: colors.background || '#FFFFFF' }]}
+          style={[styles.textContainer, { backgroundColor: colors.background || "#FFFFFF" }]}
         >
           {/* @ts-expect-error tabIndex is passed to anchor tag but is not officially supported by Expo Router */}
           <Link tabIndex={-1} href={linkHref}>

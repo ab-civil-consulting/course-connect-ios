@@ -22,7 +22,11 @@ export const SignOutModal = ({ handleClose }: { handleClose: () => void }) => {
   const { captureDiagnosticsEvent } = useCustomDiagnosticsEvents();
 
   return (
-    <Animated.View entering={SlideInUp} exiting={SlideOutUp} style={[styles.modalWrapper, { pointerEvents: "box-none" }]}>
+    <Animated.View
+      entering={SlideInUp}
+      exiting={SlideOutUp}
+      style={[styles.modalWrapper, { pointerEvents: "box-none" }]}
+    >
       <ModalContainer
         onClose={handleClose}
         title={t("signOutPermanently", {

@@ -24,7 +24,7 @@ const ComboBoxInput = ({
 
   const renderItem = useCallback(
     ({ item }: { item: DropDownItem }) => <DropdownItem item={item} onSelect={onSelect} value={value} />,
-    [value, onSelect],
+    [value, onSelect]
   );
 
   const handleTextChange = (text: string) => {

@@ -47,7 +47,7 @@ export const SearchInput = forwardRef(
         enterKeyHint="search"
       />
     );
-  },
+  }
 );
 
 SearchInput.displayName = "SearchInput";

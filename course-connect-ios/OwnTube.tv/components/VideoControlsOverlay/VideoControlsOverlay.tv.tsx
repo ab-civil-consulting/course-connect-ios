@@ -35,7 +35,7 @@ const AndroidFocusHelperContainer = forwardRef<View, PropsWithChildren<{ isVisib
         </Pressable>
       ),
     });
-  },
+  }
 );
 
 AndroidFocusHelperContainer.displayName = "AndroidFocusHelperContainer";
@@ -131,7 +131,7 @@ const VideoControlsOverlay = ({
       });
 
       return () => backHandler.remove();
-    }, [handleBackButton]),
+    }, [handleBackButton])
   );
 
   useTVEventHandler(async (event) => {
@@ -300,7 +300,10 @@ const VideoControlsOverlay = ({
                   tvParallaxProperties={{ enabled: false }}
                   onFocus={() => setIsSeekBarFocused(true)}
                   onBlur={() => setIsSeekBarFocused(false)}
-                  style={({ focused }: { pressed?: boolean; focused?: boolean }) => [styles.scrubBarContainer, { borderWidth: focused ? 1 : 0 }]}
+                  style={({ focused }: { pressed?: boolean; focused?: boolean }) => [
+                    styles.scrubBarContainer,
+                    { borderWidth: focused ? 1 : 0 },
+                  ]}
                 >
                   <ScrubBar
                     isExpanded={isSeekBarFocused}

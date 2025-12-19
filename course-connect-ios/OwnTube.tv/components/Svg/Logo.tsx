@@ -3,7 +3,11 @@ import { useTheme } from "@react-navigation/native";
 
 // MC Assist logo component
 // Uses charcoal logo for light themes, white logo for dark themes
-export const Logo = ({ width = "125.5", height = "56", ...props }: Partial<ImageProps> & { width?: string; height?: string }) => {
+export const Logo = ({
+  width = "125.5",
+  height = "56",
+  ...props
+}: Partial<ImageProps> & { width?: string; height?: string }) => {
   const { dark } = useTheme();
 
   // Use charcoal logo for light themes, white for dark themes

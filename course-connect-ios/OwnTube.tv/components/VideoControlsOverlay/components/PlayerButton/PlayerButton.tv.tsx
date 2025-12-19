@@ -36,7 +36,7 @@ const PlayerButton = forwardRef<View, TouchableOpacityProps & { icon: string; sc
         <IcoMoonIcon name={icon} size={spacing.xl * scale} color={color || colors.white80} />
       </TouchableOpacity>
     );
-  },
+  }
 );
 
 const styles = StyleSheet.create({

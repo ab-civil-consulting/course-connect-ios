@@ -28,7 +28,7 @@ export const Playlist = () => {
   >();
   const { fetchNextPage, data, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteGetPlaylistVideosQuery(
     Number(playlist),
-    currentInstanceConfig?.customizations?.showMoreSize,
+    currentInstanceConfig?.customizations?.showMoreSize
   );
   const { data: channelInfo } = useGetChannelInfoQuery(channel);
   const { data: playlistInfo, isLoading: isLoadingPlaylistInfo } = useGetPlaylistInfoQuery(Number(playlist));
@@ -60,12 +60,7 @@ export const Playlist = () => {
     return (
       <View style={[styles.errorContainer, { paddingTop: top }]}>
         <EmptyPage text={t("signInRequired")} />
-        <Button
-          onPress={handleSignIn}
-          contrast="high"
-          text={t("signInToViewVideos")}
-          style={styles.signInButton}
-        />
+        <Button onPress={handleSignIn} contrast="high" text={t("signInToViewVideos")} style={styles.signInButton} />
       </View>
     );
   }

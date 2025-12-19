@@ -134,7 +134,7 @@ export const useViewHistory = (queryArg?: { enabled?: boolean; maxItems?: number
 
     await writeToAsyncStorage(
       STORAGE.VIEW_HISTORY,
-      history.filter((entry) => entry !== uuid),
+      history.filter((entry) => entry !== uuid)
     );
 
     await deleteFromAsyncStorage([`view_history/${uuid}`]);

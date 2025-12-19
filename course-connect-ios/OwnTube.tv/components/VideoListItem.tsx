@@ -121,7 +121,7 @@ export const VideoListItem = forwardRef<View, VideoListItemProps>(
         </View>
       </View>
     );
-  },
+  }
 );
 
 VideoListItem.displayName = "VideoListItem";

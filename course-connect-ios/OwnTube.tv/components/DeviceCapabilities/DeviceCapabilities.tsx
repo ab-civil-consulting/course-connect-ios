@@ -48,7 +48,7 @@ const DeviceCapabilities = () => {
             userInfoUpdatedAt: session.userInfoUpdatedAt,
           }
         : null,
-    [session],
+    [session]
   );
 
   const handleCopyToClipboard = async () => {
@@ -57,7 +57,7 @@ const DeviceCapabilities = () => {
       : build_info;
 
     await Clipboard.setStringAsync(
-      JSON.stringify({ buildInfo, ...deviceCapabilities, ...(authInfo ? { authInfo } : {}) }),
+      JSON.stringify({ buildInfo, ...deviceCapabilities, ...(authInfo ? { authInfo } : {}) })
     );
   };
 

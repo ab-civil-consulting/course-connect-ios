@@ -31,7 +31,11 @@ export const SignedOutModal = ({ handleClose }: { handleClose: () => void }) => 
   };
 
   return (
-    <Animated.View entering={SlideInUp} exiting={SlideOutUp} style={[styles.modalWrapper, { pointerEvents: "box-none" }]}>
+    <Animated.View
+      entering={SlideInUp}
+      exiting={SlideOutUp}
+      style={[styles.modalWrapper, { pointerEvents: "box-none" }]}
+    >
       <ModalContainer containerStyle={styles.modalContainer} onClose={handleClose} title={t("signedOut")}>
         <View style={styles.modalContentContainer}>
           <Button contrast="low" style={styles.button} onPress={handleSignOut} text={t("signOut")} />

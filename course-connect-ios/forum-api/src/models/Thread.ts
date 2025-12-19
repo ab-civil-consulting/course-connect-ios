@@ -1,22 +1,19 @@
-import { query } from '../database/connection';
-import { ForumThread, CreateThreadInput, ForumPaginationParams } from '../types/forum';
-import { v4 as uuidv4 } from 'uuid';
+import { query } from "../database/connection";
+import { ForumThread, CreateThreadInput, ForumPaginationParams } from "../types/forum";
+import { v4 as uuidv4 } from "uuid";
 
 export class ThreadModel {
   static async findByCategoryId(
     categoryId: string,
-    params: ForumPaginationParams = {}
+    params: ForumPaginationParams = {},
   ): Promise<{ threads: ForumThread[]; total: number }> {
-    const { start = 0, count = 10, sort = 'recent' } = params;
+    const { start = 0, count = 10, sort = "recent" } = params;
 
-    let orderBy = 't.created_at DESC';
-    if (sort === 'popular') orderBy = 't.view_count DESC';
-    if (sort === 'oldest') orderBy = 't.created_at ASC';
+    let orderBy = "t.created_at DESC";
+    if (sort === "popular") orderBy = "t.view_count DESC";
+    if (sort === "oldest") orderBy = "t.created_at ASC";
 
-    const countResult = await query(
-      'SELECT COUNT(*) FROM forum_threads WHERE category_id = $1',
-      [categoryId]
-    );
+    const countResult = await query("SELECT COUNT(*) FROM forum_threads WHERE category_id = $1", [categoryId]);
 
     const result = await query(
       `SELECT
@@ -46,7 +43,7 @@ export class ThreadModel {
       GROUP BY t.id, c.name, u.id
       ORDER BY t.is_pinned DESC, ${orderBy}
       LIMIT $2 OFFSET $3`,
-      [categoryId, count, start]
+      [categoryId, count, start],
     );
 
     const threads: ForumThread[] = [];
@@ -59,7 +56,7 @@ export class ThreadModel {
          WHERE p.thread_id = $1
          ORDER BY p.created_at DESC
          LIMIT 1`,
-        [row.id]
+        [row.id],
       );
 
       threads.push({
@@ -79,11 +76,13 @@ export class ThreadModel {
         isLocked: row.isLocked,
         viewCount: row.viewCount,
         replyCount: parseInt(row.reply_count),
-        lastReply: lastReplyResult.rows[0] ? {
-          id: lastReplyResult.rows[0].id,
-          authorName: lastReplyResult.rows[0].authorName,
-          createdAt: lastReplyResult.rows[0].createdAt,
-        } : undefined,
+        lastReply: lastReplyResult.rows[0]
+          ? {
+              id: lastReplyResult.rows[0].id,
+              authorName: lastReplyResult.rows[0].authorName,
+              createdAt: lastReplyResult.rows[0].createdAt,
+            }
+          : undefined,
         createdAt: row.createdAt,
         updatedAt: row.updatedAt,
         relatedVideoId: row.relatedVideoId,
@@ -124,7 +123,7 @@ export class ThreadModel {
       LEFT JOIN forum_posts p ON t.id = p.thread_id
       WHERE t.id = $1
       GROUP BY t.id, c.name, u.id`,
-      [id]
+      [id],
     );
 
     if (result.rows.length === 0) return null;
@@ -132,7 +131,7 @@ export class ThreadModel {
     const row = result.rows[0];
 
     // Increment view count
-    await query('UPDATE forum_threads SET view_count = view_count + 1 WHERE id = $1', [id]);
+    await query("UPDATE forum_threads SET view_count = view_count + 1 WHERE id = $1", [id]);
 
     return {
       id: row.id,
@@ -164,11 +163,11 @@ export class ThreadModel {
     await query(
       `INSERT INTO forum_threads (id, title, content, category_id, author_id, related_video_id, related_channel_id)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [id, input.title, input.content, input.categoryId, authorId, input.relatedVideoId, input.relatedChannelId]
+      [id, input.title, input.content, input.categoryId, authorId, input.relatedVideoId, input.relatedChannelId],
     );
 
     const thread = await this.findById(id);
-    if (!thread) throw new Error('Failed to create thread');
+    if (!thread) throw new Error("Failed to create thread");
 
     return thread;
   }

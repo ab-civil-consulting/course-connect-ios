@@ -64,12 +64,7 @@ export const CategoriesScreen = () => {
     return (
       <View style={[styles.errorContainer, { paddingTop: top }]}>
         <EmptyPage text={t("signInRequired")} />
-        <Button
-          onPress={handleSignIn}
-          contrast="high"
-          text={t("signInToViewVideos")}
-          style={styles.signInButton}
-        />
+        <Button onPress={handleSignIn} contrast="high" text={t("signInToViewVideos")} style={styles.signInButton} />
       </View>
     );
   }

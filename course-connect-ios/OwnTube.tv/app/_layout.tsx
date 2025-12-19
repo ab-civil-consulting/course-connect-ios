@@ -6,7 +6,7 @@ import { SignIn } from "../screens";
 
 // Suppress expected warnings
 LogBox.ignoreLogs([
-  'Animated: `useNativeDriver` is not supported', // Expected on web - animations fall back to JS
+  "Animated: `useNativeDriver` is not supported", // Expected on web - animations fall back to JS
 ]);
 import { ThemeProvider } from "@react-navigation/native";
 import {
@@ -101,10 +101,7 @@ const RootStack = () => {
 
   // Determine if sidebar should be expanded
   // Priority: manual override > default to expanded
-  const shouldExpandSidebar =
-    isManuallyExpanded !== null
-      ? isManuallyExpanded
-      : true; // Default to expanded on first open
+  const shouldExpandSidebar = isManuallyExpanded !== null ? isManuallyExpanded : true; // Default to expanded on first open
 
   useEffect(() => {
     readFromAsyncStorage(STORAGE.DATASOURCE).then((stored) => {
@@ -136,7 +133,7 @@ const RootStack = () => {
 
       return null;
     },
-    [backend, breakpoints, pathname],
+    [backend, breakpoints, pathname]
   );
 
   useEffect(() => {
@@ -169,16 +166,18 @@ const RootStack = () => {
   // Check for both /(home)/route and /route formats (web strips the (home) prefix)
   // Include PRIVACY and TERMS so users can view legal pages without being logged in
   const authRoutes = [ROUTES.SIGNIN, ROUTES.SIGNUP, ROUTES.PASSWORD_RESET, ROUTES.OTP, ROUTES.PRIVACY, ROUTES.TERMS];
-  const isAuthRoute = authRoutes.some(route =>
-    pathname === `/(home)/${route}` || pathname === `/${route}`
-  );
+  const isAuthRoute = authRoutes.some((route) => pathname === `/(home)/${route}` || pathname === `/${route}`);
 
   if (!session && !isAuthRoute) {
     const signInBackend = backend || primaryBackend || storedBackend;
     if (__DEV__) {
-      console.log('[RootStack] Auth guard triggered - pathname:', pathname);
-      console.log('[RootStack] Is auth route:', isAuthRoute);
-      console.log('[RootStack] Rendering SignIn with backend:', signInBackend, { backend, primaryBackend, storedBackend });
+      console.log("[RootStack] Auth guard triggered - pathname:", pathname);
+      console.log("[RootStack] Is auth route:", isAuthRoute);
+      console.log("[RootStack] Rendering SignIn with backend:", signInBackend, {
+        backend,
+        primaryBackend,
+        storedBackend,
+      });
     }
     return (
       <>
@@ -268,7 +267,6 @@ const RootStack = () => {
     </>
   );
 };
-
 
 // Clear error recovery cache once on app start to prevent iOS 18 crash
 const useErrorRecoveryClear = () => {

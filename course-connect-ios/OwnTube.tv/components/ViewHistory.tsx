@@ -66,7 +66,7 @@ export const ViewHistory = () => {
             />
           </View>
         </ModalContainer>
-      </Animated.View>,
+      </Animated.View>
     );
   };
 
@@ -84,7 +84,7 @@ export const ViewHistory = () => {
         lastViewedAt={item.lastViewedAt}
       />
     ),
-    [deleteVideoFromHistory],
+    [deleteVideoFromHistory]
   );
 
   // Check if user is authenticated
@@ -99,12 +99,7 @@ export const ViewHistory = () => {
     return (
       <View style={[styles.errorContainer, { paddingTop: top }]}>
         <EmptyPage text={t("signInRequired")} />
-        <Button
-          onPress={handleSignIn}
-          contrast="high"
-          text={t("signInToViewVideos")}
-          style={styles.signInButton}
-        />
+        <Button onPress={handleSignIn} contrast="high" text={t("signInToViewVideos")} style={styles.signInButton} />
       </View>
     );
   }
@@ -118,10 +113,7 @@ export const ViewHistory = () => {
   }
 
   return (
-    <Screen
-      scrollable={false}
-      style={styles.screenContainer}
-    >
+    <Screen scrollable={false} style={styles.screenContainer}>
       <SectionList
         style={styles.sectionListContainer}
         contentContainerStyle={{

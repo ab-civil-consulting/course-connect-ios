@@ -22,7 +22,19 @@ interface VideoGridContentProps extends Pick<VideoGridProps, "data" | "variant">
 }
 
 export const VideoGridContent = forwardRef<VideoGridContentHandle, VideoGridContentProps>(
-  ({ isLoading, data = [], variant, backend, tvActionCardProps, scrollable = false, onEndReached, onEndReachedThreshold = 0.8 }, ref) => {
+  (
+    {
+      isLoading,
+      data = [],
+      variant,
+      backend,
+      tvActionCardProps,
+      scrollable = false,
+      onEndReached,
+      onEndReachedThreshold = 0.8,
+    },
+    ref
+  ) => {
     const [containerWidth, setContainerWidth] = useState(0);
     const lastItemRef = useRef<View>(null);
 
@@ -53,8 +65,8 @@ export const VideoGridContent = forwardRef<VideoGridContentHandle, VideoGridCont
               ({
                 isEmptyItemForListSpacing: true,
                 isReservedForTVActionCard: isTVActionCardVisible && index === 0,
-              }) as unknown as GetVideosVideo,
-          ),
+              }) as unknown as GetVideosVideo
+          )
         );
       }
 
@@ -80,12 +92,12 @@ export const VideoGridContent = forwardRef<VideoGridContentHandle, VideoGridCont
               ...styles.gridItemNonWeb,
               // FIXED: Use width only, let height be determined by content
               // marginBottom handled by ItemSeparatorComponent
-              ...(Platform.OS !== 'web'
+              ...(Platform.OS !== "web"
                 ? {
                     width: columnWidth,
                     flex: 0,
                     maxWidth: columnWidth,
-                    alignSelf: 'flex-start',
+                    alignSelf: "flex-start",
                   }
                 : {}),
             }}
@@ -98,7 +110,7 @@ export const VideoGridContent = forwardRef<VideoGridContentHandle, VideoGridCont
           </View>
         );
       },
-      [columnWidth, tvActionCardProps, variant, backend, data.length],
+      [columnWidth, tvActionCardProps, variant, backend, data.length]
     );
 
     const renderHorizontalListItem = useCallback(
@@ -109,7 +121,7 @@ export const VideoGridContent = forwardRef<VideoGridContentHandle, VideoGridCont
           </View>
         );
       },
-      [variant, backend],
+      [variant, backend]
     );
 
     const handleLayout = useCallback((e: { nativeEvent: { layout: { width: number } } }) => {
@@ -164,14 +176,16 @@ export const VideoGridContent = forwardRef<VideoGridContentHandle, VideoGridCont
             renderItem={isHorizontalScrollingEnabled ? renderHorizontalListItem : renderVerticalListItem}
             horizontal={isHorizontalScrollingEnabled}
             // Add ItemSeparatorComponent for consistent vertical spacing
-            ItemSeparatorComponent={() => !isHorizontalScrollingEnabled ? <View style={{ height: spacing.sm }} /> : null}
+            ItemSeparatorComponent={() =>
+              !isHorizontalScrollingEnabled ? <View style={{ height: spacing.sm }} /> : null
+            }
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
           />
         )}
       </View>
     );
-  },
+  }
 );
 
 VideoGridContent.displayName = "VideoGridContent";

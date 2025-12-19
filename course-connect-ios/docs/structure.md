@@ -97,7 +97,6 @@ Here you can find various utilities used across the app, such as time formatting
 The project root contains configuration and setup files, notable ones include:
 
 1. `build-info.json`: This file stores build-related information, including:
-
    - GitHub actor (user or system that triggered the build)
    - Short SHA of the commit
    - URL to the commit on GitHub
@@ -106,7 +105,6 @@ The project root contains configuration and setup files, notable ones include:
      This information is useful for debugging, tracking deployments, and providing version information to users.
 
 2. `i18n.ts`: This file sets up internationalization (i18n) for the application using the i18next library. It includes:
-
    - Initialization of i18next with React
    - Configuration of language fallbacks and separators
    - Import and registration of language resources

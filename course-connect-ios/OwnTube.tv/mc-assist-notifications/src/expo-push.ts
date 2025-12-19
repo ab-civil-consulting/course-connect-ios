@@ -26,9 +26,7 @@ export const sendPushNotifications = async (
     return { successful: 0, failed: 0 };
   }
 
-  const validTokens = devices
-    .map((d) => d.expoPushToken)
-    .filter((token) => Expo.isExpoPushToken(token));
+  const validTokens = devices.map((d) => d.expoPushToken).filter((token) => Expo.isExpoPushToken(token));
 
   if (validTokens.length === 0) {
     console.log("[ExpoPush] No valid Expo push tokens found");
@@ -60,10 +58,7 @@ export const sendPushNotifications = async (
           successful++;
         } else {
           failed++;
-          if (
-            ticket.details?.error === "DeviceNotRegistered" ||
-            ticket.details?.error === "InvalidCredentials"
-          ) {
+          if (ticket.details?.error === "DeviceNotRegistered" || ticket.details?.error === "InvalidCredentials") {
             invalidTokens.push(chunk[index].to as string);
           }
         }

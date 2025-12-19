@@ -53,7 +53,7 @@ export const HomeScreen = () => {
         c.name.toLowerCase().includes("popular") ||
         c.name.toLowerCase().includes("uploading") ||
         c.name.toLowerCase().includes("intro") ||
-        c.name.toLowerCase().includes("file format"),
+        c.name.toLowerCase().includes("file format")
     );
 
     const earthworksCategories = categories.filter((c) => c.name.toLowerCase().includes("earthworks"));

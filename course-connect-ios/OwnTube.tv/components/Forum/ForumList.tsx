@@ -169,7 +169,7 @@ export const ForumList = ({ backend }: ForumListProps) => {
         console.error("Error saving category:", error);
       }
     },
-    [selectedCategory, createCategoryMutation, updateCategoryMutation],
+    [selectedCategory, createCategoryMutation, updateCategoryMutation]
   );
 
   const handleDeleteCategory = useCallback(async () => {

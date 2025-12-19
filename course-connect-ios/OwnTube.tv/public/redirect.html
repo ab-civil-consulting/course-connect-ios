@@ -1,169 +1,171 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MC Assist - Opening...</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background: #f5f5f5;
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background: #f5f5f5;
+      }
+      .container {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+      }
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007aff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
-        .container {
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-            max-width: 400px;
+        100% {
+          transform: rotate(360deg);
         }
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #007AFF;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        h1 {
-            font-size: 1.5rem;
-            margin: 0 0 0.5rem;
-            color: #333;
-        }
-        p {
-            color: #666;
-            margin: 0 0 1.5rem;
-        }
-        .button {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #007AFF;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            margin: 0.5rem;
-        }
-        .button:hover {
-            background: #0056b3;
-        }
-        .stores {
-            margin-top: 1.5rem;
-        }
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin: 0 0 0.5rem;
+        color: #333;
+      }
+      p {
+        color: #666;
+        margin: 0 0 1.5rem;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background: #007aff;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin: 0.5rem;
+      }
+      .button:hover {
+        background: #0056b3;
+      }
+      .stores {
+        margin-top: 1.5rem;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="spinner"></div>
-        <h1>Opening MC Assist...</h1>
-        <p id="message">If the app doesn't open, click below to install it.</p>
-        <div id="stores" class="stores" style="display:none;">
-            <a href="" id="appStoreLink" class="button">Download from App Store</a>
-            <a href="" id="playStoreLink" class="button">Download from Play Store</a>
-        </div>
+      <div class="spinner"></div>
+      <h1>Opening MC Assist...</h1>
+      <p id="message">If the app doesn't open, click below to install it.</p>
+      <div id="stores" class="stores" style="display: none">
+        <a href="" id="appStoreLink" class="button">Download from App Store</a>
+        <a href="" id="playStoreLink" class="button">Download from Play Store</a>
+      </div>
     </div>
 
     <script>
-        // Parse URL parameters
-        const params = new URLSearchParams(window.location.search);
-        const backend = params.get('backend');
-        const id = params.get('id');
-        const timestamp = params.get('timestamp');
-        const channel = params.get('channel');
-        const playlist = params.get('playlist');
-        const category = params.get('category');
-        const searchQuery = params.get('searchQuery');
-        const sort = params.get('sort');
+      // Parse URL parameters
+      const params = new URLSearchParams(window.location.search);
+      const backend = params.get("backend");
+      const id = params.get("id");
+      const timestamp = params.get("timestamp");
+      const channel = params.get("channel");
+      const playlist = params.get("playlist");
+      const category = params.get("category");
+      const searchQuery = params.get("searchQuery");
+      const sort = params.get("sort");
 
-        // App Store URLs
-        const IOS_APP_STORE = 'https://apps.apple.com/us/app/mc-assist/id6754857663';
-        const ANDROID_PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.abcivil.mcassist.v2';
+      // App Store URLs
+      const IOS_APP_STORE = "https://apps.apple.com/us/app/mc-assist/id6754857663";
+      const ANDROID_PLAY_STORE = "https://play.google.com/store/apps/details?id=com.abcivil.mcassist.v2";
 
-        // Determine route from URL path
-        const path = window.location.pathname;
-        let route = 'home';
+      // Determine route from URL path
+      const path = window.location.pathname;
+      let route = "home";
 
-        if (path.includes('/video') || id) {
-            route = 'video';
-        } else if (path.includes('/channel-category')) {
-            route = 'channel-category';
-        } else if (path.includes('/channel-playlist')) {
-            route = 'channel-playlist';
-        } else if (path.includes('/channel')) {
-            route = 'channel';
-        } else if (path.includes('/playlist')) {
-            route = 'playlist';
-        } else if (path.includes('/category')) {
-            route = 'category';
-        } else if (path.includes('/search')) {
-            route = 'search';
+      if (path.includes("/video") || id) {
+        route = "video";
+      } else if (path.includes("/channel-category")) {
+        route = "channel-category";
+      } else if (path.includes("/channel-playlist")) {
+        route = "channel-playlist";
+      } else if (path.includes("/channel")) {
+        route = "channel";
+      } else if (path.includes("/playlist")) {
+        route = "playlist";
+      } else if (path.includes("/category")) {
+        route = "category";
+      } else if (path.includes("/search")) {
+        route = "search";
+      }
+
+      // Construct deep link URL
+      let deepLinkParams = [];
+      if (backend) deepLinkParams.push(`backend=${encodeURIComponent(backend)}`);
+      if (id) deepLinkParams.push(`id=${encodeURIComponent(id)}`);
+      if (timestamp) deepLinkParams.push(`timestamp=${encodeURIComponent(timestamp)}`);
+      if (channel) deepLinkParams.push(`channel=${encodeURIComponent(channel)}`);
+      if (playlist) deepLinkParams.push(`playlist=${encodeURIComponent(playlist)}`);
+      if (category) deepLinkParams.push(`category=${encodeURIComponent(category)}`);
+      if (searchQuery) deepLinkParams.push(`searchQuery=${encodeURIComponent(searchQuery)}`);
+      if (sort) deepLinkParams.push(`sort=${encodeURIComponent(sort)}`);
+
+      const deepLink = `mcassist://${route}${deepLinkParams.length > 0 ? "?" + deepLinkParams.join("&") : ""}`;
+
+      console.log("Attempting to open:", deepLink);
+
+      // Detect platform
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isAndroid = /Android/.test(navigator.userAgent);
+      const isMobile = isIOS || isAndroid;
+
+      // Store links
+      document.getElementById("appStoreLink").href = IOS_APP_STORE;
+      document.getElementById("playStoreLink").href = ANDROID_PLAY_STORE;
+
+      // Attempt to open the app
+      function attemptDeepLink() {
+        if (isMobile) {
+          // On mobile, attempt to open via custom URL scheme
+          window.location.href = deepLink;
+
+          // Set a timeout to show download links if app doesn't open
+          setTimeout(() => {
+            document.getElementById("message").textContent = "Don't have the app yet? Download it below:";
+            document.getElementById("stores").style.display = "block";
+
+            // Auto-redirect to appropriate store after a delay
+            setTimeout(() => {
+              if (isIOS) {
+                window.location.href = IOS_APP_STORE;
+              } else if (isAndroid) {
+                window.location.href = ANDROID_PLAY_STORE;
+              }
+            }, 2000);
+          }, 2000);
+        } else {
+          // On desktop, show both options immediately
+          document.getElementById("message").textContent = "This content is best viewed in the MC Assist mobile app:";
+          document.getElementById("stores").style.display = "block";
         }
+      }
 
-        // Construct deep link URL
-        let deepLinkParams = [];
-        if (backend) deepLinkParams.push(`backend=${encodeURIComponent(backend)}`);
-        if (id) deepLinkParams.push(`id=${encodeURIComponent(id)}`);
-        if (timestamp) deepLinkParams.push(`timestamp=${encodeURIComponent(timestamp)}`);
-        if (channel) deepLinkParams.push(`channel=${encodeURIComponent(channel)}`);
-        if (playlist) deepLinkParams.push(`playlist=${encodeURIComponent(playlist)}`);
-        if (category) deepLinkParams.push(`category=${encodeURIComponent(category)}`);
-        if (searchQuery) deepLinkParams.push(`searchQuery=${encodeURIComponent(searchQuery)}`);
-        if (sort) deepLinkParams.push(`sort=${encodeURIComponent(sort)}`);
-
-        const deepLink = `mcassist://${route}${deepLinkParams.length > 0 ? '?' + deepLinkParams.join('&') : ''}`;
-
-        console.log('Attempting to open:', deepLink);
-
-        // Detect platform
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        const isAndroid = /Android/.test(navigator.userAgent);
-        const isMobile = isIOS || isAndroid;
-
-        // Store links
-        document.getElementById('appStoreLink').href = IOS_APP_STORE;
-        document.getElementById('playStoreLink').href = ANDROID_PLAY_STORE;
-
-        // Attempt to open the app
-        function attemptDeepLink() {
-            if (isMobile) {
-                // On mobile, attempt to open via custom URL scheme
-                window.location.href = deepLink;
-
-                // Set a timeout to show download links if app doesn't open
-                setTimeout(() => {
-                    document.getElementById('message').textContent =
-                        "Don't have the app yet? Download it below:";
-                    document.getElementById('stores').style.display = 'block';
-
-                    // Auto-redirect to appropriate store after a delay
-                    setTimeout(() => {
-                        if (isIOS) {
-                            window.location.href = IOS_APP_STORE;
-                        } else if (isAndroid) {
-                            window.location.href = ANDROID_PLAY_STORE;
-                        }
-                    }, 2000);
-                }, 2000);
-            } else {
-                // On desktop, show both options immediately
-                document.getElementById('message').textContent =
-                    "This content is best viewed in the MC Assist mobile app:";
-                document.getElementById('stores').style.display = 'block';
-            }
-        }
-
-        // Start the deep link attempt
-        attemptDeepLink();
+      // Start the deep link attempt
+      attemptDeepLink();
     </script>
-</body>
+  </body>
 </html>

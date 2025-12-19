@@ -21,7 +21,7 @@ export function handleAxiosErrorWithRetry(error: unknown, target: string): Promi
     headers: response?.headers,
     requestHeaders: config?.headers,
     hasRequest: !!request,
-    hasResponse: !!response
+    hasResponse: !!response,
   });
 
   // Log the full error response data as JSON for debugging
@@ -47,10 +47,10 @@ export function handleAxiosErrorWithRetry(error: unknown, target: string): Promi
             status: response?.status,
             code: (response?.data as { code: string })?.code,
             message,
-          }),
+          })
         );
       },
-      (retryAfter ?? 0) * 1000, // QueryClient will handle the retry
+      (retryAfter ?? 0) * 1000 // QueryClient will handle the retry
     );
   });
 }

@@ -57,7 +57,11 @@ const Share = ({ onClose, titleKey, staticLink }: ShareProps) => {
   };
 
   return (
-    <Animated.View entering={SlideInUp} exiting={SlideOutUp} style={[styles.animatedContainer, { pointerEvents: "box-none" }]}>
+    <Animated.View
+      entering={SlideInUp}
+      exiting={SlideOutUp}
+      style={[styles.animatedContainer, { pointerEvents: "box-none" }]}
+    >
       <ModalContainer
         showCloseButton
         onClose={onClose}

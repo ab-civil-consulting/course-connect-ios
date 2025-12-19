@@ -31,11 +31,7 @@ export const SidebarContextProvider = ({ children }: { children: ReactNode }) =>
     // Trigger smooth animation (not on web)
     if (Platform.OS !== "web") {
       LayoutAnimation.configureNext(
-        LayoutAnimation.create(
-          300,
-          LayoutAnimation.Types.easeInEaseOut,
-          LayoutAnimation.Properties.opacity
-        )
+        LayoutAnimation.create(300, LayoutAnimation.Types.easeInEaseOut, LayoutAnimation.Properties.opacity)
       );
     }
 

@@ -55,12 +55,7 @@ export const getLastNotifiedVideo = async () => {
   });
 };
 
-export const saveVideo = async (data: {
-  uuid: string;
-  name: string;
-  channelName?: string;
-  publishedAt: Date;
-}) => {
+export const saveVideo = async (data: { uuid: string; name: string; channelName?: string; publishedAt: Date }) => {
   return prisma.video.upsert({
     where: { uuid: data.uuid },
     update: {},

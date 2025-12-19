@@ -30,7 +30,7 @@ export const combineCollectionQueryResults = <T>(
   result: UseQueryResult<
     { data: Array<GetVideosVideo>; total: number; isError?: boolean; error?: unknown } & T,
     ApiError
-  >[],
+  >[]
 ) => {
   return {
     data: result.filter((item) => item?.data?.isError || Number(item?.data?.total) > 0),

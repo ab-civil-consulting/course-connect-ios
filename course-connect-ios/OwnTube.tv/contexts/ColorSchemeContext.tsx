@@ -15,9 +15,7 @@ export const ColorSchemeContextProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     if (!selectedColorScheme) {
       readFromAsyncStorage("colorScheme").then((scheme: ColorSchemeName) => {
-        setSelectedColorScheme(
-          scheme || currentInstanceConfig?.customizations?.pageDefaultTheme || "dark",
-        );
+        setSelectedColorScheme(scheme || currentInstanceConfig?.customizations?.pageDefaultTheme || "dark");
       });
 
       return;

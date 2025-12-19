@@ -16,7 +16,7 @@ export const useSearchQuery = (params: VideosSearchQuery) => {
     getNextPageParam: (
       lastPage: { total?: number; data?: Video[]; currentPage?: number; totalPages?: number },
       allPages,
-      lastPageParam?: number,
+      lastPageParam?: number
     ) => {
       const fetchedSoFar = allPages.reduce((acc, p) => acc + (p.data?.length ?? 0), 0);
 

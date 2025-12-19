@@ -31,7 +31,11 @@ export const Otp = () => {
   const router = useRouter();
   const { backend } = useLocalSearchParams<RootStackParams[ROUTES.OTP]>();
   const { addSession, selectSession, updateSession } = useAuthSessionStore();
-  const { refetch: getUserInfo, isFetching: isGettingUserInfo, isError: isUserInfoError } = useGetMyUserInfoQuery(backend);
+  const {
+    refetch: getUserInfo,
+    isFetching: isGettingUserInfo,
+    isError: isUserInfoError,
+  } = useGetMyUserInfoQuery(backend);
 
   const { control, handleSubmit, reset, formState } = useForm({
     values: {
@@ -58,7 +62,7 @@ export const Otp = () => {
         reset();
         resetSendOtp();
       };
-    }, [formState.isSubmitSuccessful, reset, resetSendOtp]),
+    }, [formState.isSubmitSuccessful, reset, resetSendOtp])
   );
 
   const loginMutationsState = useMutationState({

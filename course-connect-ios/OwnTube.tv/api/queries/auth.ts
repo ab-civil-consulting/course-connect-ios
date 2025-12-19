@@ -32,7 +32,7 @@ export const useLoginWithUsernameAndPasswordMutation = (backendOverride?: string
       return await AuthApiImpl.login(
         backend!,
         { ...loginPrerequisites, username, password, grant_type: "password" },
-        otp,
+        otp
       );
     },
   });

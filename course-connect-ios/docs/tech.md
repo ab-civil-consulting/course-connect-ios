@@ -124,7 +124,6 @@ The instance configurations are retrieved and made available to the application 
 1. **Asset Loading**: The hook uses Expo's `Asset` module to load the `featured-instances.json5` file as an asset. This approach ensures that the file is properly bundled with the application and can be accessed efficiently.
 
 2. **Platform-Specific Reading**: Depending on the platform (web or native), the hook uses different methods to read the file contents:
-
    - For web platforms, it uses the `fetch` API to retrieve the file content.
    - For native platforms, it uses `expo-file-system`'s `readAsStringAsync` function.
 

@@ -13,7 +13,7 @@ const Picker = (props: PickerSelectProps) => {
       backgroundColor: colors.theme100,
       borderColor: colors.theme200,
     }),
-    [colors],
+    [colors]
   );
 
   const textStyle = useMemo(
@@ -24,7 +24,7 @@ const Picker = (props: PickerSelectProps) => {
       lineHeight: 17,
       color: colors.theme950,
     }),
-    [colors],
+    [colors]
   );
 
   const [isPickerOpen, setIsPickerOpen] = useState(false);

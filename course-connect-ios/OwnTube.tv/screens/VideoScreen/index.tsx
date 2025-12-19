@@ -41,7 +41,7 @@ export const VideoScreen = () => {
 
   const { data: subscriptionData, isLoading: isLoadingSubscriptionData } = useGetSubscriptionByChannelQuery(
     qualifiedChannelName,
-    isPremiumVideo && !!data,
+    isPremiumVideo && !!data
   );
 
   const isPremiumVideoAvailable = useMemo(() => {
@@ -83,7 +83,7 @@ export const VideoScreen = () => {
         videoId: params?.id,
         backend: params?.backend,
       });
-    }, [params?.id, params?.backend]),
+    }, [params?.id, params?.backend])
   );
 
   const randomPremiumAdIndex = useMemo(() => {
@@ -105,7 +105,7 @@ export const VideoScreen = () => {
     const needsAuthentication = data.privacy?.id && data.privacy.id >= 3;
 
     if (__DEV__) {
-      console.log('[VideoScreen] Token fetch effect:', {
+      console.log("[VideoScreen] Token fetch effect:", {
         videoId: params.id,
         privacyId: data.privacy?.id,
         needsAuthentication,
@@ -117,15 +117,15 @@ export const VideoScreen = () => {
       setIsLoadingToken(true);
       setTokenError(null);
       if (__DEV__) {
-        console.log('[VideoScreen] Requesting video token...');
+        console.log("[VideoScreen] Requesting video token...");
       }
       ApiServiceImpl.requestVideoToken(params.backend, params.id)
         .then((tokenData) => {
           if (__DEV__) {
-            console.log('[VideoScreen] Token received:', {
+            console.log("[VideoScreen] Token received:", {
               hasFilesToken: !!tokenData?.files?.token,
               hasStreamingToken: !!tokenData?.streamingPlaylists?.token,
-              filesToken: tokenData?.files?.token ? tokenData.files.token.substring(0, 20) + '...' : null,
+              filesToken: tokenData?.files?.token ? tokenData.files.token.substring(0, 20) + "..." : null,
             });
           }
           if (tokenData?.files?.token) {
@@ -137,24 +137,24 @@ export const VideoScreen = () => {
 
           // If we didn't get any token for a private video, set an error
           if (!tokenData?.files?.token && !tokenData?.streamingPlaylists?.token) {
-            console.error('[VideoScreen] No tokens received for private video');
-            setTokenError('Failed to obtain video access token');
+            console.error("[VideoScreen] No tokens received for private video");
+            setTokenError("Failed to obtain video access token");
           }
         })
         .catch((error) => {
           console.error("[VideoScreen] Video token request failed:", error);
-          setTokenError('Failed to authenticate video access. Please try again.');
+          setTokenError("Failed to authenticate video access. Please try again.");
         })
         .finally(() => {
           if (__DEV__) {
-            console.log('[VideoScreen] Token loading complete');
+            console.log("[VideoScreen] Token loading complete");
           }
           setIsLoadingToken(false);
         });
     } else {
       // Public/Unlisted videos don't need tokens
       if (__DEV__) {
-        console.log('[VideoScreen] Video is public/unlisted, no token needed');
+        console.log("[VideoScreen] Video is public/unlisted, no token needed");
       }
       setIsLoadingToken(false);
       setVideoFileToken(null);
@@ -172,25 +172,25 @@ export const VideoScreen = () => {
 
     // === COMPREHENSIVE VIDEO DATA DEBUGGING ===
     if (__DEV__) {
-      console.log('[VideoScreen] === FULL VIDEO DATA STRUCTURE ===');
-      console.log('[VideoScreen] Video data keys:', Object.keys(data));
-      console.log('[VideoScreen] Video name:', data.name);
-      console.log('[VideoScreen] Video UUID:', data.uuid);
+      console.log("[VideoScreen] === FULL VIDEO DATA STRUCTURE ===");
+      console.log("[VideoScreen] Video data keys:", Object.keys(data));
+      console.log("[VideoScreen] Video name:", data.name);
+      console.log("[VideoScreen] Video UUID:", data.uuid);
 
       // Check for files property
-      console.log('[VideoScreen] data.files exists?', 'files' in data);
-      console.log('[VideoScreen] data.files value:', data.files);
-      console.log('[VideoScreen] data.files type:', typeof data.files);
-      console.log('[VideoScreen] data.files is array?', Array.isArray(data.files));
-      console.log('[VideoScreen] data.files?.length:', data.files?.length);
+      console.log("[VideoScreen] data.files exists?", "files" in data);
+      console.log("[VideoScreen] data.files value:", data.files);
+      console.log("[VideoScreen] data.files type:", typeof data.files);
+      console.log("[VideoScreen] data.files is array?", Array.isArray(data.files));
+      console.log("[VideoScreen] data.files?.length:", data.files?.length);
 
       // Check for streaming playlists
-      console.log('[VideoScreen] data.streamingPlaylists:', data.streamingPlaylists);
-      console.log('[VideoScreen] streamingPlaylists length:', data.streamingPlaylists?.length);
+      console.log("[VideoScreen] data.streamingPlaylists:", data.streamingPlaylists);
+      console.log("[VideoScreen] streamingPlaylists length:", data.streamingPlaylists?.length);
 
       // Log detailed HLS playlist info
       if (data.streamingPlaylists?.length) {
-        console.log('[VideoScreen] HLS Playlist details:', {
+        console.log("[VideoScreen] HLS Playlist details:", {
           id: data.streamingPlaylists[0].id,
           type: data.streamingPlaylists[0].type,
           playlistUrl: data.streamingPlaylists[0].playlistUrl,
@@ -199,11 +199,11 @@ export const VideoScreen = () => {
       }
 
       // Look for alternative property names
-      console.log('[VideoScreen] data.webVideos:', (data as any).webVideos);
-      console.log('[VideoScreen] data.videoFiles:', (data as any).videoFiles);
-      console.log('[VideoScreen] data.file:', (data as any).file);
+      console.log("[VideoScreen] data.webVideos:", (data as any).webVideos);
+      console.log("[VideoScreen] data.videoFiles:", (data as any).videoFiles);
+      console.log("[VideoScreen] data.file:", (data as any).file);
 
-      console.log('[VideoScreen] Basic info:', {
+      console.log("[VideoScreen] Basic info:", {
         videoId: params.id,
         privacyId: data.privacy?.id,
         needsAuth,
@@ -211,15 +211,16 @@ export const VideoScreen = () => {
         hasDirectFiles: !!data.files?.length,
         directFilesCount: data.files?.length || 0,
         platform: Platform.OS,
-        videoFileToken: videoFileToken ? videoFileToken.substring(0, 20) + '...' : null,
-        streamingPlaylistToken: streamingPlaylistToken ? streamingPlaylistToken.substring(0, 20) + '...' : null,
+        videoFileToken: videoFileToken ? videoFileToken.substring(0, 20) + "..." : null,
+        streamingPlaylistToken: streamingPlaylistToken ? streamingPlaylistToken.substring(0, 20) + "..." : null,
         isLoadingToken,
       });
 
       // Log available video files for debugging
       if (data.files?.length) {
-        console.log('[VideoScreen] Available video files:',
-          data.files.map(f => ({
+        console.log(
+          "[VideoScreen] Available video files:",
+          data.files.map((f) => ({
             resolution: f.resolution?.id,
             size: f.size,
             fps: f.fps,
@@ -240,7 +241,7 @@ export const VideoScreen = () => {
     // 5. More reliable than HLS for most use cases
 
     if (__DEV__) {
-      console.log('[VideoScreen] Playback decision:', {
+      console.log("[VideoScreen] Playback decision:", {
         hasDirectFiles: !!data.files?.length,
         hasHLS: !!data.streamingPlaylists?.length,
         platform: Platform.OS,
@@ -249,8 +250,8 @@ export const VideoScreen = () => {
 
     // If no files AND no streaming playlists, video is not playable
     if (!data.files?.length && !data.streamingPlaylists?.length) {
-      console.error('[VideoScreen] Video has NO playable sources (no files, no HLS)');
-      setTokenError('Video unavailable: No playback sources found. Please check PeerTube settings.');
+      console.error("[VideoScreen] Video has NO playable sources (no files, no HLS)");
+      setTokenError("Video unavailable: No playback sources found. Please check PeerTube settings.");
       return undefined;
     }
 
@@ -263,7 +264,7 @@ export const VideoScreen = () => {
       // - Quality selection works on all platforms
 
       if (!data.files || data.files.length === 0) {
-        console.error('[VideoScreen] No video files available!');
+        console.error("[VideoScreen] No video files available!");
         return undefined;
       }
 
@@ -285,7 +286,7 @@ export const VideoScreen = () => {
       videoUrl = selectedFile?.fileUrl;
 
       if (__DEV__) {
-        console.log('[VideoScreen] Selected video file:', {
+        console.log("[VideoScreen] Selected video file:", {
           resolution: selectedFile?.resolution?.id,
           fps: selectedFile?.fps,
           size: selectedFile?.size,
@@ -302,31 +303,31 @@ export const VideoScreen = () => {
       // Wait for token if authentication is required
       if (needsAuth && isLoadingToken) {
         if (__DEV__) {
-          console.log('[VideoScreen] Direct file: Waiting for token to load...');
+          console.log("[VideoScreen] Direct file: Waiting for token to load...");
         }
         return undefined;
       }
 
       if (needsAuth && !videoFileToken) {
         if (__DEV__) {
-          console.log('[VideoScreen] Direct file: Token required but not available');
+          console.log("[VideoScreen] Direct file: Token required but not available");
         }
         return undefined;
       }
 
       if (__DEV__) {
-        console.log('[VideoScreen] Direct file URL constructed:', {
+        console.log("[VideoScreen] Direct file URL constructed:", {
           platform: Platform.OS,
           needsAuth,
           hasToken: !!videoFileToken,
           quality: selectedFile?.resolution?.id,
-          url: videoUrl ? videoUrl.substring(0, 100) + '...' : 'undefined',
+          url: videoUrl ? videoUrl.substring(0, 100) + "..." : "undefined",
         });
       }
     } else if (data.streamingPlaylists?.length) {
       // Fallback to HLS streaming if direct files not available
       if (__DEV__) {
-        console.warn('[VideoScreen] No direct files available, falling back to HLS streaming');
+        console.warn("[VideoScreen] No direct files available, falling back to HLS streaming");
       }
 
       let hlsStream: VideoStreamingPlaylist;
@@ -352,48 +353,57 @@ export const VideoScreen = () => {
       // Wait for token if authentication is required for HLS streaming
       if (needsAuth && isLoadingToken) {
         if (__DEV__) {
-          console.log('[VideoScreen] HLS: Waiting for token to load...');
+          console.log("[VideoScreen] HLS: Waiting for token to load...");
         }
         return undefined;
       }
 
       if (needsAuth && !token) {
         if (__DEV__) {
-          console.log('[VideoScreen] HLS: Token required but not available');
+          console.log("[VideoScreen] HLS: Token required but not available");
         }
         return undefined;
       }
 
       if (__DEV__) {
-        console.log('[VideoScreen] HLS URL constructed (fallback):', {
+        console.log("[VideoScreen] HLS URL constructed (fallback):", {
           platform: Platform.OS,
           needsAuth,
           hasToken: !!(streamingPlaylistToken || videoFileToken),
-          url: videoUrl ? videoUrl.substring(0, 100) + '...' : 'undefined',
+          url: videoUrl ? videoUrl.substring(0, 100) + "..." : "undefined",
         });
       }
     } else {
       // This should never happen due to our earlier check, but handle it anyway
-      console.error('[VideoScreen] No playable video source found!', {
+      console.error("[VideoScreen] No playable video source found!", {
         hasFiles: !!data.files?.length,
         hasHLS: !!data.streamingPlaylists?.length,
         platform: Platform.OS,
       });
-      setTokenError('Video playback unavailable. No video files or streams found.');
+      setTokenError("Video playback unavailable. No video files or streams found.");
       return undefined;
     }
 
     if (__DEV__) {
-      console.log('[VideoScreen] === Final URI decision ===');
-      console.log('[VideoScreen] finalUrl:', videoUrl ? videoUrl.substring(0, 150) + '...' : 'undefined');
-      console.log('[VideoScreen] usedDirectFile:', !!data.files?.length);
-      console.log('[VideoScreen] usedHLS:', !data.files?.length && !!data.streamingPlaylists?.length);
-      console.log('[VideoScreen] platform:', Platform.OS);
-      console.log('[VideoScreen] needsAuth:', needsAuth);
+      console.log("[VideoScreen] === Final URI decision ===");
+      console.log("[VideoScreen] finalUrl:", videoUrl ? videoUrl.substring(0, 150) + "..." : "undefined");
+      console.log("[VideoScreen] usedDirectFile:", !!data.files?.length);
+      console.log("[VideoScreen] usedHLS:", !data.files?.length && !!data.streamingPlaylists?.length);
+      console.log("[VideoScreen] platform:", Platform.OS);
+      console.log("[VideoScreen] needsAuth:", needsAuth);
     }
 
     return videoUrl;
-  }, [params, data, quality, premiumAdsData, isPremiumVideoUnavailable, videoFileToken, streamingPlaylistToken, isLoadingToken]);
+  }, [
+    params,
+    data,
+    quality,
+    premiumAdsData,
+    isPremiumVideoUnavailable,
+    videoFileToken,
+    streamingPlaylistToken,
+    isLoadingToken,
+  ]);
 
   const handleSetTimeStamp = (timestamp: number) => {
     if (!params?.id || isPremiumVideoUnavailable) {
@@ -414,7 +424,7 @@ export const VideoScreen = () => {
         closeModal();
         setQuality("auto");
       };
-    }, []),
+    }, [])
   );
 
   const handleBackButtonPress = () => {
@@ -490,12 +500,7 @@ export const VideoScreen = () => {
           <Button onPress={handleBackButtonPress} contrast="low" icon="Arrow-Left" style={styles.backButton} />
         )}
         <EmptyPage text={t("signInRequired")} />
-        <Button
-          onPress={handleSignIn}
-          contrast="high"
-          text={t("signInToViewVideos")}
-          style={styles.signInButton}
-        />
+        <Button onPress={handleSignIn} contrast="high" text={t("signInToViewVideos")} style={styles.signInButton} />
       </View>
     );
   }

@@ -92,5 +92,5 @@ export interface UpdateCategoryInput extends Partial<CreateCategoryInput> {
 export interface ForumPaginationParams {
   start?: number;
   count?: number;
-  sort?: 'recent' | 'popular' | 'oldest';
+  sort?: "recent" | "popular" | "oldest";
 }

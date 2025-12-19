@@ -14,7 +14,7 @@ export const useFilteredDropdown = (
     allowCustomOptions?: boolean;
     getCustomOptionText?: (input: string) => string;
   },
-  listRef: MutableRefObject<FlatList | null>,
+  listRef: MutableRefObject<FlatList | null>
 ) => {
   const [inputValue, setInputValue] = useState("");
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);

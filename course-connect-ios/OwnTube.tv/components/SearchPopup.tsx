@@ -50,12 +50,7 @@ export const SearchPopup = ({ handleClose, backend }: { handleClose: () => void;
         <ModalContainer showCloseButton onClose={handleClose} title={t("search")}>
           <View style={styles.authContainer}>
             <EmptyPage text={t("signInRequired")} />
-            <Button
-              onPress={handleSignIn}
-              contrast="high"
-              text={t("signInToViewVideos")}
-              style={styles.signInButton}
-            />
+            <Button onPress={handleSignIn} contrast="high" text={t("signInToViewVideos")} style={styles.signInButton} />
           </View>
         </ModalContainer>
       </Animated.View>

@@ -24,7 +24,7 @@ export const SkeletonLoader = ({ containerStyle }: SkeletonLoaderProps) => {
           duration: 500,
           useNativeDriver: true,
         }),
-      ]),
+      ])
     ).start();
   }, [animation]);
 

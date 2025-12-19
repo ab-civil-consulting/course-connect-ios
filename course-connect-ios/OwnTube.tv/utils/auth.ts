@@ -3,7 +3,7 @@ import { UserLogin } from "@peertube/peertube-types";
 
 export const parseAuthSessionData = (
   loginResponse: UserLogin & { expires_in: number; refresh_token_expires_in: number },
-  backend: string,
+  backend: string
 ): Partial<AuthSession> => {
   const { getConfigByBackend } = useInstanceConfigStore.getState();
   const instanceConfig = getConfigByBackend(backend);

@@ -45,7 +45,7 @@ const refreshAccessToken = async (backend: string, refreshToken: string) => {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-      },
+      }
     );
     return loginResponse;
   } catch (error) {
@@ -85,10 +85,10 @@ axiosInstance.interceptors.request.use(async (config) => {
 
   const shouldAttachAccessToken = Boolean(
     session &&
-      session.backend === backend &&
-      config.baseURL?.startsWith(`https://${backend}${basePath ?? ""}`) &&
-      !sessionExpired &&
-      accessTokenValid,
+    session.backend === backend &&
+    config.baseURL?.startsWith(`https://${backend}${basePath ?? ""}`) &&
+    !sessionExpired &&
+    accessTokenValid
   );
 
   if (shouldAttachAccessToken) {

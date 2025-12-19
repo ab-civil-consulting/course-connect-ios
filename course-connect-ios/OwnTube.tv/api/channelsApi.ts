@@ -62,7 +62,7 @@ export class ChannelsApi extends AxiosInstanceBasedApi {
   async getChannelVideos(
     baseURL: string,
     channelHandle: string,
-    queryParams: VideosCommonQuery,
+    queryParams: VideosCommonQuery
   ): Promise<{ data: GetVideosVideo[]; total: number }> {
     try {
       // IMPORTANT: Only use start and count parameters to avoid 401 errors
@@ -92,8 +92,9 @@ export class ChannelsApi extends AxiosInstanceBasedApi {
 
       // Filter client-side if categoryOneOf is specified
       if (queryParams?.categoryOneOf && queryParams.categoryOneOf.length > 0) {
-        videos = videos.filter((video: GetVideosVideo) =>
-          video.category?.id !== null && queryParams.categoryOneOf!.includes(video.category.id)
+        videos = videos.filter(
+          (video: GetVideosVideo) =>
+            video.category?.id !== null && queryParams.categoryOneOf!.includes(video.category.id)
         );
       }
 
@@ -127,7 +128,7 @@ export class ChannelsApi extends AxiosInstanceBasedApi {
         {
           baseURL: `https://${baseURL}/api/v1`,
           params: { count: 100, sort: "-updatedAt" },
-        },
+        }
       );
 
       return response.data.data;

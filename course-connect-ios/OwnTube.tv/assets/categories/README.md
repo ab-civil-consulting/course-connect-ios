@@ -17,6 +17,7 @@ Place your category images in this folder with the following filenames:
 13. `siteworks-first-time-setup.png` - Siteworks First-Time Setup
 
 ## Recommended Image Specs:
+
 - Format: PNG (preferred) or JPG
 - Dimensions: 400x240px (or similar 5:3 aspect ratio)
 - Since text is included in the images, ensure it's readable at the display size

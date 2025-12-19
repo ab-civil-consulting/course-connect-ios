@@ -32,7 +32,7 @@ export default function home() {
       TVEventControl.disableTVMenuKey();
 
       return () => TVEventControl.enableTVMenuKey();
-    }, []),
+    }, [])
   );
 
   if (!backend) {

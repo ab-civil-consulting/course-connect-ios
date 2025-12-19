@@ -1,4 +1,15 @@
-import { Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import {
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { Button, FormComponent, Input, Separator, Typography } from "../../components";
 import { useTranslation } from "react-i18next";
 import {
@@ -53,7 +64,11 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
     isPending: isLoggingIn,
     reset: resetLoginMutation,
   } = useLoginWithUsernameAndPasswordMutation(backend);
-  const { refetch: getUserInfo, isFetching: isGettingUserInfo, isError: isUserInfoError } = useGetMyUserInfoQuery(backend);
+  const {
+    refetch: getUserInfo,
+    isFetching: isGettingUserInfo,
+    isError: isUserInfoError,
+  } = useGetMyUserInfoQuery(backend);
   const { currentInstanceConfig: _currentInstanceConfig } = useAppConfigContext();
   const { top } = useSafeAreaInsets();
   useCustomFocusManager();
@@ -80,12 +95,12 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
         reset();
         resetLoginMutation();
       };
-    }, [formState.isSubmitSuccessful, reset, resetLoginMutation]),
+    }, [formState.isSubmitSuccessful, reset, resetLoginMutation])
   );
 
   const handleSignIn = async (formValues: z.infer<typeof signInFormValidationSchema>) => {
     if (__DEV__) {
-      console.log('[SignIn] handleSignIn called with backend:', backend);
+      console.log("[SignIn] handleSignIn called with backend:", backend);
     }
     if (loginPrerequisites) {
       let loginResponse: UserLoginResponse;
@@ -93,11 +108,11 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
       try {
         loginResponse = await login({ loginPrerequisites, ...formValues });
         if (__DEV__) {
-          console.log('[SignIn] Login successful');
+          console.log("[SignIn] Login successful");
         }
       } catch (e) {
         const { code } = e as { code: string };
-        console.error('[SignIn] Login failed:', e);
+        console.error("[SignIn] Login failed:", e);
 
         if (code === ServerErrorCodes.MISSING_TWO_FACTOR) {
           router.navigate({ pathname: ROUTES.OTP, params: { backend } });
@@ -110,17 +125,17 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
 
       const authSessionData = parseAuthSessionData(loginResponse, backend);
       if (__DEV__) {
-        console.log('[SignIn] Auth session data parsed');
+        console.log("[SignIn] Auth session data parsed");
       }
 
       if (loginResponse) {
         await addSession(backend, authSessionData);
         if (__DEV__) {
-          console.log('[SignIn] Session added to store');
+          console.log("[SignIn] Session added to store");
         }
         await selectSession(backend);
         if (__DEV__) {
-          console.log('[SignIn] Session selected');
+          console.log("[SignIn] Session selected");
         }
 
         const { data: userInfoResponse } = await getUserInfo();
@@ -132,18 +147,18 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
             email: userInfoResponse.email,
           });
           if (__DEV__) {
-            console.log('[SignIn] User info updated');
+            console.log("[SignIn] User info updated");
           }
         }
 
         captureDiagnosticsEvent(CustomPostHogEvents.Login, { backend });
         if (__DEV__) {
-          console.log('[SignIn] Navigating to home with backend:', backend);
+          console.log("[SignIn] Navigating to home with backend:", backend);
         }
         router.navigate({ pathname: ROUTES.HOME, params: { backend } });
       }
     } else {
-      console.error('[SignIn] No loginPrerequisites available');
+      console.error("[SignIn] No loginPrerequisites available");
     }
   };
 
@@ -152,13 +167,11 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
   const isLoading = isLoadingInstanceInfo || isLoadingInstanceServerConfig || isLoadingLoginPrerequisites;
 
   const KeyboardWrapper = Platform.OS === "web" ? View : KeyboardAvoidingView;
-  const keyboardProps = Platform.OS === "web" ? {} : { behavior: Platform.OS === "ios" ? "padding" as const : "height" as const };
+  const keyboardProps =
+    Platform.OS === "web" ? {} : { behavior: Platform.OS === "ios" ? ("padding" as const) : ("height" as const) };
 
   return (
-    <KeyboardWrapper
-      style={styles.keyboardAvoidingView}
-      {...keyboardProps}
-    >
+    <KeyboardWrapper style={styles.keyboardAvoidingView} {...keyboardProps}>
       <FormComponent
         style={{ paddingTop: spacing.xxxl + top, ...styles.container }}
         onSubmit={handleSubmit(handleSignIn)}
@@ -314,13 +327,13 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                       <Button
                         onPress={() => {
                           if (__DEV__) {
-                            console.log('[SignIn] Create Account button clicked');
-                            console.log('[SignIn] Navigating to:', `/(home)/${ROUTES.SIGNUP}`);
-                            console.log('[SignIn] With backend:', backend);
+                            console.log("[SignIn] Create Account button clicked");
+                            console.log("[SignIn] Navigating to:", `/(home)/${ROUTES.SIGNUP}`);
+                            console.log("[SignIn] With backend:", backend);
                           }
                           router.push({ pathname: `/(home)/${ROUTES.SIGNUP}`, params: { backend } });
                           if (__DEV__) {
-                            console.log('[SignIn] router.push called');
+                            console.log("[SignIn] router.push called");
                           }
                         }}
                         style={styles.height48}
@@ -482,13 +495,13 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
                         <Button
                           onPress={() => {
                             if (__DEV__) {
-                              console.log('[SignIn] Create Account button clicked');
-                              console.log('[SignIn] Navigating to:', `/(home)/${ROUTES.SIGNUP}`);
-                              console.log('[SignIn] With backend:', backend);
+                              console.log("[SignIn] Create Account button clicked");
+                              console.log("[SignIn] Navigating to:", `/(home)/${ROUTES.SIGNUP}`);
+                              console.log("[SignIn] With backend:", backend);
                             }
                             router.push({ pathname: `/(home)/${ROUTES.SIGNUP}`, params: { backend } });
                             if (__DEV__) {
-                              console.log('[SignIn] router.push called');
+                              console.log("[SignIn] router.push called");
                             }
                           }}
                           style={styles.height48}

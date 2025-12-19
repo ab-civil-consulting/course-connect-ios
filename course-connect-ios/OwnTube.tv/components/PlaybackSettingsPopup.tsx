@@ -115,9 +115,7 @@ export const PlaybackSettingsPopup = ({
 
   const screens = useMemo(() => {
     // Prioritize direct files (web videos) over HLS streaming playlists
-    const qualityOptions = (
-      videoData?.files?.length ? videoData?.files : videoData?.streamingPlaylists?.[0]?.files
-    )
+    const qualityOptions = (videoData?.files?.length ? videoData?.files : videoData?.streamingPlaylists?.[0]?.files)
       ?.map(({ resolution }) => ({ ...resolution, id: String(resolution.id) }))
       .concat([
         {
@@ -126,7 +124,7 @@ export const PlaybackSettingsPopup = ({
         },
       ]);
     const ccOptions = [{ id: "", label: t("off") }].concat(
-      videoCaptions?.map(({ language }) => ({ id: language.id, label: language.label })) || [],
+      videoCaptions?.map(({ language }) => ({ id: language.id, label: language.label })) || []
     );
 
     return {

@@ -44,7 +44,7 @@ export class ForumApi extends AxiosInstanceBasedApi {
   async getThreads(
     baseURL: string,
     categoryId: string,
-    params?: ForumPaginationParams,
+    params?: ForumPaginationParams
   ): Promise<{ threads: ForumThread[]; total: number }> {
     try {
       const response = await this.instance.get(`forum/categories/${categoryId}/threads`, {
@@ -77,7 +77,7 @@ export class ForumApi extends AxiosInstanceBasedApi {
   async getPosts(
     baseURL: string,
     threadId: string,
-    params?: ForumPaginationParams,
+    params?: ForumPaginationParams
   ): Promise<{ posts: ForumPost[]; total: number }> {
     try {
       const response = await this.instance.get(`forum/threads/${threadId}/posts`, {
@@ -121,10 +121,7 @@ export class ForumApi extends AxiosInstanceBasedApi {
   /**
    * Search forum threads
    */
-  async searchThreads(
-    baseURL: string,
-    params: ForumSearchParams,
-  ): Promise<{ threads: ForumThread[]; total: number }> {
+  async searchThreads(baseURL: string, params: ForumSearchParams): Promise<{ threads: ForumThread[]; total: number }> {
     try {
       const response = await this.instance.get("forum/search", {
         params,

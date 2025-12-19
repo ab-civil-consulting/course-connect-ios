@@ -39,8 +39,8 @@ export const useGetVideosQuery = <TResult = GetVideosVideo[]>({
       // Filter client-side if categoryOneOf is specified
       let filteredData = result.data;
       if (params?.categoryOneOf && params.categoryOneOf.length > 0) {
-        filteredData = result.data.filter(video =>
-          video.category?.id !== null && params.categoryOneOf!.includes(video.category.id)
+        filteredData = result.data.filter(
+          (video) => video.category?.id !== null && params.categoryOneOf!.includes(video.category.id)
         );
       }
 
@@ -72,7 +72,7 @@ export const useInfiniteVideosQuery = (
     uniqueQueryKey: string;
     queryParams: VideosCommonQuery;
     backend?: string;
-  }>,
+  }>
 ) => {
   const { backend: backendFromParams } = useLocalSearchParams<RootStackParams["index"]>();
   const { pageSize = 24, uniqueQueryKey, queryParams, firstPageSize, backend: backendFromArg } = queryArg;
@@ -90,7 +90,7 @@ export const useInfiniteVideosQuery = (
       // IMPORTANT: Only use start and count parameters!
       // Adding filters like categoryOneOf, sort, etc. triggers 401 errors
       // When filtering client-side, we need to fetch more videos to ensure we get all category videos
-      const fetchCount = queryParams?.categoryOneOf ? 250 : (pageParam === 0 ? _0PageSize : pageSize);
+      const fetchCount = queryParams?.categoryOneOf ? 250 : pageParam === 0 ? _0PageSize : pageSize;
       const result = await ApiServiceImpl.getVideos(backend!, {
         count: fetchCount,
         start: pageParam,
@@ -99,8 +99,8 @@ export const useInfiniteVideosQuery = (
       // Filter client-side if categoryOneOf is specified
       let filteredData = result.data;
       if (queryParams?.categoryOneOf && queryParams.categoryOneOf.length > 0) {
-        filteredData = result.data.filter(video =>
-          video.category?.id !== null && queryParams.categoryOneOf!.includes(video.category.id)
+        filteredData = result.data.filter(
+          (video) => video.category?.id !== null && queryParams.categoryOneOf!.includes(video.category.id)
         );
       }
 

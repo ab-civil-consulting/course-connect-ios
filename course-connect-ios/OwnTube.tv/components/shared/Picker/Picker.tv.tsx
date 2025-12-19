@@ -50,13 +50,13 @@ const Picker = (props: PickerSelectProps) => {
         </Pressable>
       );
     },
-    [props],
+    [props]
   );
 
   const animatedFlatListStyle = useAnimatedStyle(() => ({
     left: withTiming(isExpandedSV.value ? -containerWidth : containerWidth),
     height: withTiming(
-      isExpandedSV.value ? ITEM_HEIGHT * (props.items.length > 3 ? 3.5 : props.items.length) : ITEM_HEIGHT,
+      isExpandedSV.value ? ITEM_HEIGHT * (props.items.length > 3 ? 3.5 : props.items.length) : ITEM_HEIGHT
     ),
   }));
 

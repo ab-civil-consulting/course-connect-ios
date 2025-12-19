@@ -46,7 +46,10 @@ const useDownloadVideo = () => {
         value: file.fileDownloadUrl,
       }));
       if (__DEV__) {
-        console.log("⚠️ [MOBILE/NATIVE] WARNING: Using streaming playlist files (may not download correctly):", options);
+        console.log(
+          "⚠️ [MOBILE/NATIVE] WARNING: Using streaming playlist files (may not download correctly):",
+          options
+        );
       }
       return options;
     }
@@ -200,7 +203,7 @@ const useDownloadVideo = () => {
 
       if (session?.accessToken) {
         downloadOptions.headers = {
-          Authorization: `${session.tokenType || 'Bearer'} ${session.accessToken}`,
+          Authorization: `${session.tokenType || "Bearer"} ${session.accessToken}`,
         };
         if (__DEV__) {
           console.log("🔵 [MOBILE/NATIVE] Using Bearer token authentication for download");

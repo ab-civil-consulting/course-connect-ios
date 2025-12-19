@@ -38,7 +38,7 @@ export default function index() {
       TVEventControl.disableTVMenuKey();
 
       return () => TVEventControl.enableTVMenuKey();
-    }, []),
+    }, [])
   );
 
   if (isGettingStoredBackend) {

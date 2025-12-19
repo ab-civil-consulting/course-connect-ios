@@ -63,7 +63,7 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
    */
   async getVideos(
     baseURL: string,
-    queryParams?: VideosCommonQuery,
+    queryParams?: VideosCommonQuery
   ): Promise<{ data: GetVideosVideo[]; total: number }> {
     let rawVideos: Required<Video>[] = [];
     let total: number = 0;
@@ -204,7 +204,7 @@ export class PeertubeVideosApi extends AxiosInstanceBasedApi {
         {},
         {
           baseURL: `https://${baseURL}/api/v1`,
-        },
+        }
       );
 
       return response.data;

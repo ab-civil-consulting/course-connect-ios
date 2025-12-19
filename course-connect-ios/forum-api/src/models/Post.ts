@@ -1,18 +1,15 @@
-import { query } from '../database/connection';
-import { ForumPost, CreatePostInput, ForumPaginationParams } from '../types/forum';
-import { v4 as uuidv4 } from 'uuid';
+import { query } from "../database/connection";
+import { ForumPost, CreatePostInput, ForumPaginationParams } from "../types/forum";
+import { v4 as uuidv4 } from "uuid";
 
 export class PostModel {
   static async findByThreadId(
     threadId: string,
-    params: ForumPaginationParams = {}
+    params: ForumPaginationParams = {},
   ): Promise<{ posts: ForumPost[]; total: number }> {
     const { start = 0, count = 20 } = params;
 
-    const countResult = await query(
-      'SELECT COUNT(*) FROM forum_posts WHERE thread_id = $1',
-      [threadId]
-    );
+    const countResult = await query("SELECT COUNT(*) FROM forum_posts WHERE thread_id = $1", [threadId]);
 
     const result = await query(
       `SELECT
@@ -35,10 +32,10 @@ export class PostModel {
       WHERE p.thread_id = $1
       ORDER BY p.created_at ASC
       LIMIT $2 OFFSET $3`,
-      [threadId, count, start]
+      [threadId, count, start],
     );
 
-    const posts: ForumPost[] = result.rows.map(row => ({
+    const posts: ForumPost[] = result.rows.map((row) => ({
       id: row.id,
       threadId: row.threadId,
       content: row.content,
@@ -69,14 +66,11 @@ export class PostModel {
     await query(
       `INSERT INTO forum_posts (id, thread_id, content, author_id, reply_to_id)
        VALUES ($1, $2, $3, $4, $5)`,
-      [id, input.threadId, input.content, authorId, input.replyToId]
+      [id, input.threadId, input.content, authorId, input.replyToId],
     );
 
     // Update thread's updated_at timestamp
-    await query(
-      'UPDATE forum_threads SET updated_at = CURRENT_TIMESTAMP WHERE id = $1',
-      [input.threadId]
-    );
+    await query("UPDATE forum_threads SET updated_at = CURRENT_TIMESTAMP WHERE id = $1", [input.threadId]);
 
     const result = await query(
       `SELECT
@@ -97,7 +91,7 @@ export class PostModel {
       FROM forum_posts p
       JOIN forum_users u ON p.author_id = u.id
       WHERE p.id = $1`,
-      [id]
+      [id],
     );
 
     const row = result.rows[0];

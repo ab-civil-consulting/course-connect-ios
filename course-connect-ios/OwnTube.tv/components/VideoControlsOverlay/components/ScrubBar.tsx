@@ -72,7 +72,7 @@ export const ScrubBar = ({
         Platform.isTV
           ? gestureStartPosition.current +
               (translationY < SCRUBBING_Y_TRESHOLD ? 0 : translationX * SCRUBBING_X_SENSITIVITY)
-          : x,
+          : x
       );
       setIsDragging(false);
       gestureStartPosition.current = 0;

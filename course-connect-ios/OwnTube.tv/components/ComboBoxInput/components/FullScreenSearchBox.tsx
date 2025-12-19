@@ -34,7 +34,7 @@ export const FullScreenSearchBox: FC<FullScreenSearchBoxProps> = ({
 
   const { inputValue, setInputValue, filteredList } = useFilteredDropdown(
     { data, onChange, allowCustomOptions, getCustomOptionText },
-    listRef,
+    listRef
   );
 
   const renderItem = useCallback(
@@ -48,7 +48,7 @@ export const FullScreenSearchBox: FC<FullScreenSearchBoxProps> = ({
         value={inputValue}
       />
     ),
-    [inputValue, onChange, handleClose, onChange],
+    [inputValue, onChange, handleClose, onChange]
   );
 
   return (

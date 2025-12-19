@@ -10,7 +10,7 @@ const useLeaveInstancePermission = ({ state }: DrawerContentComponentProps) => {
   useEffect(() => {
     if (!backend) return;
     const isOpeningFromLandingPage = state.history.some(
-      (entry) => "key" in entry && entry.key.includes("(home)/index"),
+      (entry) => "key" in entry && entry.key.includes("(home)/index")
     );
 
     const entrypoints = JSON.parse(window?.sessionStorage?.getItem(STORAGE.INSTANCE_ENTRYPOINTS) || "{}");
@@ -20,7 +20,7 @@ const useLeaveInstancePermission = ({ state }: DrawerContentComponentProps) => {
     } else {
       window.sessionStorage.setItem(
         STORAGE.INSTANCE_ENTRYPOINTS,
-        JSON.stringify({ ...entrypoints, [backend]: isOpeningFromLandingPage ? "landing" : "other" }),
+        JSON.stringify({ ...entrypoints, [backend]: isOpeningFromLandingPage ? "landing" : "other" })
       );
 
       setIsLeaveInstanceAllowed(isOpeningFromLandingPage);

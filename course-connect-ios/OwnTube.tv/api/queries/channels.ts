@@ -49,7 +49,7 @@ export const useGetChannelVideosQuery = (channelHandle?: string, queryParams: Vi
 };
 
 export const useInfiniteGetChannelVideosQuery = (
-  queryArgs: Partial<{ channelHandle: string; category: number; pageSize: number; uniqueQueryKey: string }>,
+  queryArgs: Partial<{ channelHandle: string; category: number; pageSize: number; uniqueQueryKey: string }>
 ) => {
   const { backend } = useLocalSearchParams<RootStackParams["index"]>();
   const { channelHandle, category, pageSize = 24, uniqueQueryKey } = queryArgs;

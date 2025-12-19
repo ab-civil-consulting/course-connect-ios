@@ -1,6 +1,6 @@
-import { query } from '../database/connection';
-import { ForumCategory, CreateCategoryInput, UpdateCategoryInput } from '../types/forum';
-import { v4 as uuidv4 } from 'uuid';
+import { query } from "../database/connection";
+import { ForumCategory, CreateCategoryInput, UpdateCategoryInput } from "../types/forum";
+import { v4 as uuidv4 } from "uuid";
 
 export class CategoryModel {
   static async findAll(): Promise<ForumCategory[]> {
@@ -37,7 +37,7 @@ export class CategoryModel {
         WHERE t.category_id = $1
         ORDER BY p.created_at DESC
         LIMIT 1`,
-        [row.id]
+        [row.id],
       );
 
       categories.push({
@@ -48,12 +48,14 @@ export class CategoryModel {
         icon: row.icon,
         threadCount: parseInt(row.thread_count),
         postCount: parseInt(row.post_count),
-        lastPost: lastPostResult.rows[0] ? {
-          id: lastPostResult.rows[0].id,
-          title: lastPostResult.rows[0].title,
-          authorName: lastPostResult.rows[0].authorName,
-          createdAt: lastPostResult.rows[0].createdAt,
-        } : undefined,
+        lastPost: lastPostResult.rows[0]
+          ? {
+              id: lastPostResult.rows[0].id,
+              title: lastPostResult.rows[0].title,
+              authorName: lastPostResult.rows[0].authorName,
+              createdAt: lastPostResult.rows[0].createdAt,
+            }
+          : undefined,
         order: row.order,
         isLocked: row.isLocked,
       });
@@ -79,7 +81,7 @@ export class CategoryModel {
       LEFT JOIN forum_posts p ON t.id = p.thread_id
       WHERE c.id = $1
       GROUP BY c.id`,
-      [id]
+      [id],
     );
 
     if (result.rows.length === 0) return null;
@@ -103,7 +105,7 @@ export class CategoryModel {
     await query(
       `INSERT INTO forum_categories (id, name, description, slug, icon, "order", is_locked)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [id, input.name, input.description, input.slug, input.icon, input.order || 999, false]
+      [id, input.name, input.description, input.slug, input.icon, input.order || 999, false],
     );
 
     return {
@@ -156,16 +158,13 @@ export class CategoryModel {
     updates.push(`updated_at = CURRENT_TIMESTAMP`);
     values.push(id);
 
-    await query(
-      `UPDATE forum_categories SET ${updates.join(', ')} WHERE id = $${paramIndex}`,
-      values
-    );
+    await query(`UPDATE forum_categories SET ${updates.join(", ")} WHERE id = $${paramIndex}`, values);
 
     return this.findById(id);
   }
 
   static async delete(id: string): Promise<boolean> {
-    const result = await query('DELETE FROM forum_categories WHERE id = $1', [id]);
+    const result = await query("DELETE FROM forum_categories WHERE id = $1", [id]);
     return (result.rowCount || 0) > 0;
   }
 }

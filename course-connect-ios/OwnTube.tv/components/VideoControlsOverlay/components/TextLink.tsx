@@ -43,7 +43,7 @@ export const TextLink = forwardRef<View, TextLinkProps & PressableProps>(
         />
       </Pressable>
     );
-  },
+  }
 );
 
 const styles = StyleSheet.create({

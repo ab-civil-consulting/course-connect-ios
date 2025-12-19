@@ -263,11 +263,7 @@ export const SignUp = () => {
                       accessibilityLabel={showPassword ? "Hide password" : "Show password"}
                       accessibilityRole="button"
                     >
-                      <Feather
-                        name={showPassword ? "eye-off" : "eye"}
-                        size={20}
-                        color={colors.themeDesaturated500}
-                      />
+                      <Feather name={showPassword ? "eye-off" : "eye"} size={20} color={colors.themeDesaturated500} />
                     </Pressable>
                   }
                 />
@@ -304,11 +300,7 @@ export const SignUp = () => {
                       accessibilityLabel={showPassword ? "Hide password" : "Show password"}
                       accessibilityRole="button"
                     >
-                      <Feather
-                        name={showPassword ? "eye-off" : "eye"}
-                        size={20}
-                        color={colors.themeDesaturated500}
-                      />
+                      <Feather name={showPassword ? "eye-off" : "eye"} size={20} color={colors.themeDesaturated500} />
                     </Pressable>
                   }
                 />
@@ -346,9 +338,7 @@ export const SignUp = () => {
               {t("alreadyHaveAccount")}
             </Typography>
             <Spacer height={spacing.xs} />
-            <Pressable
-              onPress={navigateToSignIn}
-            >
+            <Pressable onPress={navigateToSignIn}>
               <Typography
                 style={[{ color: colors.theme500 }, styles.textAlignCenter]}
                 fontSize="sizeXS"

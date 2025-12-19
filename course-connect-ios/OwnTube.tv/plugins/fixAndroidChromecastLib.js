@@ -38,7 +38,7 @@ function withCustomGradleProperties(config) {
       config.modResults.push({
         type: "property",
         key: "kotlin.daemon.jvmargs",
-        value: "-Xmx2g -XX:MaxMetaspaceSize=512m"
+        value: "-Xmx2g -XX:MaxMetaspaceSize=512m",
       });
     }
 
@@ -48,7 +48,7 @@ function withCustomGradleProperties(config) {
       config.modResults.push({
         type: "property",
         key: "kotlin.incremental",
-        value: "true"
+        value: "true",
       });
     }
 

@@ -35,7 +35,7 @@ export const useGetCategoriesCollectionQuery = (categories: Array<{ name: string
           });
 
           // Filter videos by category on the client side
-          const filteredVideos = res.data.filter(video => video.category?.id === id);
+          const filteredVideos = res.data.filter((video) => video.category?.id === id);
 
           // Sort by publishedAt (newest first) and take only 4 videos
           const sortedVideos = filteredVideos
@@ -50,7 +50,7 @@ export const useGetCategoriesCollectionQuery = (categories: Array<{ name: string
             data: sortedVideos,
             total: filteredVideos.length,
             name,
-            id
+            id,
           };
         } catch (error) {
           if ((error as unknown as ApiError).status === 429) {
@@ -65,4 +65,3 @@ export const useGetCategoriesCollectionQuery = (categories: Array<{ name: string
     combine: (result) => combineCollectionQueryResults<{ name: string; id: number }>(result as any),
   });
 };
-

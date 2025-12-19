@@ -224,12 +224,12 @@ const VideoView = ({
   };
 
   const handlePlayerError = ({ error }: OnVideoErrorData) => {
-    console.error('[VideoView] === VIDEO PLAYER ERROR ===');
-    console.error('[VideoView] Error code:', error.errorCode);
-    console.error('[VideoView] Error description:', error.localizedDescription);
-    console.error('[VideoView] Error domain:', error.domain);
-    console.error('[VideoView] Full error object:', JSON.stringify(error, null, 2));
-    console.error('[VideoView] Video URI:', uri?.substring(0, 150));
+    console.error("[VideoView] === VIDEO PLAYER ERROR ===");
+    console.error("[VideoView] Error code:", error.errorCode);
+    console.error("[VideoView] Error description:", error.localizedDescription);
+    console.error("[VideoView] Error domain:", error.domain);
+    console.error("[VideoView] Full error object:", JSON.stringify(error, null, 2));
+    console.error("[VideoView] Video URI:", uri?.substring(0, 150));
 
     captureError(error, CustomPostHogExceptions.VideoPlayerError);
 
@@ -239,23 +239,24 @@ const VideoView = ({
 
     // ExoPlayer/react-native-video error codes
     // 22004 is typically a source loading error (invalid format or missing file)
-    if (errorCode === '22004') {
-      errorMessage = 'Video format error (22004). The video file may be missing or incompatible. Check server configuration.';
-      console.error('[VideoView] ERROR 22004: This typically means:');
-      console.error('[VideoView] - Video file not found (404)');
-      console.error('[VideoView] - Invalid video format or codec');
-      console.error('[VideoView] - Missing video file on server');
-      console.error('[VideoView] → SOLUTION: Check PeerTube video transcoding and storage settings');
-    } else if (errorCode === '2004') {
-      errorMessage = 'Failed to load video source. The video may not exist on the server.';
-    } else if (errorCode === '2002') {
-      errorMessage = 'Network error loading video. Check your internet connection.';
-    } else if (errorMessage.includes('404') || errorMessage.includes('not found')) {
-      errorMessage = 'Video not found (404). The server is missing video files. Contact your administrator.';
-    } else if (errorMessage.includes('403') || errorMessage.includes('forbidden')) {
-      errorMessage = 'Access denied (403). You may not have permission to view this video.';
-    } else if (errorMessage.includes('network') || errorMessage.includes('connection')) {
-      errorMessage = 'Network error. Please check your internet connection.';
+    if (errorCode === "22004") {
+      errorMessage =
+        "Video format error (22004). The video file may be missing or incompatible. Check server configuration.";
+      console.error("[VideoView] ERROR 22004: This typically means:");
+      console.error("[VideoView] - Video file not found (404)");
+      console.error("[VideoView] - Invalid video format or codec");
+      console.error("[VideoView] - Missing video file on server");
+      console.error("[VideoView] → SOLUTION: Check PeerTube video transcoding and storage settings");
+    } else if (errorCode === "2004") {
+      errorMessage = "Failed to load video source. The video may not exist on the server.";
+    } else if (errorCode === "2002") {
+      errorMessage = "Network error loading video. Check your internet connection.";
+    } else if (errorMessage.includes("404") || errorMessage.includes("not found")) {
+      errorMessage = "Video not found (404). The server is missing video files. Contact your administrator.";
+    } else if (errorMessage.includes("403") || errorMessage.includes("forbidden")) {
+      errorMessage = "Access denied (403). You may not have permission to view this video.";
+    } else if (errorMessage.includes("network") || errorMessage.includes("connection")) {
+      errorMessage = "Network error. Please check your internet connection.";
     }
 
     Toast.show({
@@ -308,16 +309,16 @@ const VideoView = ({
     if (!uri) return null;
 
     // Determine video type based on URL
-    const isHLS = uri.includes('.m3u8') || uri.includes('streaming-playlists/hls');
-    const isMP4 = uri.includes('.mp4') || uri.includes('/download/videos/');
-    const isWebM = uri.includes('.webm');
+    const isHLS = uri.includes(".m3u8") || uri.includes("streaming-playlists/hls");
+    const isMP4 = uri.includes(".mp4") || uri.includes("/download/videos/");
+    const isWebM = uri.includes(".webm");
 
     if (__DEV__) {
-      console.log('[VideoView] Creating video source:', {
+      console.log("[VideoView] Creating video source:", {
         isHLS,
         isMP4,
         isWebM,
-        uri: uri.substring(0, 100) + '...',
+        uri: uri.substring(0, 100) + "...",
       });
     }
 
@@ -336,29 +337,29 @@ const VideoView = ({
 
     // Set appropriate content type for ExoPlayer
     if (isHLS) {
-      sourceConfig.type = 'application/x-mpegurl';
+      sourceConfig.type = "application/x-mpegurl";
       if (__DEV__) {
-        console.log('[VideoView] Set content type to HLS');
+        console.log("[VideoView] Set content type to HLS");
       }
     } else if (isMP4) {
-      sourceConfig.type = 'video/mp4';
+      sourceConfig.type = "video/mp4";
       if (__DEV__) {
-        console.log('[VideoView] Set content type to MP4');
+        console.log("[VideoView] Set content type to MP4");
       }
     } else if (isWebM) {
-      sourceConfig.type = 'video/webm';
+      sourceConfig.type = "video/webm";
       if (__DEV__) {
-        console.log('[VideoView] Set content type to WebM');
+        console.log("[VideoView] Set content type to WebM");
       }
     }
 
     // Add authentication token to headers if available
     if (videoToken) {
       sourceConfig.headers = {
-        'X-Video-File-Token': videoToken,
+        "X-Video-File-Token": videoToken,
       };
       if (__DEV__) {
-        console.log('[VideoView] Added token to source headers');
+        console.log("[VideoView] Added token to source headers");
       }
     }
 
@@ -427,7 +428,7 @@ const VideoView = ({
         const sessionManager = GoogleCast?.getSessionManager();
         sessionManager?.endCurrentSession(true);
       };
-    }, []),
+    }, [])
   );
 
   const handleTextTracks = (e: OnTextTracksData) => {
@@ -438,7 +439,7 @@ const VideoView = ({
         }
 
         return acc;
-      }, [] as string[]),
+      }, [] as string[])
     );
   };
 
@@ -478,7 +479,7 @@ const VideoView = ({
       if (isCCAvailable && sessionCCLocale && availableCCLangs.includes(sessionCCLocale)) {
         handleSetCCLang(sessionCCLocale);
       }
-    }, [isCCAvailable, sessionCCLocale]),
+    }, [isCCAvailable, sessionCCLocale])
   );
 
   const [hlsResolution, setHlsResolution] = useState<number | undefined>();
@@ -613,7 +614,7 @@ const VideoView = ({
             onExternalPlaybackChange={(e) => {
               setCastState(e.isExternalPlaybackActive ? "airPlay" : undefined);
               captureDiagnosticsEvent(
-                e.isExternalPlaybackActive ? CustomPostHogEvents.AirPlayStarted : CustomPostHogEvents.AirPlayStopped,
+                e.isExternalPlaybackActive ? CustomPostHogEvents.AirPlayStarted : CustomPostHogEvents.AirPlayStopped
               );
             }}
             onTextTracks={handleTextTracks}

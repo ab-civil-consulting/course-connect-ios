@@ -51,7 +51,11 @@ export const AppConfigContextProvider = ({ children }: PropsWithChildren) => {
   const { t } = useTranslation();
   const [isDebugMode, setIsDebugMode] = useState(false);
   const { deviceCapabilities } = useDeviceCapabilities();
-  const { featuredInstances, isLoading: _isFeaturedInstancesLoading, error: featuredInstancesError } = useFeaturedInstancesData();
+  const {
+    featuredInstances,
+    isLoading: _isFeaturedInstancesLoading,
+    error: featuredInstancesError,
+  } = useFeaturedInstancesData();
   const { isConnected } = useNetInfo();
   const pathname = usePathname();
   const lastRecordedConnectionState = useRef<boolean | undefined | null>();
@@ -127,17 +131,14 @@ export const AppConfigContextProvider = ({ children }: PropsWithChildren) => {
   }, [isDebugMode]);
 
   // Auth routes that should render even without featured instances
-  const isAuthRoute = pathname && [
-    ROUTES.SIGNIN,
-    ROUTES.SIGNUP,
-    ROUTES.OTP,
-    ROUTES.PASSWORD_RESET,
-  ].some(route => pathname.includes(route));
+  const isAuthRoute =
+    pathname &&
+    [ROUTES.SIGNIN, ROUTES.SIGNUP, ROUTES.OTP, ROUTES.PASSWORD_RESET].some((route) => pathname.includes(route));
 
   // Log errors for debugging
   useEffect(() => {
     if (featuredInstancesError) {
-      console.error('[AppConfigContext] Featured instances failed to load:', featuredInstancesError);
+      console.error("[AppConfigContext] Featured instances failed to load:", featuredInstancesError);
     }
   }, [featuredInstancesError]);
 

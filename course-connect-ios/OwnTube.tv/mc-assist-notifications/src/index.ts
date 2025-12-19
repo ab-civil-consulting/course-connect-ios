@@ -28,8 +28,8 @@ app.get("/", (req, res) => {
     endpoints: {
       health: "/health",
       devices: "/api/devices",
-      admin: "/api/admin"
-    }
+      admin: "/api/admin",
+    },
   });
 });
 

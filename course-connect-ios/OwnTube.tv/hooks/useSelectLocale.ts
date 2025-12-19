@@ -32,7 +32,7 @@ export const useSelectLocale = () => {
 
   const handleResetLang = async () => {
     await i18n.changeLanguage(
-      process.env.EXPO_PUBLIC_LANGUAGE_OVERRIDE || deviceLocales[0].languageCode || FALLBACK_LANG,
+      process.env.EXPO_PUBLIC_LANGUAGE_OVERRIDE || deviceLocales[0].languageCode || FALLBACK_LANG
     );
     await writeToAsyncStorage(STORAGE.LOCALE, "");
     queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });

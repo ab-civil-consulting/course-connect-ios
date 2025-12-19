@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -21,7 +21,9 @@
        * Extend the react-native-web reset:
        * https://github.com/necolas/react-native-web/blob/master/packages/react-native-web/src/exports/StyleSheet/initialRules.js
        */
-      html, body, #root {
+      html,
+      body,
+      #root {
         width: 100%;
         /* To smooth any scrolling behavior */
         -webkit-overflow-scrolling: touch;
@@ -65,25 +67,9 @@
     <noscript>
       <form
         action=""
-        style="
-          background-color: #fff;
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 9999;
-        "
+        style="background-color: #fff; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999"
       >
-        <div
-          style="
-            font-size: 18px;
-            font-family: Helvetica, sans-serif;
-            line-height: 24px;
-            margin: 10%;
-            width: 80%;
-          "
-        >
+        <div style="font-size: 18px; font-family: Helvetica, sans-serif; line-height: 24px; margin: 10%; width: 80%">
           <p>Oh no! It looks like JavaScript is not enabled in your browser.</p>
           <p style="margin: 20px 0">
             <button
