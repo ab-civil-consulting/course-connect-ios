@@ -42,21 +42,21 @@ jobs:
           node-version: 20.x
 
       - name: Install Dependencies
-        run: cd course-connect-ios/course-connect-ios/OwnTube.tv/ && npm install
+        run: cd course-connect-ios/OwnTube.tv/ && npm install
 
       - name: Create .env File
         if: ${{ inputs.customizations_env_content != '' }}
         run: |
-          echo "${{ inputs.customizations_env_content }}" > ./course-connect-ios/course-connect-ios/OwnTube.tv/.env
+          echo "${{ inputs.customizations_env_content }}" > ./course-connect-ios/OwnTube.tv/.env
 
       - name: Overwrite Manifest file for PWA customization
         if: ${{ inputs.customizations_env_content != '' }}
         run: |
           # Source the environment variables
-          source ./course-connect-ios/course-connect-ios/OwnTube.tv/.env
+          source ./course-connect-ios/OwnTube.tv/.env
 
           # Write the manifest file
-          cat > ./course-connect-ios/course-connect-ios/OwnTube.tv/public/manifest.json << EOF
+          cat > ./course-connect-ios/OwnTube.tv/public/manifest.json << EOF
           {
             "short_name": "${EXPO_PUBLIC_APP_NAME:-OwnTube.tv}",
             "name": "${EXPO_PUBLIC_APP_NAME:-OwnTube.tv}",
@@ -103,9 +103,9 @@ jobs:
 
       - name: Create association files for deeplinking
         run: |
-          mkdir -p ./course-connect-ios/course-connect-ios/OwnTube.tv/public/.well-known
+          mkdir -p ./course-connect-ios/OwnTube.tv/public/.well-known
 
-          cat > ./course-connect-ios/course-connect-ios/OwnTube.tv/public/.well-known/apple-app-site-association << 'EOF'
+          cat > ./course-connect-ios/OwnTube.tv/public/.well-known/apple-app-site-association << 'EOF'
           {
             "applinks": {
               "details": [
@@ -118,7 +118,7 @@ jobs:
           }
           EOF
 
-          cat > ./course-connect-ios/course-connect-ios/OwnTube.tv/public/.well-known/assetlinks.json << 'EOF'
+          cat > ./course-connect-ios/OwnTube.tv/public/.well-known/assetlinks.json << 'EOF'
           [
             {
               "relation": ["delegate_permission/common.handle_all_urls"],
@@ -135,12 +135,12 @@ jobs:
 
       - name: Inject Build Info
         run: |
-          cat > ./course-connect-ios/course-connect-ios/OwnTube.tv/build-info.json << 'EOF'
+          cat > ./course-connect-ios/OwnTube.tv/build-info.json << 'EOF'
           ${{ inputs.build_info }}
           EOF
 
       - name: Build Web App by @${{ github.actor }}
-        run: cd course-connect-ios/course-connect-ios/OwnTube.tv/ && cat build-info.json && npx expo export --platform web
+        run: cd course-connect-ios/OwnTube.tv/ && cat build-info.json && npx expo export --platform web
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -148,7 +148,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./course-connect-ios/course-connect-ios/OwnTube.tv/dist/"
+          path: "./course-connect-ios/OwnTube.tv/dist/"
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -75,7 +75,7 @@ jobs:
           node-version: 20.x
 
       - name: Install Dependencies
-        run: cd course-connect-ios/course-connect-ios/OwnTube.tv/ && npm install
+        run: cd course-connect-ios/OwnTube.tv/ && npm install
 
       - name: Create .env File
         id: create_env
@@ -83,8 +83,8 @@ jobs:
         run: |
           echo "BUNDLE_ID=$(echo "${{ inputs.customizations_env_content }}" | grep '^EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER=' | cut -d'=' -f2)" >> $GITHUB_OUTPUT
           echo "APP_NAME=$(echo "${{ inputs.customizations_env_content }}" | grep '^EXPO_PUBLIC_APP_NAME=' | cut -d'=' -f2 | sed "s/['\"]//g")" >> $GITHUB_OUTPUT
-          echo "${{ inputs.customizations_env_content }}" > ./course-connect-ios/course-connect-ios/OwnTube.tv/.env
-          echo "EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL=ab-civil-consulting.github.io/course-connect-ios" >> ./course-connect-ios/course-connect-ios/OwnTube.tv/.env
+          echo "${{ inputs.customizations_env_content }}" > ./course-connect-ios/OwnTube.tv/.env
+          echo "EXPO_PUBLIC_CUSTOM_DEPLOYMENT_URL=ab-civil-consulting.github.io/course-connect-ios" >> ./course-connect-ios/OwnTube.tv/.env
 
       - name: Expo Prebuild assets
         run: |
@@ -92,11 +92,11 @@ jobs:
             export EXPO_TV=1
           fi
           export LC_CTYPE=UTF-8
-          cd course-connect-ios/course-connect-ios/OwnTube.tv/ && npx expo prebuild --clean --platform ios
+          cd course-connect-ios/OwnTube.tv/ && npx expo prebuild --clean --platform ios
 
       - name: Inject Build Info
         run: |
-          cat > ./course-connect-ios/course-connect-ios/OwnTube.tv/build-info.json << 'EOF'
+          cat > ./course-connect-ios/OwnTube.tv/build-info.json << 'EOF'
           ${{ inputs.build_info }}
           EOF
 
@@ -143,7 +143,7 @@ jobs:
           if [ "${{ inputs.target }}" == "appletvos" ]; then
             export EXPO_TV=1
           fi
-          cd course-connect-ios/course-connect-ios/OwnTube.tv/ios/
+          cd course-connect-ios/OwnTube.tv/ios/
           WORKSPACE_FILE=$(find . -maxdepth 1 -name "*.xcworkspace")
           SCHEME=$(xcodebuild -list | sed -n '/Schemes:/,$p' | tail -n +2 | head -n 1 | xargs)
 
@@ -173,7 +173,7 @@ jobs:
           APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_DEVELOPMENT_TEAM }}
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
         run: |
-          cd course-connect-ios/course-connect-ios/OwnTube.tv/ios
+          cd course-connect-ios/OwnTube.tv/ios
           echo "<?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -217,7 +217,7 @@ jobs:
         run: |
           IPA_NAME="${{ steps.create_env.outputs.APP_NAME }}"
           IPA_NAME="${IPA_NAME// /}"
-          cd course-connect-ios/course-connect-ios/OwnTube.tv/ios
+          cd course-connect-ios/OwnTube.tv/ios
           xcrun altool --upload-app \
           --type ${{ inputs.target }} \
           --file build/OwnTube/$IPA_NAME.ipa \

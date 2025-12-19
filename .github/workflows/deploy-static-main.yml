@@ -151,13 +151,13 @@ jobs:
         with:
           node-version: 20.x
       - name: Install Dependencies
-        run: cd course-connect-ios/course-connect-ios/OwnTube.tv/ && npm install
+        run: cd course-connect-ios/OwnTube.tv/ && npm install
       - name: Check ESLint Code Style
-        run: cd course-connect-ios/course-connect-ios/OwnTube.tv/ && npx eslint .
+        run: cd course-connect-ios/OwnTube.tv/ && npx eslint .
       - name: Check Prettier Formatting
-        run: cd course-connect-ios/course-connect-ios/OwnTube.tv/ && npx prettier --check ../
+        run: cd course-connect-ios/OwnTube.tv/ && npx prettier --check ../
       - name: Run Tests
-        run: cd course-connect-ios/course-connect-ios/OwnTube.tv/ && npm run test
+        run: cd course-connect-ios/OwnTube.tv/ && npm run test
 
   deploy_web:
     needs: [code_quality, build_info, customizations_setup]
