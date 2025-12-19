@@ -1,9 +1,0 @@
-{
-  "name": "peertube-plugin-email-as-username",
-  "version": "1.0.0",
-  "description": "A plugin to use the email as the username and hide the username field during registration.",
-  "engine": {
-    "peertube": ">=6.0.0"
-  },
-  "main": "main.js"
-}
