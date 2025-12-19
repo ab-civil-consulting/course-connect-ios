@@ -60,7 +60,6 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
 
   // Validate and construct thumbnail URL
   let imageUrl: string | null = null;
-  let urlValidationError: string | null = null;
 
   if (thumbnailPath && backend) {
     // Check if thumbnailPath is already a full URL
@@ -77,7 +76,7 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
     try {
       new URL(imageUrl);
     } catch (e) {
-      urlValidationError = `Invalid URL: ${imageUrl}`;
+      const _urlValidationError = `Invalid URL: ${imageUrl}`;
       imageUrl = null;
       console.error('[VideoThumbnail] URL validation failed:', { imageUrl, error: e });
     }
@@ -122,7 +121,7 @@ export const VideoThumbnail: FC<VideoThumbnailProps> = ({ video, backend: backen
             height: imageDimensions.height,
           }
         ]}
-        onError={(error) => {
+        onError={(_error) => {
           // Retry logic: retry up to 2 times with exponential backoff
           if (retryCount < 2 && imageSource !== fallback) {
             const retryDelay = Math.pow(2, retryCount) * 1000; // 1s, 2s

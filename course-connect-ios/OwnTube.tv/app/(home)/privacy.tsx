@@ -83,13 +83,13 @@ export default function privacy() {
         </Typography>
         <Typography>
           <Typography fontWeight="Bold">PeerTube:</Typography> Your email and username are shared with the PeerTube instance
-          where your account is created. Your watch history on that instance is governed by the PeerTube instance's privacy
+          where your account is created. Your watch history on that instance is governed by the PeerTube instance&apos;s privacy
           policy.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography>
           <Typography fontWeight="Bold">PostHog Analytics:</Typography> Analytics data (playback events, device information)
-          is sent to PostHog for analysis. Review PostHog's privacy policy for details on how they handle this data.
+          is sent to PostHog for analysis. Review PostHog&apos;s privacy policy for details on how they handle this data.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography>
@@ -114,7 +114,7 @@ export default function privacy() {
         <Typography>
           Watch history and preferences are stored locally on your device. Protect your device with strong authentication
           (passcode or biometric). Keep your device and apps updated. Data sent to PeerTube and PostHog is protected by
-          those services' security measures.
+          those services&apos; security measures.
         </Typography>
         <Typography>{"\n"}</Typography>
         <Typography fontWeight="Bold">Changes</Typography>

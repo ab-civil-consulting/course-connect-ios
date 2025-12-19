@@ -8,7 +8,7 @@ import { useCustomFocusManager, usePageContentTopPadding } from "../../hooks";
 import { useTranslation } from "react-i18next";
 import { useAppConfigContext } from "../../contexts";
 import { useQueryClient } from "@tanstack/react-query";
-import { Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { IcoMoonIcon } from "../../components/IcoMoonIcon";
 import { Typography } from "../../components/Typography";
 import { useTheme } from "@react-navigation/native";
@@ -43,7 +43,7 @@ export const CategoryScreen = () => {
     return flatVideos;
   }, [data, hasNextPage, isLoading, isFetchingNextPage, isError, error]);
 
-  const refetchPageData = async () => {
+  const _refetchPageData = async () => {
     await queryClient.refetchQueries({ queryKey: [QUERY_KEYS.videos], type: "active" });
   };
 
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   errorContainer: { alignItems: "center", flex: 1, height: "100%", justifyContent: "center", width: "100%" },
   header: {
     alignItems: "center",
-    borderBottomColor: "rgba(128, 128, 128, 0.2)",
+    borderBottomColor: "rgba(128, 128, 128, 0.2)" as const,
     borderBottomWidth: 1,
     flexDirection: "row",
     paddingHorizontal: spacing.md,

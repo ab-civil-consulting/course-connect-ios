@@ -52,7 +52,7 @@ export default function terms() {
         <Typography fontWeight="Bold">1. Welcome</Typography>
         <Typography>
           Welcome to Course Connect! These Terms of Service apply to all users of the Course Connect mobile application
-          ("Course Connect" or the "App"), owned and operated by {process.env.EXPO_PUBLIC_PROVIDER_LEGAL_ENTITY || "AB Civil Consulting LLC"} ("AB Civil," "we," "us," or "our").
+          (&quot;Course Connect&quot; or the &quot;App&quot;), owned and operated by {process.env.EXPO_PUBLIC_PROVIDER_LEGAL_ENTITY || "AB Civil Consulting LLC"} (&quot;AB Civil,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;).
           By using the App, you agree to be bound by all of the Terms of Service. IF YOU DO NOT AGREE TO THESE TERMS, DO NOT
           REGISTER FOR OR USE ANY OF THE SERVICES OFFERED OR PROVIDED THROUGH COURSE CONNECT. The Services are provided free of charge.
         </Typography>
@@ -118,7 +118,7 @@ export default function terms() {
 
         <Typography fontWeight="Bold">5. Disclaimer of Warranties</Typography>
         <Typography>
-          YOUR USE OF THE SERVICE IS AT YOUR SOLE RISK. THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS.
+          YOUR USE OF THE SERVICE IS AT YOUR SOLE RISK. THE SERVICE IS PROVIDED ON AN &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; BASIS.
           AB CIVIL EXPRESSLY DISCLAIMS ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING THE
           IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT.
         </Typography>
@@ -127,7 +127,7 @@ export default function terms() {
         <Typography fontWeight="Bold">6. Limitation of Liability</Typography>
         <Typography>
           AB CIVIL WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES. IN NO
-          EVENT WILL AB CIVIL'S TOTAL LIABILITY TO YOU FOR ALL DAMAGES, LOSSES OR CAUSES OF ACTION EXCEED ONE HUNDRED
+          EVENT WILL AB CIVIL&apos;S TOTAL LIABILITY TO YOU FOR ALL DAMAGES, LOSSES OR CAUSES OF ACTION EXCEED ONE HUNDRED
           DOLLARS ($100).
         </Typography>
         <Typography>{"\n"}</Typography>

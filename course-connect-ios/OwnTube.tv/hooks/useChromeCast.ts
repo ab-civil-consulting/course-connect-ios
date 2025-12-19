@@ -23,7 +23,7 @@ export const useChromeCast = ({
 }: UseChromeCastProps) => {
   const [isChromecastConnected, setIsChromecastConnected] = useState(false);
   const [isChromeCastAvailable, setIsChromeCastAvailable] = useState(false);
-  const [isCastInitialized, setIsCastInitialized] = useState(false);
+  const [_isCastInitialized, setIsCastInitialized] = useState(false);
   const isChromecastConnectedRef = useRef(false);
   const { captureDiagnosticsEvent, captureError } = useCustomDiagnosticsEvents();
 

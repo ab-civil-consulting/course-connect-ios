@@ -51,7 +51,7 @@ export const AppConfigContextProvider = ({ children }: PropsWithChildren) => {
   const { t } = useTranslation();
   const [isDebugMode, setIsDebugMode] = useState(false);
   const { deviceCapabilities } = useDeviceCapabilities();
-  const { featuredInstances, isLoading: isFeaturedInstancesLoading, error: featuredInstancesError } = useFeaturedInstancesData();
+  const { featuredInstances, isLoading: _isFeaturedInstancesLoading, error: featuredInstancesError } = useFeaturedInstancesData();
   const { isConnected } = useNetInfo();
   const pathname = usePathname();
   const lastRecordedConnectionState = useRef<boolean | undefined | null>();

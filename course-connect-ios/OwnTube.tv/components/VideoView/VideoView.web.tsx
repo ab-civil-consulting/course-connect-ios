@@ -69,7 +69,7 @@ const VideoView = ({
   const { backend } = useLocalSearchParams<RootStackParams[ROUTES.VIDEO]>();
   const { mutate: postVideoView } = usePostVideoViewMutation();
   const lastReportedTime = useRef<number>(0);
-  const { session } = useAuthSessionStore();
+  const { session: _session } = useAuthSessionStore();
   const [playbackStatus, setPlaybackStatus] = useState<PlaybackStatus>({
     didJustFinish: false,
     isMuted: false,

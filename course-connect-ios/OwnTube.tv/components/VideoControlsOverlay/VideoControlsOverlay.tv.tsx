@@ -13,10 +13,8 @@ import { Typography } from "../Typography";
 import { getHumanReadableDuration } from "../../utils";
 import { borderRadius, colors, spacing } from "../../theme";
 import { ShareButton } from "./components/ShareButton";
-import { TextLink } from "./components/TextLink";
 import { ScrubBar } from "./components/ScrubBar";
 import { LinearGradient } from "expo-linear-gradient";
-import { ROUTES } from "../../types";
 import PlayerButton from "./components/PlayerButton";
 import { VideoControlsOverlayProps } from "./VideoControlsOverlay";
 import { useVideoControlsOverlay } from "./hooks/useVideoControlsOverlay";
@@ -59,8 +57,8 @@ const VideoControlsOverlay = ({
   handleReplay,
   handleJumpTo,
   title,
-  channel,
-  handleOpenDetails,
+  _channel,
+  _handleOpenDetails,
   handleShare,
   handleOpenSettings,
   handleHideOverlay,
@@ -82,7 +80,7 @@ const VideoControlsOverlay = ({
     percentageAvailable,
     percentagePosition,
     centralIconName,
-    t,
+    _t,
     colors,
     router,
     isSettingsMenuVisible,
@@ -97,8 +95,8 @@ const VideoControlsOverlay = ({
   });
 
   const [backRef, setBackRef] = useState<number | undefined>();
-  const [detailsRef, setDetailsRef] = useState<number | undefined>();
-  const [shareBtnRef, setShareBtnRef] = useState<number | undefined>();
+  const [_detailsRef, _setDetailsRef] = useState<number | undefined>();
+  const [_shareBtnRef, setShareBtnRef] = useState<number | undefined>();
   const containerRef = useRef<View | null>(null);
   const settingsRef = useRef<View | null>(null);
 

@@ -10,7 +10,7 @@
     "plugin:react/jsx-runtime",
     "plugin:react-native/all"
   ],
-  "ignorePatterns": ["babel.config.js", "dist/", "scripts/"],
+  "ignorePatterns": ["babel.config.js", "dist/", "scripts/", "metro.config.js"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -23,7 +23,7 @@
     "react/prop-types": "off",
     "react-native/no-inline-styles": "off",
     "@typescript-eslint/no-var-requires": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-non-null-assertion": "warn",
     "@typescript-eslint/prefer-nullish-coalescing": "off",

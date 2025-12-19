@@ -42,7 +42,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
   const { colors } = useTheme();
   const { captureDiagnosticsEvent } = useCustomDiagnosticsEvents();
 
-  const { data: instanceInfo, isLoading: isLoadingInstanceInfo } = useGetInstanceInfoQuery(backend);
+  const { data: _instanceInfo, isLoading: isLoadingInstanceInfo } = useGetInstanceInfoQuery(backend);
   const { data: instanceServerConfig, isLoading: isLoadingInstanceServerConfig } = useGetInstanceServerConfigQuery({
     hostname: backend,
   });
@@ -54,7 +54,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
     reset: resetLoginMutation,
   } = useLoginWithUsernameAndPasswordMutation(backend);
   const { refetch: getUserInfo, isFetching: isGettingUserInfo, isError: isUserInfoError } = useGetMyUserInfoQuery(backend);
-  const { currentInstanceConfig } = useAppConfigContext();
+  const { currentInstanceConfig: _currentInstanceConfig } = useAppConfigContext();
   const { top } = useSafeAreaInsets();
   useCustomFocusManager();
   const { addSession, selectSession, updateSession } = useAuthSessionStore();
@@ -537,8 +537,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   noticeBanner: {
-    backgroundColor: "#fef3c7",
-    borderColor: "#f59e0b",
+    backgroundColor: "#fef3c7" as const,
+    borderColor: "#f59e0b" as const,
     borderRadius: borderRadius.radiusSm,
     borderWidth: 1,
     paddingHorizontal: spacing.sm,

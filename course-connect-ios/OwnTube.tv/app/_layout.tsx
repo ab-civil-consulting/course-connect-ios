@@ -53,7 +53,9 @@ try {
   usePostHog = posthogModule.usePostHog;
 } catch (error) {
   // Create mock provider and hook for Expo Go
-  PostHogProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+  const MockPostHogProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+  MockPostHogProvider.displayName = "MockPostHogProvider";
+  PostHogProvider = MockPostHogProvider;
   usePostHog = () => ({
     capture: () => {},
     screen: () => {},
@@ -277,7 +279,7 @@ const useErrorRecoveryClear = () => {
       if (!hasCleared.current && !__DEV__) {
         hasCleared.current = true;
         try {
-          // @ts-ignore - clearErrorRecoveryCache may not be in types yet
+          // @ts-expect-error - clearErrorRecoveryCache may not be in types yet
           if (Updates.clearErrorRecoveryCache) {
             await Updates.clearErrorRecoveryCache();
             console.log("[ErrorRecovery] Cache cleared successfully");

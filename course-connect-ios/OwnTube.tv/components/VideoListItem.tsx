@@ -1,5 +1,5 @@
 import { VideoThumbnail } from "./VideoThumbnail";
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Typography } from "./Typography";
 import { format } from "date-fns";
 import { useBreakpoints, useHoverState, ViewHistoryEntry } from "../hooks";

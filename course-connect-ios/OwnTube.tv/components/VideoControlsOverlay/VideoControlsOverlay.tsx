@@ -10,10 +10,8 @@ import { ShareButton } from "./components/ShareButton";
 import { ScrubBar } from "./components/ScrubBar";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { SlideInDown, SlideInUp, SlideOutDown, SlideOutUp, FadeIn, FadeOut } from "react-native-reanimated";
-import { ROUTES } from "../../types";
 import PlayerButton from "./components/PlayerButton";
 import { useVideoControlsOverlay } from "./hooks/useVideoControlsOverlay";
-import { ViewOnSiteLink } from "../ViewOnSiteLink";
 import AvRoutePickerButton from "../AvRoutePickerButton/AvRoutePickerButton";
 import { PlaybackSettingsPopup } from "../PlaybackSettingsPopup";
 import GoogleCastButton from "../GoogleCastButton";
@@ -89,15 +87,15 @@ const VideoControlsOverlay = ({
   handleReplay,
   handleJumpTo,
   title,
-  channel,
+  _channel,
   handleVolumeControl,
   volume,
   toggleFullscreen,
   isFullscreen,
-  handleOpenDetails,
+  _handleOpenDetails,
   handleShare,
-  handleOpenSettings,
-  videoLinkProps,
+  _handleOpenSettings,
+  _videoLinkProps,
   handleHideOverlay,
   handleSetSpeed,
   speed,
@@ -142,7 +140,7 @@ const VideoControlsOverlay = ({
   const isMobile = Device.deviceType !== DeviceType.DESKTOP;
   const { currentInstanceConfig } = useAppConfigContext();
 
-  const hideVideoSiteLink =
+  const _hideVideoSiteLink =
     process.env.EXPO_PUBLIC_HIDE_VIDEO_SITE_LINKS || currentInstanceConfig?.customizations?.hideVideoSiteLinks;
 
   const insets = useSafeAreaInsets();

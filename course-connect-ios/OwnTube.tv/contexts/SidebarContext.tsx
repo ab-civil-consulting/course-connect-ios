@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { LayoutAnimation, Platform } from "react-native";
 import { readFromAsyncStorage, writeToAsyncStorage } from "../utils";
-import { STORAGE } from "../types";
 
 interface SidebarContextValue {
   isManuallyExpanded: boolean | null; // null = auto (follows breakpoint), true/false = user preference

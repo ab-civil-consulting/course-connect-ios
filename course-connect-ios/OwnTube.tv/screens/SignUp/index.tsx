@@ -16,7 +16,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { RootStackParams } from "../../app/_layout";
 import { ROUTES } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { borderRadius, spacing } from "../../theme";
+import { spacing } from "../../theme";
 import { Spacer } from "../../components/shared/Spacer";
 import { useTheme } from "@react-navigation/native";
 import { Controller, useForm } from "react-hook-form";

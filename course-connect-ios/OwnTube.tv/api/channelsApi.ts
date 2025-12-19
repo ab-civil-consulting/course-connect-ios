@@ -1,7 +1,6 @@
 import { VideoChannel, VideoPlaylist, VideosCommonQuery, Video } from "@peertube/peertube-types";
 import { GetVideosVideo } from "./models";
 import { AxiosInstanceBasedApi } from "./axiosInstance";
-import { commonQueryParams } from "./constants";
 import { handleAxiosErrorWithRetry } from "./errorHandler";
 
 /**

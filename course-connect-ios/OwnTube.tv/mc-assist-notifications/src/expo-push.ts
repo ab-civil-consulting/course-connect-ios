@@ -1,4 +1,4 @@
-import { Expo, ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
+import { Expo, ExpoPushMessage } from "expo-server-sdk";
 import { getActiveDevices, removeInvalidTokens, logNotification } from "./database";
 
 const expo = new Expo();

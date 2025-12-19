@@ -10,7 +10,7 @@ interface TVFocusGuideHelperProps extends ViewProps {
 }
 
 const TVFocusGuideHelper = forwardRef<View, TVFocusGuideHelperProps>(
-  ({ autoFocus, trapFocusUp, trapFocusDown, trapFocusLeft, trapFocusRight, ...props }, ref) => {
+  ({ _autoFocus, _trapFocusUp, _trapFocusDown, _trapFocusLeft, _trapFocusRight, ...props }, ref) => {
     // TV-specific props are handled by React Native TV internally
     return <View ref={ref} {...props} />;
   }

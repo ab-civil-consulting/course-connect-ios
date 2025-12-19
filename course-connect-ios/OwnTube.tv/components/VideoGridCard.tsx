@@ -122,11 +122,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     gap: spacing.sm,
+    minHeight: 50, // Ensure enough space for at least 2 lines of text
+    paddingBottom: spacing.md, // Space below text to prevent collapse
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.md, // Space above text
-    paddingBottom: spacing.md, // Space below text to prevent collapse
     width: "100%",
-    minHeight: 50, // Ensure enough space for at least 2 lines of text
   },
   thumbnailContainer: {
     aspectRatio: 16 / 9,
