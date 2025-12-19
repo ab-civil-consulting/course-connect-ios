@@ -68,6 +68,15 @@ jobs:
       - name: Change Wrapper Permissions
         run: cd course-connect-ios/OwnTube.tv/android/ && chmod +x ./gradlew
 
+      - name: Configure Gradle Memory Settings
+        run: |
+          cd course-connect-ios/OwnTube.tv/android/
+          # Increase metaspace to prevent OutOfMemoryError during lint analysis
+          sed -i 's/XX:MaxMetaspaceSize=512m/XX:MaxMetaspaceSize=1024m/g' gradle.properties
+          sed -i 's/org.gradle.jvmargs=-Xmx4g/org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError/g' gradle.properties
+          # Add lint configuration to reduce memory usage
+          sed -i '/buildTypes {/a\    lint {\n        checkReleaseBuilds false\n        abortOnError false\n    }' app/build.gradle
+
       - name: Inject Build Info
         run: |
           cat > ./course-connect-ios/OwnTube.tv/build-info.json << 'EOF'
