@@ -226,5 +226,8 @@
   "viewsSortKey": "Перегляди",
   "sortOrder": "Порядок сортування",
   "publishDateNewest": "Дата публікації (спочатку новіші)",
-  "publishDateOldest": "Дата публікації (спочатку старіші)"
+  "publishDateOldest": "Дата публікації (спочатку старіші)",
+  "enableNotifications": "Enable Notifications",
+  "notificationPromptDescription": "Stay up to date with new videos and course updates. We'll send you notifications when new content is available.",
+  "maybeLater": "Maybe Later"
 }

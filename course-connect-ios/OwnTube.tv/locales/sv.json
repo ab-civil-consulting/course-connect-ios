@@ -227,5 +227,8 @@
   "viewsSortKey": "Visningar",
   "sortOrder": "Sortering",
   "publishDateNewest": "Publiceringsdatum (nyast först)",
-  "publishDateOldest": "Publiceringsdatum (äldst först)"
+  "publishDateOldest": "Publiceringsdatum (äldst först)",
+  "enableNotifications": "Enable Notifications",
+  "notificationPromptDescription": "Stay up to date with new videos and course updates. We'll send you notifications when new content is available.",
+  "maybeLater": "Maybe Later"
 }

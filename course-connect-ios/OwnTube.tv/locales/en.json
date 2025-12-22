@@ -338,5 +338,8 @@
   "collapseSidebar": "Collapse sidebar",
   "notificationsSettings": "Notifications",
   "enablePushNotifications": "Enable push notifications",
-  "pushNotificationsDescription": "Get notified when new videos are available"
+  "pushNotificationsDescription": "Get notified when new videos are available",
+  "enableNotifications": "Enable Notifications",
+  "notificationPromptDescription": "Stay up to date with new videos and course updates. We'll send you notifications when new content is available.",
+  "maybeLater": "Maybe Later"
 }

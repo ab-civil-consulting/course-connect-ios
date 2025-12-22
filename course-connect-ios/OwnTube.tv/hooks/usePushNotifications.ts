@@ -36,8 +36,15 @@ export interface PushNotificationPayload {
 export const usePushNotifications = () => {
   const router = useRouter();
   const { session } = useAuthSessionStore();
-  const { state, isInitialized, initializePushNotificationStore, setExpoPushToken, setIsEnabled, setIsRegistered } =
-    usePushNotificationStore();
+  const {
+    state,
+    isInitialized,
+    initializePushNotificationStore,
+    setExpoPushToken,
+    setIsEnabled,
+    setIsRegistered,
+    setHasBeenPrompted,
+  } = usePushNotificationStore();
 
   const [isRegistering, setIsRegistering] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -117,6 +124,9 @@ export const usePushNotifications = () => {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
+
+      // Mark that user has been prompted for permissions
+      await setHasBeenPrompted(true);
 
       if (finalStatus !== "granted") {
         setError("Permission for push notifications was denied");

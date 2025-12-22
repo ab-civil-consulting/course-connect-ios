@@ -43,3 +43,4 @@ export * from "./QRCodeLinkModal";
 export * from "./VideoItemFooter";
 export * from "./SignedOutModal";
 export * from "./DownloadVideo";
+export * from "./NotificationPromptModal";

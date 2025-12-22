@@ -7,6 +7,7 @@ export interface PushNotificationState {
   isEnabled: boolean;
   isRegistered: boolean;
   lastRegisteredAt: string | null;
+  hasBeenPromptedForPermission: boolean;
 }
 
 interface PushNotificationStore {
@@ -15,6 +16,7 @@ interface PushNotificationStore {
   setExpoPushToken: (token: string | null) => Promise<void>;
   setIsEnabled: (enabled: boolean) => Promise<void>;
   setIsRegistered: (registered: boolean, timestamp?: string) => Promise<void>;
+  setHasBeenPrompted: (prompted: boolean) => Promise<void>;
   initializePushNotificationStore: () => Promise<void>;
   clearPushNotificationState: () => Promise<void>;
 }
@@ -24,6 +26,7 @@ const initialState: PushNotificationState = {
   isEnabled: false,
   isRegistered: false,
   lastRegisteredAt: null,
+  hasBeenPromptedForPermission: false,
 };
 
 export const usePushNotificationStore = create<PushNotificationStore>((set, get) => ({
@@ -72,6 +75,12 @@ export const usePushNotificationStore = create<PushNotificationStore>((set, get)
       isRegistered: registered,
       lastRegisteredAt: timestamp || new Date().toISOString(),
     };
+    await writeToAsyncStorage(STORAGE.PUSH_NOTIFICATION_STATE, newState);
+    set({ state: newState });
+  },
+
+  setHasBeenPrompted: async (prompted) => {
+    const newState = { ...get().state, hasBeenPromptedForPermission: prompted };
     await writeToAsyncStorage(STORAGE.PUSH_NOTIFICATION_STATE, newState);
     set({ state: newState });
   },
