@@ -37,7 +37,7 @@ export default {
 
   adaptiveIcon: {
     foregroundImage: "./assets/adaptive-icon-foreground.png",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#5B9BD5",
   },
   ios: {
     infoPlist: {
