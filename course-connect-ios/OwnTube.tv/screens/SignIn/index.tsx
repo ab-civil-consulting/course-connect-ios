@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Button, FormComponent, Input, NotificationPromptModal, Separator, Typography } from "../../components";
+import { Button, FormComponent, Input, Separator, Typography } from "../../components";
 import { useTranslation } from "react-i18next";
 import {
   useGetInstanceInfoQuery,
@@ -33,7 +33,7 @@ import { z } from "zod";
 import { SignInFormLoader } from "../../components/loaders/SignInFormLoader";
 import { useCallback, useRef, useState } from "react";
 import { Feather } from "@expo/vector-icons";
-import { useCustomFocusManager } from "../../hooks";
+import { useCustomFocusManager, usePushNotifications } from "../../hooks";
 import { useAuthSessionStore, usePushNotificationStore } from "../../store";
 import { parseAuthSessionData } from "../../utils/auth";
 import { ServerErrorCodes, UserLoginResponse } from "../../api/models";
@@ -73,10 +73,10 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
   const { top } = useSafeAreaInsets();
   useCustomFocusManager();
   const { addSession, selectSession, updateSession } = useAuthSessionStore();
-  const { state: pushNotificationState } = usePushNotificationStore();
+  const { state: pushNotificationState, isInitialized: isPushStoreInitialized } = usePushNotificationStore();
+  const { registerForPushNotifications } = usePushNotifications();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
 
   const { control, handleSubmit, reset, formState } = useForm({
     values: {
@@ -155,20 +155,31 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
 
         captureDiagnosticsEvent(CustomPostHogEvents.Login, { backend });
 
-        // Check if we should show notification prompt
-        const shouldShowPrompt = Platform.OS !== "web" && !pushNotificationState.hasBeenPromptedForPermission;
+        // Request push notifications for first-time users on native platforms
+        if (Platform.OS !== "web") {
+          // Wait briefly for push store to initialize if needed
+          if (!isPushStoreInitialized) {
+            if (__DEV__) {
+              console.log("[SignIn] Waiting for push store initialization...");
+            }
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
 
-        if (shouldShowPrompt) {
-          if (__DEV__) {
-            console.log("[SignIn] Showing notification prompt");
+          // Check if user hasn't been prompted yet
+          if (!pushNotificationState.hasBeenPromptedForPermission) {
+            if (__DEV__) {
+              console.log("[SignIn] Requesting push notification permission");
+            }
+            // This shows the native permission dialog
+            await registerForPushNotifications();
           }
-          setShowNotificationPrompt(true);
-        } else {
-          if (__DEV__) {
-            console.log("[SignIn] Navigating to home with backend:", backend);
-          }
-          router.navigate({ pathname: ROUTES.HOME, params: { backend } });
         }
+
+        // Navigate to home
+        if (__DEV__) {
+          console.log("[SignIn] Navigating to home with backend:", backend);
+        }
+        router.navigate({ pathname: ROUTES.HOME, params: { backend } });
       }
     } else {
       console.error("[SignIn] No loginPrerequisites available");
@@ -176,14 +187,6 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
   };
 
   const passwordFieldRef = useRef<TextInput | null>(null);
-
-  const handleCloseNotificationPrompt = () => {
-    setShowNotificationPrompt(false);
-    if (__DEV__) {
-      console.log("[SignIn] Notification prompt closed, navigating to home with backend:", backend);
-    }
-    router.navigate({ pathname: ROUTES.HOME, params: { backend } });
-  };
 
   const isLoading = isLoadingInstanceInfo || isLoadingInstanceServerConfig || isLoadingLoginPrerequisites;
 
@@ -540,7 +543,6 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
           </ScrollView>
         )}
       </FormComponent>
-      {showNotificationPrompt && <NotificationPromptModal onClose={handleCloseNotificationPrompt} />}
     </KeyboardWrapper>
   );
 };
