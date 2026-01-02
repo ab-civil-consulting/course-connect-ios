@@ -1,148 +1,170 @@
-# Session Context - 2025-12-17T22:45:00-06:00
+# Session Context - 2025-12-22T21:45:00-06:00
 
 ## Current Session Overview
 
-- **Main Task/Feature**: Push Notifications Implementation for MC Assist App (Server-side completion)
-- **Session Duration**: Extended session (~4 hours)
-- **Current Status**: Server deployed and running, encountering undefined `state` field error, deciding on transcoding check approach
+- **Main Task/Feature**: Add immediate push notification permission prompt for new users after sign-in (Option A approach)
+- **Session Duration**: ~4 hours across multiple sub-tasks
+- **Current Status**: ✅ Planning complete, ready to implement. User wants to switch models before implementation begins.
 
 ## Recent Activity (Last 30-60 minutes)
 
 - **What We Just Did**:
-  - Added PeerTube OAuth authentication (working successfully)
-  - Implemented privacy-aware notification logic (skip private videos)
-  - Added UUID-based tracking instead of date-based
-  - Attempted to add transcoding state check (encountering API limitation)
-  - Changed polling interval from 5 minutes to 1 minute
-- **Active Problems**:
-  - PeerTube API `/videos` endpoint doesn't include `state` field
-  - Server throwing "Cannot read properties of undefined (reading 'id')" error
-  - Need to decide on approach for handling transcoding check
-- **Current Files**:
-  - `mc-assist-notifications/src/peertube.ts` - Modified locally, not yet pushed
-  - `mc-assist-notifications/src/database.ts` - Added hasBeenNotified() function
-- **Test Status**: Server running but crashing on video checks due to undefined state field
+  - Explored current push notification implementation via Explore agent
+  - Created comprehensive plan for first-launch notification prompt
+  - User chose Option A (prompt after sign-in) over HomeScreen approach
+  - Updated plan to reflect sign-in flow integration
+  - Confirmed rebuild requirement (YES - native changes require full rebuild)
+- **Active Problems**: None - ready to implement
+- **Current Files**: Plan exists at `C:\Users\HeathBoyte\.claude\plans\wise-giggling-walrus.md`
+- **Test Status**: N/A - implementation hasn't started yet
 
 ## Key Technical Decisions Made
 
 - **Architecture Choices**:
-  - Native systemd service instead of Docker for notification server
-  - PostgreSQL running natively (not containerized)
-  - UUID-based notification tracking (not timestamp-based)
+  - Show notification prompt immediately AFTER successful sign-in (Option A)
+  - Use modal that blocks navigation until user responds
+  - Track "has been prompted" state in push notification store
+  - Persist state in AsyncStorage for cross-session persistence
 - **Implementation Approaches**:
-  - OAuth authentication with admin credentials
-  - Check last 50 videos, skip already-notified ones
-  - Privacy filtering: skip private (id=3), notify on internal (id=4) and public (id=1)
-  - 1-minute polling interval via cron job
+  - Add `hasBeenPromptedForPermission` boolean to `usePushNotificationStore`
+  - Create new `NotificationPromptModal` component with "Enable" and "Maybe Later" buttons
+  - Modify SignIn screen to show modal after authentication succeeds
+  - Call `registerForPushNotifications()` when user taps "Enable"
 - **Technology Selections**:
-  - Express + Prisma + PostgreSQL + expo-server-sdk
-  - Native PeerTube installation (not Docker)
+  - Use existing Zustand store (`usePushNotificationStore`)
+  - Leverage existing `usePushNotifications` hook
+  - Use existing Modal, Button, Typography components from design system
 - **Performance/Security Considerations**:
-  - Admin API uses API key authentication
-  - OAuth tokens cached with expiry
-  - Invalid push tokens automatically cleaned up
+  - Only prompt once per user (tracked via AsyncStorage)
+  - Skip on web platform (Platform.OS checks)
+  - Respect existing Settings toggle functionality
 
 ## Code Context
 
-- **Modified Files** (this session):
-  - `mc-assist-notifications/src/peertube.ts` - Added OAuth, privacy checks, UUID tracking, state field (not pushed)
-  - `mc-assist-notifications/src/database.ts` - Added hasBeenNotified() function
-  - `mc-assist-notifications/.env` (server) - Added OAuth credentials, changed polling to 1 min
-  - `/etc/systemd/system/mc-notifications.service` - Created systemd service
-  - `/etc/nginx/sites-enabled/peertube` - Added /notifications/ proxy location
-  - `/etc/hosts` - Added localhost mapping for domain resolution
-- **New Patterns**: OAuth token caching, UUID-based duplicate prevention
-- **Dependencies**: All installed via npm (no changes this session)
-- **Configuration Changes**:
-  - Server .env: Added PEERTUBE_CLIENT_ID, CLIENT_SECRET, USERNAME, PASSWORD
-  - POLL_INTERVAL_MINUTES changed from 5 to 1
-  - PostgreSQL database "notifications" created
+- **Modified Files**: None yet (planning phase complete)
+- **New Patterns**:
+  - Post-authentication flow interruption for onboarding
+  - Boolean flag pattern for "has seen" tracking
+- **Dependencies**: No new dependencies required
+- **Configuration Changes**: None
 
 ## Current Implementation State
 
 - **Completed**:
-  - Full app-side push notification code (previous session)
-  - Server infrastructure deployed and running
-  - OAuth authentication working
-  - Privacy-aware filtering (private videos skipped)
-  - UUID-based notification tracking
-  - Database schema and helpers
-  - Nginx proxy configuration
-  - 1-minute polling interval
+  - ✅ Full exploration of push notification implementation
+  - ✅ Comprehensive plan created
+  - ✅ Approach selected (Option A - sign-in flow)
+  - ✅ Earlier session: Fixed GitHub Actions workflow failures (tests, ESLint, Android builds)
 - **In Progress**:
-  - Transcoding state check (blocked by API limitation)
-  - Local code changes to handle undefined state field (not yet pushed)
+  - Ready to implement but blocked by model switch
 - **Blocked**:
-  - Need to decide: Remove state check, keep with fallback, or fetch full video details
+  - User wants to change chat model before implementation
 - **Next Steps**:
-  1. Decide on transcoding check approach
-  2. Commit and push state field fix
-  3. Update server with fixed code
-  4. Test with mobile app
-  5. Merge feature branch to main
+  1. Switch model (user action)
+  2. Update `store/pushNotificationStore.ts` - add `hasBeenPromptedForPermission` state
+  3. Create `components/NotificationPromptModal/index.tsx` - new modal component
+  4. Update `components/index.ts` - export new modal
+  5. Modify `screens/SignIn/index.tsx` - add prompt after successful sign-in
+  6. Update `hooks/usePushNotifications.ts` - set prompted flag after permission request
+  7. Test flow on device
+  8. Rebuild app with `eas build`
 
 ## Important Context for Handoff
 
 - **Environment Setup**:
-  - Server: course-connect.ab-civil.com (SSH as root)
-  - Repo location: /opt/course-connect-ios/course-connect-ios/OwnTube.tv/mc-assist-notifications
-  - Service: mc-notifications (systemd)
-  - Database: peertube_prod (PostgreSQL, native install)
+  - React Native TV project (react-native-tvos 0.76.9-0)
+  - Expo SDK with EAS Build
+  - Working directory: `course-connect-ios/OwnTube.tv/`
 - **Running/Testing**:
-  - Start: `systemctl start mc-notifications`
-  - Logs: `journalctl -u mc-notifications -f`
-  - Rebuild: `npm run build && systemctl restart mc-notifications`
-  - Test endpoint: `curl https://course-connect.ab-civil.com/notifications/health`
+  - Push notifications ONLY work on physical devices
+  - Cannot test in simulator/Expo Go
+  - Requires rebuild: `eas build --platform ios/android`
+  - Submit to TestFlight/Google Play for testing
 - **Known Issues**:
-  - PeerTube `/videos` API endpoint doesn't return `state` field
-  - All videos are internal (privacy.id=4), none are public
-  - Push notifications only work on physical devices
+  - Push notifications already functional, just need better UX for first-time users
+  - Current flow requires users to find Settings modal (poor discoverability)
 - **External Dependencies**:
-  - PeerTube at course-connect.ab-civil.com
-  - Expo Push API (free tier)
-  - PostgreSQL database (shared with PeerTube)
+  - Notification server: `https://course-connect.ab-civil.com/notifications`
+  - Expo push token API
+  - Native iOS/Android permission dialogs
 
 ## Conversation Thread
 
-- **Original Goal**: Implement complete push notification system for MC Assist app
+- **Original Goal**: Fix GitHub Actions workflow failures (ESLint, tests, Android builds)
 - **Evolution**:
-  1. Completed app-side code (Part A) ✓
-  2. Created server-side notification service (Part B) ✓
-  3. Deployed to production server ✓
-  4. Added OAuth for internal video access ✓
-  5. Improved privacy/transcoding handling (in progress)
+  1. Fixed test failures (3 test suites had 4 failing tests)
+  2. Fixed ESLint errors (2 unused imports)
+  3. Fixed Android OutOfMemoryError in CI (Gradle memory settings)
+  4. Fixed lint block placement error in workflows
+  5. Added web platform checks to usePushNotifications
+  6. **NEW:** Add first-launch push notification prompt
 - **Lessons Learned**:
-  - PeerTube runs as systemd service, not Docker
-  - Server can't resolve its own domain without /etc/hosts entry
-  - OAuth credentials from database work for API access
-  - PeerTube API has inconsistent field availability
-  - Need to check API responses before assuming field existence
+  - Gradle memory must be configured in CI before build (sed commands in workflow)
+  - lint block must be outside buildTypes in Gradle structure
+  - sed placement matters: use `/packagingOptions {/i\` not `/buildTypes {/a\`
+  - Push notifications require native rebuild, not OTA-updatable
 - **Alternatives Considered**:
-  - Docker deployment (decided against, using systemd instead)
-  - Webhook-based notifications (PeerTube doesn't have built-in webhooks)
-  - 5-minute polling (changed to 1 minute for faster notifications)
+  - ❌ Option B: Prompt on HomeScreen (delayed, less immediate)
+  - ❌ Option C: Prompt on first video view (too late)
+  - ❌ Option D: Auto-request without UI (poor UX, intrusive)
+  - ✅ Option A: Prompt after sign-in (CHOSEN - good onboarding moment)
 
-## Three Options for Transcoding Check
+## Push Notification Implementation Details
 
-**Option 1: Remove state check** (simplest)
+### Current Architecture
 
-- Notify immediately on upload (even if transcoding)
-- Might send notifications before video is ready
+- **Hook**: `hooks/usePushNotifications.ts` - manages lifecycle, registration, listeners
+- **Store**: `store/pushNotificationStore.ts` - Zustand store with AsyncStorage persistence
+- **Settings UI**: `components/VideoControlsOverlay/components/modals/Settings.tsx` - manual toggle
+- **Server**: `mc-assist-notifications/` - Express server for push distribution
 
-**Option 2: Keep state check with undefined handling** (current local fix)
+### Current Registration Flow
 
-- If state exists and !== 1, skip
-- If state undefined, notify anyway
-- Safe fallback but might notify during transcoding
+1. User manually opens Settings modal during video playback
+2. User toggles "Enable Push Notifications" checkbox
+3. `registerForPushNotifications()` called
+4. OS native permission dialog appears
+5. If granted: Token generated and registered with backend
+6. If denied: Error state, don't ask again
 
-**Option 3: Fetch full video details** (most accurate, slower)
+### Desired New Flow (Option A)
 
-- Additional API call per video to `/videos/{uuid}`
-- Guaranteed state info but more API calls
+1. User signs in successfully
+2. Check `hasBeenPromptedForPermission` in store
+3. If `false` and platform !== web:
+   - Show `NotificationPromptModal`
+   - User taps "Enable Notifications" → `registerForPushNotifications()` → OS dialog
+   - User taps "Maybe Later" → dismiss modal
+   - Set `hasBeenPromptedForPermission = true` in both cases
+4. Navigate to HomeScreen
 
-## Current Code State (Not Pushed)
+### Files to Modify (Implementation Plan)
 
-- Local changes to handle undefined state field
-- Made state field optional in interface
-- Added conditional check: `if (video.state && video.state.id !== 1)`
-- Ready to commit and push after decision
+1. `store/pushNotificationStore.ts` - Add `hasBeenPromptedForPermission: boolean` state and action
+2. `components/NotificationPromptModal/index.tsx` - NEW modal component with Enable/Maybe Later buttons
+3. `components/index.ts` - Export new modal
+4. `screens/SignIn/index.tsx` - Show modal after successful authentication
+5. `hooks/usePushNotifications.ts` - Set prompted flag after permission request completes
+
+### Rebuild Requirement
+
+**YES - Full native rebuild required:**
+
+- Changes to permission flow = native changes
+- Cannot use Expo OTA Updates
+- iOS: `eas build --platform ios` → TestFlight → App Store
+- Android: `eas build --platform android` → Google Play
+
+## Recent Commits (Earlier Today)
+
+1. `b0bbe17` - Fix lint block placement in Android workflows
+2. `8d1ebc0` - Fix Android build OutOfMemoryError in CI workflows
+3. `969f489` - Add web platform checks to usePushNotifications hook
+4. `a14863e` - Fix ESLint errors: Remove unused imports from queries.test.tsx
+5. `e4d1d85` - Fix GitHub Actions test failures
+
+## Ready for Implementation
+
+The plan is fully documented at `C:\Users\HeathBoyte\.claude\plans\wise-giggling-walrus.md`.
+
+**Implementation is ready to start** once model is switched.
