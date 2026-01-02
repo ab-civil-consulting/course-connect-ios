@@ -3,6 +3,6 @@
   "GITHUB_SHA_SHORT": "localFakeSha",
   "COMMIT_URL": "https://github.com/ab-civil/mc-assist/commit/localFakeSha",
   "BUILD_TIMESTAMP": "1970-01-01T00:00:00Z",
-  "WEB_URL": "https://localhost:8081",
+  "WEB_URL": "https://ab-civil-consulting.github.io/course-connect-ios",
   "GITHUB_REPOSITORY": "mc-assist-local-dev"
 }
