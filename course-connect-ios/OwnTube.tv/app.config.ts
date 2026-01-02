@@ -18,7 +18,7 @@ export default {
   icon,
   owner: "adam_bower",
   scheme: "mcassist",
-  version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.2",
+  version: process.env.EXPO_PUBLIC_APP_VERSION || "1.0.3",
   assetBundlePatterns: ["assets/fonts/**/*", "assets/categories/**/*", "assets/*.png", "assets/appleTV/**/*"],
   userInterfaceStyle: process.env.EXPO_PUBLIC_USER_INTERFACE_STYLE || "light",
 
