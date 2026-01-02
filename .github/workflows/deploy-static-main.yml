@@ -155,7 +155,7 @@ jobs:
       - name: Check ESLint Code Style
         run: cd course-connect-ios/OwnTube.tv/ && npx eslint .
       - name: Check Prettier Formatting
-        run: cd course-connect-ios/OwnTube.tv/ && npx prettier --check ../
+        run: cd course-connect-ios/OwnTube.tv/ && npx prettier --check ./
       - name: Run Tests
         run: cd course-connect-ios/OwnTube.tv/ && npm run test
 
