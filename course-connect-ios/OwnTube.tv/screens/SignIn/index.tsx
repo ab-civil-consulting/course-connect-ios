@@ -162,7 +162,7 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
             if (__DEV__) {
               console.log("[SignIn] Waiting for push store initialization...");
             }
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise((resolve) => setTimeout(resolve, 100));
           }
 
           // Check if user hasn't been prompted yet
