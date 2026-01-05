@@ -59,6 +59,7 @@ export default {
       : undefined,
   },
   android: {
+    googleServicesFile: "./google-services.json",
     blockedPermissions: ["RECORD_AUDIO", "READ_MEDIA_VIDEO", "READ_MEDIA_IMAGES"],
     permissions: ["WRITE_EXTERNAL_STORAGE"],
     versionCode: getBuildNumber({ platform: "android" }),

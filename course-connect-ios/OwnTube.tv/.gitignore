@@ -37,3 +37,11 @@ yarn-error.*
 # native mobile files
 /android/
 /ios/
+
+# Firebase configuration (contains sensitive project IDs)
+google-services.json
+GoogleService-Info.plist
+
+# FCM service account keys (highly sensitive - never commit)
+*service-account*.json
+fcm-*.json
