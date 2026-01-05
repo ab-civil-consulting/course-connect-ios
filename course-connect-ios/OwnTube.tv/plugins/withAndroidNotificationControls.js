@@ -18,6 +18,11 @@ function withAndroidNotificationControls(config) {
           "android:name": "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
         },
       },
+      {
+        $: {
+          "android:name": "android.permission.POST_NOTIFICATIONS",
+        },
+      },
     ];
 
     androidManifest["uses-permission"] = [...permissions, ...newPermissions];

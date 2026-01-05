@@ -157,21 +157,64 @@ export const SignIn = ({ backend: backendProp }: { backend?: string } = {}) => {
 
         // Request push notifications for first-time users on native platforms
         if (Platform.OS !== "web") {
-          // Wait briefly for push store to initialize if needed
+          if (__DEV__) {
+            console.log("[SignIn] Push notification check - isPushStoreInitialized:", isPushStoreInitialized);
+          }
+
+          // Wait for push store to initialize with exponential backoff
           if (!isPushStoreInitialized) {
             if (__DEV__) {
               console.log("[SignIn] Waiting for push store initialization...");
             }
-            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            let attempts = 0;
+            const maxAttempts = 5;
+            while (!isPushStoreInitialized && attempts < maxAttempts) {
+              const delay = 100 * Math.pow(2, attempts); // 100ms, 200ms, 400ms, 800ms, 1600ms
+              await new Promise((resolve) => setTimeout(resolve, delay));
+              attempts++;
+              if (__DEV__) {
+                console.log(
+                  "[SignIn] Push store initialization attempt",
+                  attempts,
+                  "- initialized:",
+                  isPushStoreInitialized
+                );
+              }
+            }
+
+            if (!isPushStoreInitialized) {
+              console.warn("[SignIn] Push store did not initialize after", maxAttempts, "attempts");
+            }
+          }
+
+          if (__DEV__) {
+            console.log("[SignIn] Push notification state:", {
+              hasBeenPrompted: pushNotificationState.hasBeenPromptedForPermission,
+              isEnabled: pushNotificationState.isEnabled,
+              isRegistered: pushNotificationState.isRegistered,
+            });
           }
 
           // Check if user hasn't been prompted yet
           if (!pushNotificationState.hasBeenPromptedForPermission) {
             if (__DEV__) {
-              console.log("[SignIn] Requesting push notification permission");
+              console.log("[SignIn] Requesting push notification permission (first time)");
             }
-            // This shows the native permission dialog
-            await registerForPushNotifications();
+
+            try {
+              // This shows the native permission dialog
+              const token = await registerForPushNotifications();
+              if (__DEV__) {
+                console.log("[SignIn] Permission request completed, token:", token ? "received" : "null");
+              }
+            } catch (error) {
+              console.error("[SignIn] Error requesting push notifications:", error);
+            }
+          } else {
+            if (__DEV__) {
+              console.log("[SignIn] User has already been prompted for notifications");
+            }
           }
         }
 

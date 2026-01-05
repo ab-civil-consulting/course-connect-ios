@@ -103,56 +103,125 @@ export const usePushNotifications = () => {
   const registerForPushNotifications = async (): Promise<string | null> => {
     // Push notifications not supported on web
     if (Platform.OS === "web") {
+      if (__DEV__) {
+        console.log("[PushNotifications] Skipping registration - web platform");
+      }
       return null;
     }
 
-    if (isRegistering) return null;
+    if (isRegistering) {
+      if (__DEV__) {
+        console.log("[PushNotifications] Already registering, skipping");
+      }
+      return null;
+    }
+
     setIsRegistering(true);
     setError(null);
 
     try {
+      // Log device info
+      if (__DEV__) {
+        console.log("[PushNotifications] Device check:", {
+          isDevice: Device.isDevice,
+          osVersion: Platform.Version,
+          platform: Platform.OS,
+        });
+      }
+
       if (!Device.isDevice) {
-        setError("Push notifications require a physical device");
+        const errorMsg = "Push notifications require a physical device";
+        console.warn("[PushNotifications]", errorMsg);
+        setError(errorMsg);
         setIsRegistering(false);
         return null;
       }
 
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
+      // Check current permission status
+      if (__DEV__) {
+        console.log("[PushNotifications] Checking existing permissions...");
       }
 
-      // Mark that user has been prompted for permissions
-      await setHasBeenPrompted(true);
+      const permissionResult = await Notifications.getPermissionsAsync();
+      const { status: existingStatus, canAskAgain, granted } = permissionResult;
+
+      if (__DEV__) {
+        console.log("[PushNotifications] Existing permission status:", {
+          status: existingStatus,
+          canAskAgain,
+          granted,
+        });
+      }
+
+      let finalStatus = existingStatus;
+
+      // Request permission if not granted
+      if (existingStatus !== "granted") {
+        if (__DEV__) {
+          console.log("[PushNotifications] Requesting permissions...");
+        }
+
+        const requestResult = await Notifications.requestPermissionsAsync();
+        finalStatus = requestResult.status;
+
+        if (__DEV__) {
+          console.log("[PushNotifications] Permission request result:", {
+            status: requestResult.status,
+            canAskAgain: requestResult.canAskAgain,
+            granted: requestResult.granted,
+          });
+        }
+
+        // Mark that user has been prompted (after request is made)
+        await setHasBeenPrompted(true);
+        if (__DEV__) {
+          console.log("[PushNotifications] hasBeenPrompted flag set to true");
+        }
+      }
 
       if (finalStatus !== "granted") {
-        setError("Permission for push notifications was denied");
+        const errorMsg = `Permission for push notifications was ${finalStatus}`;
+        console.warn("[PushNotifications]", errorMsg);
+        setError(errorMsg);
         await setIsEnabled(false);
         setIsRegistering(false);
         return null;
       }
 
+      // Get EAS project ID
       const projectId = Constants.expoConfig?.extra?.eas?.projectId;
       if (!projectId) {
-        setError("Missing EAS project ID");
+        const errorMsg = "Missing EAS project ID";
+        console.error("[PushNotifications]", errorMsg);
+        setError(errorMsg);
         setIsRegistering(false);
         return null;
+      }
+
+      if (__DEV__) {
+        console.log("[PushNotifications] Getting Expo push token...");
       }
 
       const tokenData = await Notifications.getExpoPushTokenAsync({ projectId });
       const token = tokenData.data;
 
+      if (__DEV__) {
+        console.log("[PushNotifications] Token received:", token.substring(0, 20) + "...");
+      }
+
       await setExpoPushToken(token);
       await setIsEnabled(true);
       await registerTokenWithServer(token);
+
+      if (__DEV__) {
+        console.log("[PushNotifications] Registration complete");
+      }
 
       setIsRegistering(false);
       return token;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to register";
+      console.error("[PushNotifications] Registration error:", err);
       setError(message);
       setIsRegistering(false);
       return null;
