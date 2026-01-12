@@ -37,9 +37,9 @@ def scale_android_icon():
     safe_zone_radius = int(width * 0.61)
     print(f"   Safe zone radius: {safe_zone_radius}px (61% of canvas)")
 
-    # Scale factor: 1.5x makes the icon fill ~82% of safe zone diameter
-    # This is ideal for Android adaptive icons
-    scale_factor = 1.5
+    # Scale factor: 1.3x makes the icon fill ~71% of safe zone diameter
+    # This provides moderate padding around the icon
+    scale_factor = 1.3
     new_size = int(width * scale_factor)
 
     print(f"   Scale factor: {scale_factor}x")
